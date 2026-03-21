@@ -21,7 +21,7 @@
 //   { action: "deleteFile", path, sha, message }
 //     → { ok: true }
 
-const REPO = 'slickmojang11/webman';
+const REPO = 'fsr-official/NoteBooks-XI';
 
 function authHeader(pat) {
   return pat.startsWith('github_pat_') ? `Bearer ${pat}` : `token ${pat}`;

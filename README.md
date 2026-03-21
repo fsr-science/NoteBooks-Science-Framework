@@ -95,7 +95,7 @@ Ideal for opening documents, spreadsheets, and presentations.
 
 ---
 
- ##👥 Credits
+## 👥 Credits
 
 - **Harshit Saha** — Founder (FSR), Project Creator and Maintainer (NoteBooks and NotePad), Science Administration Department
 -  **Rishiraj Adhikari** — Head (FSR)

@@ -1,0 +1,52 @@
+# ============================================================
+# manage-admins.yml
+# Triggered via repository_dispatch when super-admin creates
+# or revokes an admin code via the WebMan UI.  Writes the
+# updated admins.json to the repo so it persists across
+# sessions and browsers.
+#
+# Place at:  .github/workflows/manage-admins.yml
+#
+# Required secret:  WEBMAN_PAT
+# ============================================================
+name: Manage Admin Codes
+
+on:
+  repository_dispatch:
+    types: [update-admins]
+  workflow_dispatch:
+    inputs:
+      admins_json:
+        description: 'Full JSON string for admins.json contents'
+        required: true
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.WEBMAN_PAT }}
+          fetch-depth: 0
+
+      - name: Write admins.json
+        run: |
+          if [ "${{ github.event_name }}" = "repository_dispatch" ]; then
+            PAYLOAD='${{ toJson(github.event.client_payload.admins_json) }}'
+          else
+            PAYLOAD='${{ inputs.admins_json }}'
+          fi
+          echo "$PAYLOAD" > admins.json
+          echo "admins.json updated."
+
+      - name: Commit admins.json
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name  "github-actions[bot]"
+          git add admins.json
+          git diff --staged --quiet || git commit -m "chore: update admin codes [skip ci]"
+          git push

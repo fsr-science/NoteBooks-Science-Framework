@@ -6,7 +6,7 @@
 // The Office viewer calls:
 //   https://view.officeapps.live.com/op/embed.aspx?src=https://your-app.vercel.app/api/raw?path=...
 
-const REPO = 'slickmojang11/webman';
+const REPO = 'fsr-official/NoteBooks-XI';
 
 const MIME_TYPES = {
   doc:  'application/msword',

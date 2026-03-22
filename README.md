@@ -7,7 +7,7 @@
 
 ## 🧭 Overview
 
-**NoteBooks XI** is an academic content platform developed by the **Federation of Socialist Republics** in collaboration with the **CodingUHub** community.
+**NoteBooks XI** is an academic content platform developed by the **Federation of Socialist Republics (XI)** in collaboration with the **CodingUHub** community.
 
 It replaces fragmented note-sharing workflows with a centralized, moderated system—functionally similar to a domain-specific knowledge base.
 

@@ -2636,6 +2636,11 @@
       "type": "file",
       "name": "fallback.html",
       "path": "fallback.html"
+    },
+    {
+      "type": "file",
+      "name": "obsidian-md.js",
+      "path": "obsidian-md.js"
     }
   ]
 }

@@ -10,7 +10,8 @@ EXCLUDED_ROOT_FILES = {
     "service-worker.js",
     "offline.html",
     "offline.png",
-    "admins.json"
+    "admins.json",
+    "obsidian-md.js"
 }
 
 EXCLUDED_ROOT_DIRS = {

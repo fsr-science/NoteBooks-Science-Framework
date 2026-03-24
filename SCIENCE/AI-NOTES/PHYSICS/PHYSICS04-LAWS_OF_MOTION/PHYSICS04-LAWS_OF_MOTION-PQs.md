@@ -1,8 +1,5 @@
-# CHAPTER 4 — PRACTICE QUESTION BANK
-
-### Laws of Motion
-
-#### 75+ Questions | Board · NEET · JEE Layered
+# ⚡ CHAPTER 4 — PRACTICE QUESTION BANK
+> **Laws of Motion** | 75+ Questions | Board · NEET · JEE Layered
 
 ---
 
@@ -793,52 +790,76 @@
 
 **Q71.** 🟢 A force of 100 N acts on a 20 kg body initially at rest for 5 s. Find (a) the acceleration, (b) final velocity, and (c) distance covered.
 
-**Answer:**
-(a) a = F/m = 100/20 = **5 m s⁻²**
-(b) v = u + at = 0 + 5×5 = **25 m s⁻¹**
-(c) s = ½at² = ½×5×25 = **62.5 m**
+> [!example] Solution
+> $F = 100$ N, $m = 20$ kg, $u = 0$, $t = 5$ s
+>
+> **(a)** $a = F/m = 100/20 = \mathbf{5 \text{ m s}^{-2}}$
+>
+> **(b)** $v = u + at = 0 + 5 \times 5 = \mathbf{25 \text{ m s}^{-1}}$
+>
+> **(c)** $s = \frac{1}{2}at^2 = \frac{1}{2} \times 5 \times 25 = \mathbf{62.5 \text{ m}}$
 
 ---
 
 **Q72.** 🟢 A shell of mass 100 g is fired from a 10 kg gun with muzzle velocity 300 m s⁻¹. Find the recoil velocity of the gun.
 
-**Answer:**
-Momentum conservation: 0 = 0.1×300 + 10×v_gun
-v_gun = −3 m s⁻¹ → **Recoil speed = 3 m s⁻¹** (opposite to bullet)
+> [!example] Solution
+> $m_\text{shell} = 0.1$ kg, $v_\text{shell} = 300$ m s⁻¹, $m_\text{gun} = 10$ kg
+>
+> By conservation of momentum (initial $p = 0$):
+>
+> $$0 = 0.1 \times 300 + 10 \times v_\text{gun}$$
+>
+> $$v_\text{gun} = -3 \text{ m s}^{-1} \implies \textbf{Recoil speed} = \mathbf{3 \text{ m s}^{-1}} \text{ (opposite to shell)}$$
 
 ---
 
 **Q73.** 🟡 A 5 kg body on a rough horizontal floor has μs = 0.4, μk = 0.3. A horizontal force of 30 N is applied. Does it move? If yes, find acceleration. (g = 10 m s⁻²)
 
-**Answer:**
-(fs)max = 0.4 × 5 × 10 = **20 N** < 30 N → **body moves**
-fk = 0.3 × 50 = 15 N
-a = (30−15)/5 = **3 m s⁻²**
+> [!example] Solution
+> $(f_s)_\text{max} = \mu_s \times mg = 0.4 \times 5 \times 10 = 20$ N
+>
+> Applied force $30$ N $> 20$ N $\implies$ **body moves.**
+>
+> $$f_k = \mu_k \times mg = 0.3 \times 50 = 15 \text{ N}$$
+>
+> $$a = \frac{F - f_k}{m} = \frac{30 - 15}{5} = \mathbf{3 \text{ m s}^{-2}}$$
 
 ---
 
 **Q74.** 🟡 A cyclist at 36 km/h takes a circular turn of radius 20 m. If μs = 0.5, will the cyclist slip? (g = 10 m s⁻²)
 
-**Answer:**
-v = 10 m s⁻¹; vmax = √(0.5×20×10) = √100 = **10 m s⁻¹**
-v = vmax → cyclist is exactly at the limit. **On the verge of slipping (just doesn't slip).**
+> [!example] Solution
+> $v = 36 \text{ km/h} = 10$ m s⁻¹; $R = 20$ m; $\mu_s = 0.5$
+>
+> $$v_\text{max} = \sqrt{\mu_s Rg} = \sqrt{0.5 \times 20 \times 10} = \sqrt{100} = 10 \text{ m s}^{-1}$$
+>
+> $v = v_\text{max}$ exactly $\implies$ **Cyclist is exactly at the limit — on the verge of slipping (just does not slip).**
 
 ---
 
 **Q75.** 🔴 A block of mass 5 kg rests on a horizontal floor (μs = 0.5, μk = 0.4). A rope pulls it at 37° above horizontal with force F. Find (a) minimum F to just start movement, (b) acceleration once it moves. (g = 10 m s⁻²; sin37° = 0.6, cos37° = 0.8)
 
-**Answer:**
-N = mg − F sin37° = 50 − 0.6F
-(fs)max = μs × N = 0.5(50 − 0.6F)
-
-At impending motion: F cos37° = (fs)max
-0.8F = 25 − 0.3F → 1.1F = 25 → **(a) F = 22.73 N**
-
-Once moving:
-N = 50 − 0.6×22.73 = 50 − 13.64 = 36.36 N
-fk = 0.4 × 36.36 = 14.54 N
-Net force = 22.73×0.8 − 14.54 = 18.18 − 14.54 = 3.64 N
-**(b) a = 3.64/5 = 0.73 m s⁻²**
+> [!example] Solution
+> **Setting up forces:**
+>
+> $$N = mg - F\sin 37° = 50 - 0.6F$$
+>
+> $$(f_s)_\text{max} = \mu_s N = 0.5(50 - 0.6F)$$
+>
+> **Part (a) — Impending motion:** $F\cos 37° = (f_s)_\text{max}$
+>
+> $$0.8F = 25 - 0.3F \implies 1.1F = 25 \implies \mathbf{F = 22.73 \text{ N}}$$
+>
+> **Part (b) — Once moving:**
+>
+> $$N = 50 - 0.6 \times 22.73 = 36.36 \text{ N}$$
+>
+> $$f_k = 0.4 \times 36.36 = 14.54 \text{ N}$$
+>
+> $$\text{Net force} = 22.73 \times 0.8 - 14.54 = 18.18 - 14.54 = 3.64 \text{ N}$$
+>
+> $$\mathbf{a = 3.64/5 = 0.73 \text{ m s}^{-2}}$$
 
 ---
 

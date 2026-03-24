@@ -1,6 +1,5 @@
 # CHAPTER 4 — GLOSSARY & TERMINOLOGY
-
-### Laws of Motion
+> **Laws of Motion**
 
 ---
 

@@ -2626,11 +2626,6 @@
       "type": "file",
       "name": "autocommit.ps1",
       "path": "autocommit.ps1"
-    },
-    {
-      "type": "file",
-      "name": "index.html.old.000",
-      "path": "index.html.old.000"
     }
   ]
 }

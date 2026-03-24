@@ -1,30 +1,40 @@
-# CHAPTER 2: MOTION IN A STRAIGHT LINE
-
-### Complete Study Notes | Board · NEET · JEE Layered
+# ⚡ CHAPTER 2 — MOTION IN A STRAIGHT LINE
+> **Complete Study Notes** | Board · NEET · JEE Layered
 
 ---
 
 ## 🗺️ CONCEPT ROADMAP
 
-```
-[Motion = Change in Position with Time]
-        ↓
-[Reference Point / Origin] → Position, Displacement, Path Length
-        ↓
-[Rate of Change of Position] → Velocity (instantaneous & average) · Speed
-        ↓
-[Rate of Change of Velocity] → Acceleration (instantaneous & average)
-        ↓
-[Graphical Representations]
-    ├── x–t graph (slope = velocity)
-    ├── v–t graph (slope = acceleration; area = displacement)
-    └── a–t graph (area = change in velocity)
-        ↓
-[Uniformly Accelerated Motion] → Kinematic Equations (v, u, a, s, t)
-        ↓
-[Special Cases] → Free Fall · Stopping Distance · Reaction Time
-        ↓
-[Relative Velocity] → Motion of one body relative to another
+```mermaid
+flowchart TD
+    A(["Motion = Change in Position with Time"])
+    A --> B["Frame of Reference and Origin"]
+    B --> C["Position, Displacement, Path Length"]
+    C --> D["Velocity — rate of change of position"]
+    D --> D2["Average velocity: v_avg = delta_x / delta_t"]
+    D --> D3["Instantaneous velocity: v = dx/dt"]
+    D3 --> E["Acceleration — rate of change of velocity"]
+    E --> E2["Average: a_avg = delta_v / delta_t"]
+    E --> E3["Instantaneous: a = dv/dt = slope of v-t tangent"]
+    E3 --> F["Graphical Representations"]
+    F --> F1["x-t graph: slope = velocity"]
+    F --> F2["v-t graph: slope = acceleration, area = displacement"]
+    F2 --> G["Uniformly Accelerated Motion"]
+    G --> G1["v = v0 + at"]
+    G --> G2["x = v0t + (1/2)at^2"]
+    G --> G3["v^2 = v0^2 + 2ax"]
+    G3 --> H["Special Cases"]
+    H --> H1["Free Fall: a = g = 9.8 m s^-2"]
+    H --> H2["Stopping Distance: ds = v0^2 / (2a)"]
+    H --> H3["Relative Velocity: v_AB = v_A - v_B"]
+
+    style A fill:#1e3a5f,color:#e0f0ff,stroke:#4a9eff
+    style G fill:#1a3d2e,color:#a8f0c6,stroke:#2ecc71
+    style G1 fill:#1a3d2e,color:#a8f0c6,stroke:#2ecc71
+    style G2 fill:#1a3d2e,color:#a8f0c6,stroke:#2ecc71
+    style G3 fill:#1a3d2e,color:#a8f0c6,stroke:#2ecc71
+    style H fill:#3d2a1a,color:#f0d0a8,stroke:#e67e22
+    style H1 fill:#3d1a1a,color:#ffd0d0,stroke:#e74c3c
 ```
 
 ---
@@ -33,21 +43,22 @@
 
 ### 1.1 What is Motion?
 
-> **Motion** is defined as the **change in position** of an object with respect to  **time** .
+> [!info] Definition
+> **Motion** is the **change in position** of an object with respect to **time**. The description of motion without going into its causes is **Kinematics**.
 
-* Kinematics = the study of **how** objects move, *without* reference to the causes of motion (forces, mass etc.). Causes are studied in Chapter 4 (Newton's Laws).
-* In this chapter, we restrict ourselves to **rectilinear motion** — motion along a  **straight line** .
-* Objects are treated as **point objects** (valid when the size of the object is much smaller than the distance it moves).
+- Kinematics = the study of **how** objects move, without reference to the causes (forces, mass, etc.). Causes are studied in Chapter 4 (Newton's Laws).
+- This chapter restricts to **rectilinear motion** — motion along a **straight line**.
+- Objects are treated as **point objects** (valid when object size is much smaller than the distance it moves).
 
-### 1.2 Frame of Reference & Origin
+### 1.2 Frame of Reference and Origin
 
-* A **reference frame** is a coordinate system with respect to which motion is described.
-* For straight-line motion, a single **x-axis** is sufficient.
-* Position to the **right** of origin → **positive (+)**
-* Position to the **left** of origin → **negative (−)**
-* **Choice of origin** and **positive direction** is arbitrary — results are physically equivalent regardless of choice.
+- A **reference frame** is a coordinate system with respect to which motion is described.
+- For straight-line motion, a single **x-axis** is sufficient.
+- Position to the **right** of origin → **positive (+)**
+- Position to the **left** of origin → **negative (−)**
 
-> ⚠️  **Board Note** : Always state your choice of origin and positive direction before solving problems involving signs.
+> [!warning] Board Reminder
+> The choice of origin and positive direction is **arbitrary**. Always state your chosen convention before solving any problem involving signs.
 
 ---
 
@@ -55,41 +66,43 @@
 
 ### 2.1 Position
 
-The **position** of an object at any instant is its coordinate measured from the origin along the axis.
+The **position** of an object at any instant is its coordinate measured from the origin along the axis. Symbol: $x$. SI unit: **m**.
 
 ### 2.2 Displacement ⭐
 
-> **Displacement** = Change in position = x₂ − x₁
-
-* It is a **vector** quantity (has both magnitude and direction).
-* **SI unit** : metre (m)
-* **Dimensional formula** : [M⁰ L T⁰] = [L]
-* Can be  **positive, negative, or zero** .
-* Displacement is the **shortest path** between two points.
+> [!important] Definition
+> **Displacement** = Change in position:
+>
+> $$\Delta x = x_2 - x_1$$
+>
+> - It is a **vector** quantity (has both magnitude and direction).
+> - SI unit: metre (m). Dimensional formula: $[L]$
+> - Can be **positive, negative, or zero**.
 
 ### 2.3 Path Length (Distance)
 
-> **Path length** = Total length of the actual path traversed by the object.
-
-* It is a **scalar** quantity (always positive).
-* **SI unit** : metre (m)
-* **Dimensional formula** : [L]
+> [!note] Definition
+> **Path length** = Total length of the actual path traversed.
+>
+> - It is a **scalar** quantity (always $\geq 0$).
+> - SI unit: metre (m). Dimensional formula: $[L]$
 
 ### 2.4 Key Distinction ⭐
 
-| Feature      | Displacement       | Path Length              |
-| ------------ | ------------------ | ------------------------ |
-| Type         | Vector             | Scalar                   |
-| Value        | Can be +, −, or 0 | Always ≥ 0              |
-| Formula      | x₂ − x₁         | Sum of all path segments |
-| Relationship | ≤ Path Length     | ≥                       |
+| Feature | Displacement | Path Length |
+|:---|:---:|:---:|
+| Type | Vector | Scalar |
+| Value | Can be +, −, or 0 | Always ≥ 0 |
+| Formula | $x_2 - x_1$ | Sum of all path segments |
+| Relation | $\leq$ Path Length | $\geq$ \|Displacement\| |
 
-> **Critical Rule** : Path Length ≥ |Displacement|. Equality holds **only** when motion is in one direction without reversal.
+> [!important] Critical Rule
+> **Path Length ≥ \|Displacement\|.** Equality holds **only** when motion is in one direction without any reversal.
 
 **Example:** A person walks 4 m east, then 3 m west.
 
-* Path length = 4 + 3 = **7 m**
-* Displacement = 4 − 3 = **+1 m** (east)
+- Path length = 4 + 3 = **7 m**
+- Displacement = 4 − 3 = **+1 m** (east)
 
 ---
 
@@ -97,54 +110,46 @@ The **position** of an object at any instant is its coordinate measured from the
 
 ### 3.1 Average Velocity ⭐
 
-> **Average velocity** = Total displacement / Total time taken
+> [!info] Definition
+> **Average velocity** = Total displacement ÷ Total time taken
 
-$$
-\bar{v} = \frac{\Delta x}{\Delta t} = \frac{x_2 - x_1}{t_2 - t_1}
-$$
+$$\bar{v} = \frac{\Delta x}{\Delta t} = \frac{x_2 - x_1}{t_2 - t_1}$$
 
-* **Vector** quantity
-* **SI unit** : m s⁻¹
-* **Dimensional formula** : [M⁰ L T⁻¹]
-* Can be positive, negative, or zero.
+- **Vector** quantity. SI unit: m s⁻¹. Dimensional formula: $[M^0 L T^{-1}]$
+- Can be positive, negative, or zero.
 
 ### 3.2 Average Speed
 
-> **Average speed** = Total path length / Total time taken
+- **Average speed** = Total path length ÷ Total time taken
+- **Scalar** quantity. Always $\geq |\text{average velocity}|$
+- Equality holds only when motion is unidirectional.
 
-* **Scalar** quantity
-* Always **≥ |average velocity|**
-* Equality holds only when motion is unidirectional.
+> [!warning] NEET Trap
+> **Average speed ≠ |Average velocity|** when the object reverses direction. A person who walks 2.5 km to market (30 min) and returns home (20 min) has **zero average velocity** over the entire trip but a non-zero average speed!
 
-> ⚠️  **NEET Trap** : Average speed ≠ |Average velocity| when the object reverses direction. A person who walks 2.5 km to the market (30 min) and returns home (20 min) has zero average velocity over the entire trip, but a non-zero average speed!
+### 3.3 Instantaneous Velocity ⭐⭐
 
-### 3.3 Instantaneous Velocity ⭐⭐ (Most Important for JEE)
+> [!important] Definition — Most Important for JEE
+> **Instantaneous velocity** is the velocity at a specific **instant**, defined as the limit of average velocity as $\Delta t \to 0$:
+>
+> $$v = \lim_{\Delta t \to 0} \frac{\Delta x}{\Delta t} = \frac{dx}{dt}$$
 
-> **Instantaneous velocity** is the velocity at a specific **instant** of time; defined as the limit of average velocity as Δt → 0:
+- It is the **derivative of position with respect to time**.
+- On an x–t graph: instantaneous velocity = **slope of the tangent** at that point.
+- For **uniform motion** (constant velocity): instantaneous velocity = average velocity at all instants.
 
-$$
-v = \lim_{\Delta t \to 0} \frac{\Delta x}{\Delta t} = \frac{dx}{dt}
-$$
-
-* It is the  **derivative of position with respect to time** .
-* On an x–t graph: instantaneous velocity = **slope of the tangent** at that point.
-* For **uniform motion** (constant velocity): instantaneous velocity = average velocity at all instants.
-
-**Numerical Example (NCERT):** For x = 0.08t³, the instantaneous velocity at t = 4 s:
-
-```
-v = dx/dt = d(0.08t³)/dt = 0.24t²
-At t = 4 s: v = 0.24 × 16 = 3.84 m s⁻¹
-```
-
-This is confirmed by Table 2.1 — as Δt → 0, Δx/Δt → 3.84 m s⁻¹.
+> [!example] NCERT Numerical — For $x = 0.08t^3$, find instantaneous velocity at $t = 4$ s
+> $v = dx/dt = 0.24t^2$
+>
+> At $t = 4$ s: $v = 0.24 \times 16 = \mathbf{3.84}$ **m s⁻¹**
+>
+> Confirmed by NCERT Table 2.1 — as $\Delta t \to 0$, $\Delta x / \Delta t \to 3.84$ m s⁻¹.
 
 ### 3.4 Instantaneous Speed
 
-> **Instantaneous speed** = magnitude of instantaneous velocity.
-
-* It is **always equal** to |instantaneous velocity| (unlike average speed vs. average velocity).
-* **Why?** At a single instant, the path length and displacement are infinitesimally equal (no reversal possible at a point).
+- **Instantaneous speed** = magnitude of instantaneous velocity = $|v|$
+- **Always equal** to $|$instantaneous velocity$|$ (unlike average speed vs. average velocity)
+- **Why?** At a single instant, path length and displacement are infinitesimally equal (no reversal possible at a point).
 
 ---
 
@@ -152,78 +157,73 @@ This is confirmed by Table 2.1 — as Δt → 0, Δx/Δt → 3.84 m s⁻¹.
 
 ### 4.1 Average Acceleration
 
-> **Average acceleration** = Change in velocity / Time interval
+> [!info] Definition
+> **Average acceleration** = Change in velocity ÷ Time interval
 
-$$
-\bar{a} = \frac{\Delta v}{\Delta t} = \frac{v_2 - v_1}{t_2 - t_1}
-$$
+$$\bar{a} = \frac{\Delta v}{\Delta t} = \frac{v_2 - v_1}{t_2 - t_1}$$
 
-* **Vector** quantity
-* **SI unit** : m s⁻²
-* **Dimensional formula** : [M⁰ L T⁻²]
-* On a v–t graph: average acceleration = **slope of chord** connecting two points.
+- **Vector** quantity. SI unit: m s⁻². Dimensional formula: $[M^0 L T^{-2}]$
+- On a v–t graph: average acceleration = **slope of chord** connecting two points.
 
 ### 4.2 Instantaneous Acceleration ⭐
 
-$$
-a = \lim_{\Delta t \to 0} \frac{\Delta v}{\Delta t} = \frac{dv}{dt}
-$$
+$$a = \lim_{\Delta t \to 0} \frac{\Delta v}{\Delta t} = \frac{dv}{dt}$$
 
-* On a v–t graph: instantaneous acceleration = **slope of the tangent** at that point.
-* Can be positive, negative, or zero.
+- On a v–t graph: instantaneous acceleration = **slope of the tangent** at that point.
+- Can be positive, negative, or zero.
 
 ### 4.3 Positive vs. Negative Acceleration — CRITICAL DISTINCTION ⭐⭐
 
-> ⚠️ **The sign of acceleration does NOT tell you whether speed is increasing or decreasing.** It depends on both sign of acceleration AND sign of velocity.
+> [!warning] The sign of acceleration does NOT tell you whether speed is increasing or decreasing. It depends on both the sign of acceleration AND the sign of velocity.
 
-| Velocity      | Acceleration  | Effect on Speed                        |
-| ------------- | ------------- | -------------------------------------- |
-| Positive (+)  | Positive (+)  | Speed**increases**               |
-| Positive (+)  | Negative (−) | Speed**decreases**(deceleration) |
-| Negative (−) | Negative (−) | Speed**increases**               |
-| Negative (−) | Positive (+)  | Speed**decreases**               |
+| Velocity | Acceleration | Effect on Speed |
+|:---:|:---:|:---|
+| Positive (+) | Positive (+) | Speed **increases** |
+| Positive (+) | Negative (−) | Speed **decreases** (deceleration) |
+| Negative (−) | Negative (−) | Speed **increases** (in negative direction) |
+| Negative (−) | Positive (+) | Speed **decreases** |
 
- **Rule** : If v and a have the **same sign** → speed increases. If they have **opposite signs** → speed decreases.
+**Rule:** If v and a have the **same sign** → speed increases. If **opposite signs** → speed decreases.
 
- **Classic Example** : A ball thrown upward.
+**Classic Example — Ball thrown upward (taking upward as positive):**
 
-* Taking upward as positive: v is initially positive, a = −g throughout.
-* Going up: v > 0, a < 0 → speed decreases.
-* Coming down: v < 0, a < 0 → speed increases.
-* At topmost point: v = 0, but **a = −g ≠ 0** (very commonly asked!)
+- Going up: $v > 0$, $a = -g < 0$ → speed decreases
+- Coming down: $v < 0$, $a = -g < 0$ → speed increases
+- At topmost point: $v = 0$, but $a = -g \neq 0$
 
-> 🔑  **Key Fact** : Zero velocity at an instant does **not** imply zero acceleration at that instant.
+> [!tip] Key Fact
+> **Zero velocity at an instant does not imply zero acceleration at that instant.** A particle may be momentarily at rest yet have non-zero acceleration (e.g., ball at its highest point).
 
-### 4.4 x–t, v–t, and a–t Graph Shapes (for Constant Acceleration)
+### 4.4 x–t, v–t, and a–t Graph Shapes
 
-| Type of Motion                | x–t graph shape        | v–t graph shape                     |
-| ----------------------------- | ----------------------- | ------------------------------------ |
-| Uniform (a = 0)               | Straight line, inclined | Straight line, parallel to time axis |
-| Uniformly accelerated (a > 0) | Upward parabola         | Straight line, positive slope        |
-| Uniformly decelerated (a < 0) | Downward parabola       | Straight line, negative slope        |
+| Type of Motion | x–t graph | v–t graph |
+|:---|:---|:---|
+| Uniform ($a = 0$) | Straight line, inclined | Horizontal line (constant height) |
+| Uniformly accelerated ($a > 0$) | Upward parabola | Straight line, positive slope |
+| Uniformly decelerated ($a < 0$) | Downward parabola | Straight line, negative slope |
 
-> 🔑  **JEE Note** : In realistic graphs, x–t, v–t, a–t curves are **smooth** (no sharp kinks). Sharp kinks mean the function is non-differentiable — physically this would mean an instantaneous change in velocity/acceleration, which is impossible in practice.
+> [!tip] JEE Note
+> In realistic graphs, x–t, v–t, a–t curves are **smooth** (no sharp kinks). Sharp kinks imply non-differentiable functions — physically impossible since velocity and acceleration cannot change instantaneously.
 
 ---
 
 ## SECTION 5 — AREA UNDER v–t GRAPH ⭐⭐
 
-> **The area under the velocity–time (v–t) curve between t₁ and t₂ equals the displacement of the object in that time interval.**
+> [!important]
+> **The area under the v–t curve between $t_1$ and $t_2$ equals the displacement of the object in that time interval.**
 
-**Proof (for uniform velocity u):**
+**Proof (for uniform velocity $u$):**
+- v–t curve is a horizontal straight line at height $u$.
+- Area under curve from 0 to $T$ = $u \times T$ = displacement ✓
 
-* v–t curve is a horizontal straight line at height u.
-* Area under curve from 0 to T = u × T = displacement ✓
+**Check dimensions:** $v \text{ (m s}^{-1}) \times t \text{ (s)} = \text{m}$ = displacement ✓
 
-**Check dimensions:** v (m s⁻¹) × t (s) = m = displacement ✓
+For **changing velocity**, use calculus:
 
-**For changing velocity:** Use calculus:
+$$x = \int_{t_1}^{t_2} v \, dt$$
 
-$$
-x = \int_{t_1}^{t_2} v , dt
-$$
-
-> ⚠️  **Board Note** : Students often confuse "area under v–t curve" (= displacement) with "area under a–t curve" (= change in velocity). Know both!
+> [!warning] Board Note
+> Students often confuse "area under v–t curve" (= displacement) with "area under a–t curve" (= change in velocity, $\Delta v$). Know **both**!
 
 ---
 
@@ -231,130 +231,126 @@ $$
 
 ### 6.1 The Three Equations of Motion
 
-For an object moving with  **constant acceleration a** , with initial velocity v₀ at t = 0:
+For an object with **constant acceleration $a$**, initial velocity $v_0$ at $t = 0$:
 
-| Equation                    | Relation           | Quantities involved |
-| --------------------------- | ------------------ | ------------------- |
-| **v = v₀ + at**      | velocity–time     | v, v₀, a, t        |
-| **x = v₀t + ½at²** | position–time     | x, v₀, a, t        |
-| **v² = v₀² + 2ax** | velocity–position | v, v₀, a, x        |
+| Equation | Form | Quantities Linked |
+|:---|:---:|:---|
+| First equation | $v = v_0 + at$ | $v, v_0, a, t$ — no displacement |
+| Second equation | $x = v_0 t + \frac{1}{2}at^2$ | $x, v_0, a, t$ — no final velocity |
+| Third equation | $v^2 = v_0^2 + 2ax$ | $v, v_0, a, x$ — no time |
+| Average velocity form | $x = \frac{1}{2}(v + v_0)t$ | $x, v, v_0, t$ — no acceleration |
 
-> If initial position is x₀ (not zero), replace x with (x − x₀) in all equations.
+> [!note]
+> If initial position is $x_0$ (not zero), replace $x$ with $(x - x_0)$ in all equations.
 
-### 6.2 Derivation Summary (Using Calculus — NCERT Example 2.2)
+### 6.2 Derivation Summary (Calculus Method — NCERT Example 2.2)
 
-**Equation 1 (v = v₀ + at):**
+**Equation 1:**
 
-```
-a = dv/dt  →  dv = a dt
-Integrate: ∫dv = ∫a dt  →  v − v₀ = at  →  v = v₀ + at
-```
+> [!example] Derivation of $v = v_0 + at$
+> $a = dv/dt \Rightarrow dv = a\, dt$
+>
+> Integrating both sides: $v - v_0 = at \Rightarrow \boxed{v = v_0 + at}$
 
-**Equation 2 (x = v₀t + ½at²):**
+**Equation 2:**
 
-```
-v = dx/dt  →  dx = v dt = (v₀ + at) dt
-Integrate: x − x₀ = v₀t + ½at²  →  x = v₀t + ½at²  (if x₀ = 0)
-```
+> [!example] Derivation of $x = v_0 t + \frac{1}{2}at^2$
+> $v = dx/dt \Rightarrow dx = (v_0 + at)\, dt$
+>
+> Integrating: $x - x_0 = v_0 t + \tfrac{1}{2}at^2 \Rightarrow \boxed{x = v_0 t + \tfrac{1}{2}at^2}$ (with $x_0 = 0$)
 
-**Equation 3 (v² = v₀² + 2ax):**
+**Equation 3:**
 
-```
-a = v(dv/dx)  →  v dv = a dx
-Integrate: (v² − v₀²)/2 = ax  →  v² = v₀² + 2ax
-```
+> [!example] Derivation of $v^2 = v_0^2 + 2ax$
+> $a = v(dv/dx) \Rightarrow v\, dv = a\, dx$
+>
+> Integrating: $\tfrac{v^2 - v_0^2}{2} = ax \Rightarrow \boxed{v^2 = v_0^2 + 2ax}$
 
-> 🔑  **JEE Note** : These kinematic equations are valid  **ONLY for constant acceleration** . For variable acceleration, use calculus directly (integrate a to get v, integrate v to get x).
+> [!warning] JEE Note
+> Kinematic equations are valid **only for constant acceleration** (both magnitude and direction constant). For variable acceleration, use calculus directly — integrate $a$ to get $v$, integrate $v$ to get $x$.
 
-### 6.3 Useful Derived Result — Average Velocity Under Constant Acceleration
+### 6.3 Average Velocity Under Constant Acceleration
 
-$$
-\bar{v} = \frac{v + v_0}{2}
-$$
+$$\bar{v} = \frac{v + v_0}{2}$$
 
-This is the **arithmetic mean** of initial and final velocities — valid  **only for constant acceleration** .
+This is the **arithmetic mean** of initial and final velocities — valid **only for constant acceleration**.
 
-### 6.4 Worked NCERT Examples
+### 6.4 Distance in the nth Second
 
-**Example 2.1 — Position as Function of Time:**
-x = a + bt² where a = 8.5 m, b = 2.5 m s⁻²
+$$s_n = v_0 + a\!\left(n - \frac{1}{2}\right)$$
 
-```
-v = dx/dt = 2bt = 5.0t m s⁻¹
-At t = 0: v = 0 m s⁻¹
-At t = 2.0 s: v = 10 m s⁻¹
-Average velocity between t = 2 and t = 4 s:
-  v̄ = [x(4) − x(2)] / (4 − 2)
-     = [(8.5 + 2.5×16) − (8.5 + 2.5×4)] / 2
-     = [48.5 − 18.5] / 2 = 30/2 = 15 m s⁻¹
-```
+This gives the distance covered in the **nth second specifically** — NOT total distance in $n$ seconds.
 
-**Example 2.3 — Ball Thrown Upward (NCERT):**
-Ball thrown up at 20 m s⁻¹ from a height of 25 m.
+### 6.5 Worked NCERT Examples
 
-```
-(a) Maximum height above launch point:
-    v² = v₀² + 2a(y − y₀)
-    0 = 400 + 2(−10)(y − y₀)
-    y − y₀ = 20 m
+**Example 2.1 — Position as function of time:** $x = a + bt^2$ where $a = 8.5$ m, $b = 2.5$ m s⁻²
 
-(b) Time to hit the ground (Method 2 — using full displacement):
-    y₀ = 25 m, y = 0, v₀ = 20 m/s, a = −10 m/s²
-    0 = 25 + 20t − 5t²
-    5t² − 20t − 25 = 0  →  t² − 4t − 5 = 0
-    (t − 5)(t + 1) = 0  →  t = 5 s
-```
+> [!example] Solution
+> $v = dx/dt = 2bt = 5.0t$ m s⁻¹
+>
+> At $t = 0$: $v = 0$ m s⁻¹ | At $t = 2.0$ s: $v = 10$ m s⁻¹
+>
+> Average velocity from $t = 2$ to $t = 4$ s:
+>
+> $\bar{v} = \dfrac{x(4) - x(2)}{4 - 2} = \dfrac{48.5 - 18.5}{2} = \mathbf{15}$ **m s⁻¹**
 
-**Example 2.4 — Free Fall:**
+**Example 2.3 — Ball thrown upward from 25 m height at 20 m s⁻¹:** (Take $g = 10$ m s⁻²)
 
-```
-a = −g = −9.8 m s⁻²,  v₀ = 0
-v = −gt = −9.8t m s⁻¹
-y = −½gt² = −4.9t² m
-v² = −2gy = −19.6y m² s⁻²
-```
-
-**Example 2.5 — Galileo's Law of Odd Numbers:**
-Distances fallen from rest in successive equal time intervals τ are in ratio **1 : 3 : 5 : 7 : 9 : 11 ...**
-
-**Example 2.6 — Stopping Distance:**
-
-```
-v = 0, v₀ = initial speed, deceleration = −a
-Using v² = v₀² + 2ax:
-dₛ = v₀²/(2a)
-→ Stopping distance ∝ v₀² (doubling initial speed → 4× stopping distance!)
-```
-
-**Example 2.7 — Reaction Time:**
-A ruler dropped under free fall.
-
-```
-d = ½gt²  →  tᵣ = √(2d/g)
-For d = 21 cm = 0.21 m:
-tᵣ = √(2×0.21/9.8) = √(0.042/9.8... wait, 2×0.21=0.42, 0.42/9.8 ≈ 0.0429)
-tᵣ ≈ 0.207 s ≈ 0.2 s
-```
+> [!example] Solution
+> **(a) Maximum height above launch point:**
+>
+> $v^2 = v_0^2 + 2a(y - y_0) \Rightarrow 0 = 400 + 2(-10)(y - y_0) \Rightarrow \mathbf{(y - y_0) = 20}$ **m**
+>
+> **(b) Time to hit ground (Method 2 — full displacement):**
+>
+> $y_0 = 25$ m, $y = 0$, $v_0 = 20$ m s⁻¹, $a = -10$ m s⁻²
+>
+> $0 = 25 + 20t - 5t^2 \Rightarrow 5t^2 - 20t - 25 = 0 \Rightarrow \mathbf{t = 5}$ **s**
 
 ---
 
 ## SECTION 7 — FREE FALL ⭐⭐
 
-> **Free fall** = motion of an object under the influence of gravity alone (no air resistance).
+> [!important] Definition
+> **Free fall** = motion of an object under **gravity alone**, with no air resistance.
 
-* Acceleration = g = **9.8 m s⁻²** (downward), assumed constant near Earth's surface.
-* It is a **special case of uniformly accelerated motion** with a = g.
-* **Galileo's discovery** : All objects fall with the same acceleration irrespective of their mass (in absence of air resistance).
-* **Galileo's Law of Odd Numbers** : Distances covered in 1st, 2nd, 3rd, ... equal time intervals are in ratio **1 : 3 : 5 : 7 ...**
+- Acceleration = $g = 9.8$ m s⁻² (downward), constant near Earth's surface.
+- Special case of uniformly accelerated motion.
+- **Galileo's discovery:** All objects fall with the same acceleration regardless of mass (in absence of air resistance).
 
-### 7.1 Free Fall Equations (taking downward as negative, upward as positive)
+### 7.1 Galileo's Law of Odd Numbers
 
-```
-a = −g = −9.8 m s⁻²
-v = v₀ − gt
-y = y₀ + v₀t − ½gt²
-v² = v₀² − 2g(y − y₀)
-```
+> [!info] Galileo's Law of Odd Numbers *(Board/NEET)*
+> Distances covered in the 1st, 2nd, 3rd, ... equal time intervals $\tau$ (from rest) are in the ratio:
+>
+> $$1 : 3 : 5 : 7 : 9 \ldots$$
+>
+> Total distance after $n$ intervals $\propto n^2$ (i.e., $1 : 4 : 9 : 16 \ldots$)
+
+### 7.2 Free Fall Equations (upward = positive)
+
+**Example 2.4 (NCERT) — Free fall from rest:**
+
+> [!example] Free Fall Equations (taking upward as positive, $v_0 = 0$)
+> $a = -g = -9.8$ m s⁻²
+>
+> $v = -gt = -9.8t$ m s⁻¹
+>
+> $y = -\tfrac{1}{2}gt^2 = -4.9t^2$ m
+>
+> $v^2 = -2gy = -19.6y$ m² s⁻²
+
+**Stopping Distance (Example 2.6):**
+
+$$d_s = \frac{v_0^2}{2a}$$
+
+Stopping distance $\propto v_0^2$ — doubling initial speed **quadruples** stopping distance.
+
+**Reaction Time (Example 2.7):** A ruler dropped under free fall.
+
+$$t_r = \sqrt{\frac{2d}{g}}$$
+
+For $d = 21.0$ cm: $t_r = \sqrt{2 \times 0.21 / 9.8} \approx 0.2$ s
 
 ---
 
@@ -362,46 +358,39 @@ v² = v₀² − 2g(y − y₀)
 
 ### 8.1 Concept
 
-> **Relative velocity** of object A with respect to object B = velocity of A as observed from B's frame of reference.
-
-$$
-v_{AB} = v_A - v_B
-$$
-
-where v_A and v_B are velocities measured with respect to a common ground frame.
+> [!important] Definition
+> **Relative velocity** of object A with respect to B:
+>
+> $$v_{AB} = v_A - v_B$$
+>
+> where $v_A$ and $v_B$ are velocities measured with respect to the ground frame.
 
 ### 8.2 Cases
 
-**Case 1: Same direction (v_A and v_B both positive)**
+**Case 1: Same direction**
 
-$$
-v_{AB} = v_A - v_B
-$$
+$$v_{AB} = v_A - v_B$$
 
-* If v_A > v_B: A moves away from B (positive relative velocity).
-* If v_A < v_B: A appears to move backward (negative relative velocity).
-* If v_A = v_B: **relative velocity = 0** → objects appear stationary with respect to each other.
+- $v_A = v_B$: relative velocity = 0 (appear stationary to each other)
+- $v_A > v_B$: A moves away from B
 
-**Case 2: Opposite directions**
+**Case 2: Opposite directions** (A at $+v_A$, B at $-v_B$):
 
-If A moves at +v_A and B moves at −v_B:
+$$v_{AB} = v_A - (-v_B) = v_A + v_B$$
 
-$$
-v_{AB} = v_A - (-v_B) = v_A + v_B
-$$
-
-> 🔑  **Classic Example (NCERT 2.14)** : Police van at +30 km h⁻¹ fires bullet at +150 m s⁻¹. Thief's car moves at +192 km h⁻¹ = +160/3 m s⁻¹.
+> [!tip] Classic NCERT Example (Q2.14)
+> Police van at +30 km h⁻¹ fires bullet at +150 m s⁻¹. Thief's car at +192 km h⁻¹ = +53.33 m s⁻¹.
 >
-> * Bullet speed (ground frame) = 150 + 30×(5/18) = 150 + 8.33 = 158.33 m s⁻¹
-> * Relative speed of bullet w.r.t. thief's car = 158.33 − 53.33 = **105 m s⁻¹**
+> - Bullet speed (ground frame) = 150 + 8.33 = 158.33 m s⁻¹
+> - Relative speed of bullet w.r.t. thief's car = 158.33 − 53.33 = **105 m s⁻¹**
 
-### 8.3 Rain–Man Problem (Common NEET Application)
+### 8.3 Meeting Problems
 
-For two objects moving in the same direction:
+For two objects moving from the same start:
 
-* Their positions at time t: x_A(t) = x_A0 + v_A · t; x_B(t) = x_B0 + v_B · t
-* Separation: x_A − x_B = (x_A0 − x_B0) + (v_A − v_B) · t
-* If v_A = v_B: separation remains constant →  **they never meet or separate further** .
+- Positions at time $t$: $x_A(t) = x_{A0} + v_A \cdot t$ and $x_B(t) = x_{B0} + v_B \cdot t$
+- If $v_A = v_B$: separation remains constant → they never meet or separate further.
+- To find meeting time: set $x_A(t) = x_B(t)$ and solve for $t$.
 
 ---
 
@@ -409,93 +398,95 @@ For two objects moving in the same direction:
 
 ### x–t Graph
 
-| Feature                 | Physical Meaning             |
-| ----------------------- | ---------------------------- |
-| Slope (dx/dt)           | Instantaneous velocity       |
-| Positive slope          | Moving in positive direction |
-| Negative slope          | Moving in negative direction |
-| Zero slope (horizontal) | Object at rest               |
-| Curve bending upward    | Positive acceleration        |
-| Curve bending downward  | Negative acceleration        |
-| Straight line           | Uniform velocity (a = 0)     |
+| Feature | Physical Meaning |
+|:---|:---|
+| Slope ($dx/dt$) | Instantaneous velocity |
+| Positive slope | Moving in positive direction |
+| Negative slope | Moving in negative direction |
+| Zero slope (horizontal) | Object at rest |
+| Curve bending upward | Positive acceleration |
+| Curve bending downward | Negative acceleration |
+| Straight line | Uniform velocity ($a = 0$) |
 
 ### v–t Graph
 
-| Feature                           | Physical Meaning                                |
-| --------------------------------- | ----------------------------------------------- |
-| Slope (dv/dt)                     | Instantaneous acceleration                      |
-| Area under curve                  | Displacement                                    |
-| Horizontal line                   | Uniform velocity (a = 0)                        |
-| Straight line with positive slope | Uniform positive acceleration                   |
-| Straight line with negative slope | Uniform deceleration                            |
-| Crossing the time axis (v = 0)    | Object momentarily at rest / reverses direction |
+| Feature | Physical Meaning |
+|:---|:---|
+| Slope ($dv/dt$) | Instantaneous acceleration |
+| Area under curve | Displacement |
+| Horizontal line | Uniform velocity ($a = 0$) |
+| Straight line, positive slope | Uniform positive acceleration |
+| Straight line, negative slope | Uniform deceleration |
+| Crossing the time axis ($v = 0$) | Object momentarily at rest / reverses direction |
 
-> ⚠️  **Board Trap** : A v–t graph crossing the x-axis means the object  **reverses direction** , NOT that it stops forever. The area below the x-axis represents displacement in the negative direction.
+> [!warning] Board Trap
+> A v–t graph **crossing** the x-axis means the object **reverses direction**, NOT that it stops permanently. Area **below** the x-axis represents displacement in the negative direction.
 
 ### a–t Graph
 
-| Feature                    | Physical Meaning             |
-| -------------------------- | ---------------------------- |
-| Area under curve           | Change in velocity (Δv)     |
-| Constant (horizontal line) | Uniformly accelerated motion |
+| Feature | Physical Meaning |
+|:---|:---|
+| Area under curve | Change in velocity ($\Delta v$) |
+| Horizontal line | Uniformly accelerated motion |
 
 ---
 
 ## SECTION 10 — POINTS TO PONDER (NCERT) ⭐
 
 1. Origin and positive direction are a **choice** — specify them first.
-2. If speed is **increasing** → a is in the **same direction** as v. If speed is **decreasing** → a is **opposite** to v.
+2. If speed is **increasing** → $a$ is in the **same direction** as $v$. If speed is **decreasing** → $a$ is **opposite** to $v$.
 3. Sign of acceleration depends on choice of positive direction — **not** inherently linked to speeding up/down.
-4. Zero velocity at an instant ≠ zero acceleration at that instant (e.g., ball at topmost point).
+4. Zero velocity at an instant **≠** zero acceleration (e.g., ball at topmost point: $v = 0$ but $a = g$).
 5. Kinematic quantities are **algebraic** — always substitute with correct signs.
-6. Kinematic equations hold **only for constant acceleration** (magnitude AND direction constant).
+6. Kinematic equations hold **only for constant acceleration** (magnitude AND direction both constant).
 
 ---
 
-## SECTION 11 — DIMENSIONAL FORMULAE (Chapter 2 Quantities)
+## SECTION 11 — DIMENSIONAL FORMULAE
 
-| Physical Quantity          | Symbol | Dimensional Formula | SI Unit |
-| -------------------------- | ------ | ------------------- | ------- |
-| Displacement               | Δx    | [L]                 | m       |
-| Velocity (avg & inst.)     | v      | [LT⁻¹]            | m s⁻¹ |
-| Speed                      | —     | [LT⁻¹]            | m s⁻¹ |
-| Acceleration (avg & inst.) | a      | [LT⁻²]            | m s⁻² |
-| Time                       | t      | [T]                 | s       |
+| Physical Quantity | Symbol | Dimensional Formula | SI Unit |
+|:---|:---:|:---:|:---:|
+| Displacement | $\Delta x$ | $[M^0 L T^0]$ | m |
+| Velocity (avg and inst.) | $v$ | $[M^0 L T^{-1}]$ | m s⁻¹ |
+| Speed | — | $[M^0 L T^{-1}]$ | m s⁻¹ |
+| Acceleration (avg and inst.) | $a$ | $[M^0 L T^{-2}]$ | m s⁻² |
+| Time | $t$ | $[M^0 L^0 T^1]$ | s |
 
 ---
 
 ## SECTION 12 — QUICK FORMULA REFERENCE ⭐⭐⭐
 
-| Formula               | Name                       | Condition                |
-| --------------------- | -------------------------- | ------------------------ |
-| v = v₀ + at          | 1st equation of motion     | Constant a; x₀ = 0      |
-| x = v₀t + ½at²     | 2nd equation of motion     | Constant a; x₀ = 0      |
-| v² = v₀² + 2ax     | 3rd equation of motion     | Constant a; x₀ = 0      |
-| x = ½(v + v₀)t      | Average velocity form      | Constant a               |
-| v̄ = Δx/Δt         | Average velocity (general) | Any motion               |
-| v̄_speed = path/time | Average speed (general)    | Any motion               |
-| v = dx/dt             | Instantaneous velocity     | Any motion               |
-| a = dv/dt = v(dv/dx)  | Instantaneous acceleration | Any motion               |
-| v_AB = v_A − v_B     | Relative velocity          | Any 1D motion            |
-| dₛ = v₀²/(2a)      | Stopping distance          | Uniform deceleration     |
-| tᵣ = √(2d/g)        | Reaction time              | Ruler drop experiment    |
-| y = −½gt²          | Free fall from rest        | v₀ = 0, downward +ve    |
-| Distances ratio       | 1 : 3 : 5 : 7 : ...        | Galileo's odd number law |
+| Formula | Name | Condition |
+|:---|:---|:---|
+| $v = v_0 + at$ | 1st equation of motion | Constant $a$; $x_0 = 0$ |
+| $x = v_0 t + \frac{1}{2}at^2$ | 2nd equation of motion | Constant $a$; $x_0 = 0$ |
+| $v^2 = v_0^2 + 2ax$ | 3rd equation of motion | Constant $a$; $x_0 = 0$ |
+| $x = \frac{1}{2}(v + v_0)t$ | Average velocity form | Constant $a$ |
+| $s_n = v_0 + a(n - \frac{1}{2})$ | Distance in nth second | Constant $a$ |
+| $\bar{v} = \Delta x / \Delta t$ | Average velocity (general) | Any motion |
+| $v = dx/dt$ | Instantaneous velocity | Any motion |
+| $a = dv/dt = v(dv/dx)$ | Instantaneous acceleration | Any motion |
+| $v_{AB} = v_A - v_B$ | Relative velocity | Any 1D motion |
+| $d_s = v_0^2 / (2a)$ | Stopping distance | Uniform deceleration |
+| $t_r = \sqrt{2d/g}$ | Reaction time | Ruler drop experiment |
+| $1 : 3 : 5 : 7 \ldots$ | Galileo's odd numbers | Free fall from rest |
 
 ---
 
 ## SECTION 13 — COMMON EXAM TRAPS ⭐⭐⭐
 
-1. **Sign of acceleration ≠ direction of motion** : Negative a doesn't mean object moves backward; it depends on initial velocity.
-2. **v = 0 does NOT mean a = 0** : At the highest point of projectile, v = 0 but a = g downward.
+> [!danger] High-Yield Mistakes to Avoid
+
+1. **Sign of $a$ ≠ direction of motion:** Negative $a$ doesn't mean moving backward — it depends on initial velocity direction.
+2. **$v = 0$ does NOT mean $a = 0$:** At the highest point of a throw, $v = 0$ but $a = g$ downward.
 3. **Average speed ≠ |Average velocity|** when the object reverses direction.
 4. **Instantaneous speed = |Instantaneous velocity|** always (unlike the averages).
-5. **Kinematic equations need constant acceleration** : Don't use v = v₀ + at for variable acceleration scenarios.
-6. **Area under v–t graph = displacement** (not distance). To find total distance when direction changes, split and add magnitudes separately.
-7. **Relative velocity in same direction** : v_rel = v_A − v_B. In opposite directions: v_rel = v_A + v_B.
-8. **Stopping distance ∝ v₀²** : Doubling speed → 4× stopping distance (a very common road-safety based question).
-9. **Galileo's Odd Numbers** : Only valid for free fall from REST (v₀ = 0).
-10. **Sharp kinks in graphs** → non-physical (functions not differentiable at those points).
+5. **Kinematic equations require constant acceleration** — don't use them for variable $a$.
+6. **Area under v–t = displacement** (not distance). For total distance when direction changes, split and add magnitudes separately.
+7. **Relative velocity:** same direction → $v_{AB} = v_A - v_B$; opposite direction → $v_{AB} = v_A + v_B$.
+8. **Stopping distance $\propto v_0^2$:** Doubling speed → **4× stopping distance**.
+9. **Galileo's odd numbers:** Only valid for free fall from **REST** ($v_0 = 0$).
+10. **Sharp kinks in graphs** → non-physical (functions not differentiable).
 
 ---
 

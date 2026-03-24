@@ -1,438 +1,430 @@
-# CHAPTER 2 — RAPID REVISION + MIND MAPS
-
-### Motion in a Straight Line
+# ⚡ CHAPTER 2 — RAPID REVISION + MIND MAPS
+> **Motion in a Straight Line** | Board · NEET · JEE
 
 ---
-
-# ⚡ ONE-PAGE RAPID REVISION SHEET
 
 ## 🔢 Key Definitions — Absolute Must-Memorise
 
 | Quantity | Definition | Formula | SI Unit |
-|---|---|---|---|
-| **Displacement** | Change in position | Δx = x₂ − x₁ | m (vector) |
-| **Distance** | Total path length | Sum of all segments | m (scalar) |
-| **Average velocity** | Displacement / time | v̄ = Δx/Δt | m s⁻¹ (vector) |
-| **Average speed** | Path length / time | speed = path/t | m s⁻¹ (scalar) |
-| **Instantaneous velocity** | v = dx/dt | Limit of Δx/Δt as Δt→0 | m s⁻¹ |
-| **Instantaneous speed** | \|instantaneous velocity\| | \|v\| = \|dx/dt\| | m s⁻¹ |
-| **Average acceleration** | Δv/Δt | ā = (v₂−v₁)/(t₂−t₁) | m s⁻² |
-| **Instantaneous acceleration** | dv/dt | Limit of Δv/Δt as Δt→0 | m s⁻² |
+|:---|:---|:---:|:---:|
+| **Displacement** | Change in position (vector) | $\Delta x = x_2 - x_1$ | m |
+| **Distance** | Total path length (scalar) | Sum of all segments | m |
+| **Average velocity** | Displacement divided by time | $\bar{v} = \Delta x / \Delta t$ | m s⁻¹ |
+| **Average speed** | Path length divided by time | path / $t$ | m s⁻¹ |
+| **Instantaneous velocity** | Limit of avg velocity as $\Delta t \to 0$ | $v = dx/dt$ | m s⁻¹ |
+| **Instantaneous speed** | Magnitude of instantaneous velocity | $\lvert v \rvert$ | m s⁻¹ |
+| **Average acceleration** | Change in velocity divided by time | $\bar{a} = \Delta v / \Delta t$ | m s⁻² |
+| **Instantaneous acceleration** | Limit of avg acceleration as $\Delta t \to 0$ | $a = dv/dt$ | m s⁻² |
 
 ---
 
 ## 📐 Three Kinematic Equations — Must Know Cold
 
-```
-CONDITION: Constant acceleration, starting at x = 0
+| # | Equation | Missing Quantity |
+|:---:|:---|:---:|
+| 1 | $v = v_0 + at$ | displacement $x$ |
+| 2 | $x = v_0 t + \frac{1}{2}at^2$ | final velocity $v$ |
+| 3 | $v^2 = v_0^2 + 2ax$ | time $t$ |
+| — | $x = \frac{1}{2}(v_0 + v)t$ | acceleration $a$ |
+| — | $s_n = v_0 + a(n - \frac{1}{2})$ | distance in nth second |
 
-    ┌──────────────────────────────────────────────────┐
-    │  1.  v = v₀ + at          (no x)                │
-    │  2.  x = v₀t + ½at²      (no v)                 │
-    │  3.  v² = v₀² + 2ax      (no t)                 │
-    │                                                   │
-    │  Also useful:                                     │
-    │      x = ½(v + v₀)t      (no a)                 │
-    │      sₙ = v₀ + a(n − ½)  (distance in nth sec)  │
-    └──────────────────────────────────────────────────┘
-
-VARIABLES: v₀ = initial velocity, v = final velocity,
-           a = acceleration, t = time, x = displacement
-```
+> [!warning] Condition
+> All three kinematic equations are valid **only when acceleration is constant** (both magnitude and direction). For variable acceleration, use calculus — integrate $a$ to get $v$, integrate $v$ to get $x$.
 
 ---
 
 ## 📊 Graph Interpretation — Instant Recall
 
-```
-x–t GRAPH:                      v–t GRAPH:
-───────────────────────         ──────────────────────────
-Slope = velocity               Slope = acceleration
-Curved up → a > 0             Area under curve = displacement
-Curved down → a < 0           Horizontal line → a = 0
-Straight line → a = 0         Line through origin → x ∝ t²
-Horizontal → v = 0            Crosses time axis → v=0 (reversal)
-```
+| Graph | Slope of line/tangent | Area under curve |
+|:---|:---|:---|
+| **x–t graph** | Instantaneous velocity | — |
+| **v–t graph** | Instantaneous acceleration | Displacement |
+| **a–t graph** | — | Change in velocity ($\Delta v$) |
+
+| x–t Shape | Meaning |
+|:---|:---|
+| Straight line (inclined) | Uniform velocity ($a = 0$) |
+| Horizontal line | Object at rest ($v = 0$) |
+| Upward-curving parabola | Positive constant acceleration |
+| Downward-curving parabola | Negative constant acceleration |
+| Vertical line | Physically **impossible** |
 
 ---
 
 ## ⚠️ Critical Distinctions — High-Yield Traps
 
-```
-PATH LENGTH vs DISPLACEMENT:
-  Path length ≥ |displacement|
-  Equal only if motion is one-directional (no reversal)
+> [!important] Path Length vs Displacement
+> **Path length $\geq$ |Displacement|**
+> Equality holds **only** when motion is one-directional (no reversal at any point).
 
-AVERAGE SPEED vs |AVERAGE VELOCITY|:
-  average speed ≥ |average velocity|
-  Equal only if motion is one-directional
+> [!important] Average Speed vs |Average Velocity|
+> **Average speed $\geq$ |average velocity|**
+> Equality holds only for unidirectional motion.
 
-INSTANTANEOUS SPEED vs |INSTANTANEOUS VELOCITY|:
-  ALWAYS EQUAL (at every instant)
-  Because at an instant, no reversal possible
+> [!tip] Instantaneous Speed vs |Instantaneous Velocity|
+> **ALWAYS EQUAL at every instant** — because at a single instant, no reversal is possible.
 
-NEGATIVE ACCELERATION vs SLOWING DOWN:
-  Negative a ≠ necessarily slowing down
-  If v < 0 and a < 0 → SPEEDING UP (in negative direction)
-  Slowing down occurs when v and a have OPPOSITE signs
-```
+> [!warning] Negative Acceleration vs Slowing Down
+> - Negative $a$ does NOT necessarily mean slowing down.
+> - **Slowing down occurs when $v$ and $a$ have opposite signs.**
+> - $v < 0$ and $a < 0$ → object is **speeding up** in the negative direction.
 
 ---
 
-## 🔑 Special Results & Important Values
+## 🔑 Special Results and Important Values
 
-| Result | Formula / Value |
-|---|---|
-| Free fall acceleration | g = 9.8 m s⁻² ≈ 10 m s⁻² |
-| Stopping distance | dₛ = v₀²/(2a) ∝ v₀² |
-| Reaction time (ruler) | t = √(2d/g) |
-| Galileo's odd numbers | 1 : 3 : 5 : 7 : 9 ... (distances in successive equal intervals from rest) |
-| Same-direction relative velocity | v_AB = v_A − v_B |
-| Opposite-direction relative velocity | v_AB = v_A + v_B |
-| Average velocity (const. a) | v̄ = (v + v₀)/2 (arithmetic mean) |
-| Distance in nth second | sₙ = v₀ + a(n − ½) |
-| Objects meet (same start) | x₁ = x₂ → solve for t |
+| Result | Formula or Value |
+|:---|:---|
+| Free fall acceleration | $g = 9.8$ m s⁻² $\approx 10$ m s⁻² |
+| Stopping distance | $d_s = v_0^2 / (2a) \propto v_0^2$ |
+| Reaction time (ruler drop) | $t_r = \sqrt{2d/g}$ |
+| Galileo's odd numbers | $1 : 3 : 5 : 7 : 9 \ldots$ (from rest, equal time intervals) |
+| Same-direction relative velocity | $v_{AB} = v_A - v_B$ |
+| Opposite-direction relative velocity | $v_{AB} = v_A + v_B$ |
+| Average velocity (constant $a$) | $\bar{v} = (v + v_0)/2$ (arithmetic mean) |
+| Distance in nth second | $s_n = v_0 + a(n - \tfrac{1}{2})$ |
+| Objects meet | Set $x_A(t) = x_B(t)$ and solve |
 
 ---
 
 ## ⚡ Dimensional Formulae
 
-```
-Displacement       [L]         = [M⁰L¹T⁰]
-Velocity           [LT⁻¹]      = [M⁰L¹T⁻¹]
-Acceleration       [LT⁻²]      = [M⁰L¹T⁻²]
-Time               [T]         = [M⁰L⁰T¹]
-```
+| Quantity | Dimensional Formula | SI Unit |
+|:---|:---:|:---:|
+| Displacement | $[M^0 L T^0]$ | m |
+| Velocity | $[M^0 L T^{-1}]$ | m s⁻¹ |
+| Acceleration | $[M^0 L T^{-2}]$ | m s⁻² |
+| Time | $[M^0 L^0 T^1]$ | s |
 
 ---
 
 ## 🔁 Free Fall Summary
 
-```
-Taking upward as positive: a = −g = −9.8 m s⁻²
-
-From rest (v₀ = 0, y₀ = 0):
-  v = −gt
-  y = −½gt²
-  v² = −2gy
-
-At highest point: v = 0, but a = −g ≠ 0!
-
-Galileo's Law of Odd Numbers:
-  Distances in t=0→τ, τ→2τ, 2τ→3τ, ...
-  are in ratio 1 : 3 : 5 : 7 : ...
-```
+> [!info] Free Fall (taking upward as positive)
+> - $a = -g = -9.8$ m s⁻²
+>
+> **From rest ($v_0 = 0$, $y_0 = 0$):**
+> - $v = -gt$
+> - $y = -\frac{1}{2}gt^2$
+> - $v^2 = -2gy$
+>
+> **At highest point of any throw:** $v = 0$ but $a = -g \neq 0$
+>
+> **Galileo's Law:** Distances in successive equal intervals $\tau$ are in ratio $1 : 3 : 5 : 7 \ldots$
 
 ---
-
 ---
 
 # 🗺️ MIND MAP 1 — Chapter Overview
 
-```
-                   ┌──────────────────────────────────────────┐
-                   │    MOTION IN A STRAIGHT LINE              │
-                   └──────────────────┬───────────────────────┘
-                                      │
-          ┌───────────────────────────┼───────────────────────────┐
-          │                           │                           │
-          ▼                           ▼                           ▼
-  ┌──────────────────┐      ┌──────────────────┐       ┌──────────────────┐
-  │  BASIC CONCEPTS  │      │   KINEMATICS     │       │    GRAPHS &      │
-  │                  │      │                  │       │    EQUATIONS     │
-  └────────┬─────────┘      └────────┬─────────┘       └────────┬─────────┘
-           │                         │                           │
-    ┌──────┴──────┐           ┌──────┴──────┐            ┌──────┴──────────┐
-    │             │           │             │            │                 │
-    ▼             ▼           ▼             ▼            ▼                 ▼
- Position    Displacement   Velocity   Acceleration   x–t graphs       Kinematic
- Frame of    vs Distance    average    constant/      v–t graphs       equations
- reference   |disp|≤ dist   instant.   variable       a–t graphs       v = v₀+at
-                │           │                                           x = v₀t+½at²
-                ▼           ▼                                           v² = v₀²+2ax
-            Path length   Slope of
-            ≥ |net disp|  x–t graph
-                          = velocity
+```mermaid
+flowchart TD
+    ROOT(["MOTION IN A STRAIGHT LINE"])
+
+    ROOT --> BC["BASIC CONCEPTS"]
+    ROOT --> KIN["KINEMATICS"]
+    ROOT --> GEQ["GRAPHS AND EQUATIONS"]
+    ROOT --> SPC["SPECIAL TOPICS"]
+
+    BC --> BC1["Motion = change in position with time"]
+    BC --> BC2["Rectilinear motion — along a straight line"]
+    BC --> BC3["Frame of reference — origin is arbitrary choice"]
+    BC --> BC4["Displacement vs Path Length"]
+    BC4 --> BC5["Path length is greater than or equal to |displacement|"]
+
+    KIN --> KIN1["Average velocity: v_avg = delta_x / delta_t"]
+    KIN --> KIN2["Instantaneous velocity: v = dx/dt"]
+    KIN2 --> KIN3["Slope of tangent on x-t graph"]
+    KIN --> KIN4["Speed = magnitude of velocity (scalar)"]
+    KIN --> KIN5["Average acceleration: a_avg = delta_v / delta_t"]
+    KIN --> KIN6["Instantaneous acceleration: a = dv/dt"]
+    KIN6 --> KIN7["Slope of tangent on v-t graph"]
+
+    GEQ --> GEQ1["x-t graph: slope = velocity"]
+    GEQ --> GEQ2["v-t graph: slope = acceleration"]
+    GEQ --> GEQ3["v-t area = displacement"]
+    GEQ --> EQ["KINEMATIC EQUATIONS — constant a only"]
+    EQ --> EQ1["v = v0 + at"]
+    EQ --> EQ2["x = v0t + (1/2)at^2"]
+    EQ --> EQ3["v^2 = v0^2 + 2ax"]
+
+    SPC --> SPC1["Free Fall: a = g = 9.8 m s^-2 downward"]
+    SPC --> SPC2["Stopping distance: ds = v0^2 / (2a)"]
+    SPC --> SPC3["Reaction time: tr = sqrt(2d/g)"]
+    SPC --> SPC4["Relative velocity: v_AB = v_A - v_B"]
+
+    style ROOT fill:#2c3e50,color:#ecf0f1,stroke:#3498db,stroke-width:2px
+    style BC fill:#1e3a5f,color:#aed6f1,stroke:#2980b9
+    style KIN fill:#1a3d2e,color:#a9dfbf,stroke:#27ae60
+    style GEQ fill:#3d2a1a,color:#f0d0a8,stroke:#e67e22
+    style SPC fill:#3d1a1a,color:#f5b7b1,stroke:#e74c3c
+    style EQ fill:#1a3d2e,color:#a9dfbf,stroke:#27ae60
 ```
 
 ---
 
 # 🗺️ MIND MAP 2 — Types of Velocity and Speed
 
-```
-                    ┌────────────────────────────────┐
-                    │       VELOCITY / SPEED          │
-                    └────────────────┬───────────────┘
-                                     │
-           ┌─────────────────────────┼──────────────────────────┐
-           │                         │                          │
-           ▼                         ▼                          ▼
-  ┌────────────────┐        ┌────────────────┐        ┌────────────────────┐
-  │ AVERAGE        │        │ INSTANTANEOUS  │        │ RELATIVE VELOCITY  │
-  │ VELOCITY       │        │ VELOCITY       │        │                    │
-  │                │        │                │        │  v_AB = v_A - v_B  │
-  │ v̄ = Δx/Δt    │        │ v = dx/dt      │        │                    │
-  │                │        │ = slope of     │        │ Same direction:    │
-  │ Vector!        │        │ tangent to     │        │ v_rel = v_A - v_B  │
-  │ Can be +, -, 0 │        │ x-t graph      │        │                    │
-  └────────────────┘        └────────────────┘        │ Opposite direction:│
-           │                         │                │ v_rel = v_A + v_B  │
-           ▼                         ▼                └────────────────────┘
-  ┌────────────────┐        ┌────────────────┐
-  │ AVERAGE        │        │ INSTANTANEOUS  │
-  │ SPEED          │        │ SPEED          │
-  │                │        │                │
-  │ = path/time    │        │ = |v| = |dx/dt|│
-  │                │        │                │
-  │ Scalar!        │        │ ALWAYS = |inst.│
-  │ Always ≥ 0     │        │ velocity|      │
-  │ ≥ |avg vel|    │        │ (unlike avgs!) │
-  └────────────────┘        └────────────────┘
+```mermaid
+flowchart LR
+    ROOT(["VELOCITY AND SPEED"])
+
+    ROOT --> AV["AVERAGE VELOCITY"]
+    ROOT --> IV["INSTANTANEOUS VELOCITY"]
+    ROOT --> RV["RELATIVE VELOCITY"]
+
+    AV --> AV1["v_avg = delta_x / delta_t"]
+    AV --> AV2["Vector: can be positive, negative, or zero"]
+    AV --> AV3["slope of chord on x-t graph"]
+    AV --> AS["AVERAGE SPEED"]
+    AS --> AS1["= path length / time (scalar)"]
+    AS --> AS2["Always greater than or equal to |average velocity|"]
+    AS --> AS3["Equal only for unidirectional motion"]
+
+    IV --> IV1["v = dx/dt — derivative of position"]
+    IV --> IV2["slope of tangent on x-t graph"]
+    IV --> IV3["For uniform motion: instantaneous v = average v"]
+    IV --> IS["INSTANTANEOUS SPEED"]
+    IS --> IS1["= |v| at every instant"]
+    IS --> IS2["ALWAYS equal to |instantaneous velocity|"]
+    IS --> IS3["Unlike averages — no reversal possible at a point"]
+
+    RV --> RV1["v_AB = v_A - v_B"]
+    RV --> RV2["Same direction: relative speed = v_A - v_B"]
+    RV --> RV3["Opposite direction: relative speed = v_A + v_B"]
+
+    style ROOT fill:#2c3e50,color:#ecf0f1,stroke:#3498db
+    style AV fill:#1e3a5f,color:#aed6f1,stroke:#2980b9
+    style IV fill:#1a3d2e,color:#a9dfbf,stroke:#27ae60
+    style RV fill:#3d2a1a,color:#f0d0a8,stroke:#e67e22
+    style AS fill:#1a3a5c,color:#aee6ff,stroke:#3498db
+    style IS fill:#1a3d2e,color:#aeffcc,stroke:#27ae60
 ```
 
 ---
 
-# 🗺️ MIND MAP 3 — Kinematic Equations (Full Decision Tree)
+# 🗺️ MIND MAP 3 — Kinematic Equations Decision Tree
 
-```
-                    ┌──────────────────────────────────┐
-                    │   WHICH KINEMATIC EQUATION?       │
-                    │   (constant acceleration only)    │
-                    └─────────────────┬────────────────┘
-                                      │
-                    What quantity is MISSING from the problem?
-                                      │
-          ┌───────────────────────────┼───────────────────────────┐
-          │                           │                           │
-          ▼                           ▼                           ▼
-  ┌──────────────┐           ┌──────────────┐           ┌──────────────┐
-  │  x missing   │           │  t missing   │           │  v missing   │
-  │              │           │              │           │              │
-  │ v = v₀ + at  │           │ v² = v₀²+2ax│           │ x = ½(v₀+v)t│
-  └──────────────┘           └──────────────┘           └──────────────┘
-          │                           │
-          ▼                           ▼
-  ┌──────────────┐           ┌──────────────┐
-  │  v missing   │           │  a missing   │
-  │              │           │              │
-  │ x =v₀t+½at² │           │ x = ½(v₀+v)t│
-  └──────────────┘           └──────────────┘
+```mermaid
+flowchart TD
+    ROOT(["WHICH EQUATION TO USE?"])
+    ROOT --> COND["Condition: constant acceleration only"]
+    COND --> Q{"Which quantity is not given and not needed?"}
 
-  For distance in nth second:
-  ┌──────────────────────────────────────────────────────┐
-  │  sₙ = v₀ + a(n − ½)                                  │
-  │  = distance covered in the nth second specifically    │
-  │  (Not total distance in n seconds!)                   │
-  └──────────────────────────────────────────────────────┘
+    Q -->|"displacement x not needed"| EQ1["v = v0 + at"]
+    Q -->|"time t not needed"| EQ2["v^2 = v0^2 + 2ax"]
+    Q -->|"final velocity v not needed"| EQ3["x = v0t + (1/2)at^2"]
+    Q -->|"acceleration a not needed"| EQ4["x = (1/2)(v0 + v)t"]
 
-  For variable acceleration:
-  ┌──────────────────────────────────────────────────────┐
-  │  v = ∫a dt        (integrate a to get v)             │
-  │  x = ∫v dt        (integrate v to get x)             │
-  │  a = v(dv/dx)     (alternate form when t is absent)  │
-  └──────────────────────────────────────────────────────┘
+    EQ1 --> N1["Links v, v0, a, t — no x"]
+    EQ2 --> N2["Links v, v0, a, x — no t"]
+    EQ3 --> N3["Links x, v0, a, t — no v"]
+    EQ4 --> N4["Links x, v, v0, t — no a"]
+
+    ROOT --> NTH["Distance in nth second specifically"]
+    NTH --> NTH1["sn = v0 + a times (n - 1/2)"]
+    NTH1 --> NTH2["Not total distance in n seconds"]
+
+    ROOT --> VAR["Variable acceleration — use calculus"]
+    VAR --> VAR1["v = integral of a dt"]
+    VAR --> VAR2["x = integral of v dt"]
+    VAR --> VAR3["a = v times (dv/dx) — when t is absent"]
+
+    style ROOT fill:#2c3e50,color:#ecf0f1,stroke:#3498db
+    style Q fill:#3d2a1a,color:#f0d0a8,stroke:#e67e22
+    style EQ1 fill:#1a3d2e,color:#a9dfbf,stroke:#27ae60
+    style EQ2 fill:#1a3d2e,color:#a9dfbf,stroke:#27ae60
+    style EQ3 fill:#1a3d2e,color:#a9dfbf,stroke:#27ae60
+    style EQ4 fill:#1a3d2e,color:#a9dfbf,stroke:#27ae60
+    style VAR fill:#3d1a1a,color:#f5b7b1,stroke:#e74c3c
+    style NTH fill:#1e3a5f,color:#aed6f1,stroke:#2980b9
 ```
 
 ---
 
 # 🗺️ MIND MAP 4 — Graph Shapes for Different Motions
 
-```
-TYPE OF MOTION         x–t GRAPH         v–t GRAPH         a–t GRAPH
-───────────────────────────────────────────────────────────────────────
-At rest               Horizontal line   Point on t-axis   Zero (line at 0)
+| Type of Motion | x–t Graph Shape | v–t Graph Shape | a–t Graph Shape |
+|:---|:---|:---|:---|
+| At rest | Horizontal line | Point on time axis | Line at zero |
+| Uniform velocity ($a = 0$) | Straight inclined line | Horizontal line at height $v$ | Line at zero |
+| Uniform positive acceleration | Upward parabola from origin | Straight line from origin (positive slope) | Horizontal line at $+a$ |
+| Uniform negative acceleration (decelerating) | Downward parabola | Straight line, negative slope | Horizontal line at $-a$ |
+| Reversing motion | Curve with turning point | Line crossing time axis | Horizontal line (same sign throughout) |
+| Free fall from rest | Downward parabola | Straight line from origin (downward) | Horizontal at $-g = -9.8$ m s⁻² |
 
-Uniform velocity      Straight inclined Horizontal line   Line at zero
-(a = 0)               line              at height v       
+> [!tip] Memory Hook for x–t Shapes
+> - Curve **bending upward** → positive acceleration
+> - Curve **bending downward** → negative acceleration
+> - **Straight line** → zero acceleration (uniform motion)
+> - **Vertical line** → physically **impossible** (object at two positions simultaneously)
 
-Uniform +ve accel.    Upward parabola   Straight line     Horizontal line
-(a > 0, v₀ = 0)       from origin       from origin       at height +a
+---
 
-Uniform −ve accel.    Downward parabola Straight line     Horizontal line
-(a < 0, v₀ > 0)       (inverted)        sloping down      at height −a
-decelerating
+# 🗺️ MIND MAP 5 — Sign Convention and Common Mistakes
 
-Reversing motion      Curve with        Line crossing     Horizontal line
-                      turning point     time axis         (stays same sign)
+```mermaid
+flowchart TD
+    ROOT(["SIGN CONVENTION"])
 
-Free fall             Downward          Straight line     Horizontal at
-(from rest)           parabola          from origin       −g = −9.8 m s⁻²
-                                        (downward dir.)
+    ROOT --> STEP1["Step 1 — Choose origin and positive direction FIRST"]
+    STEP1 --> STEP2["All signs of displacement, velocity, acceleration depend on this choice"]
+
+    STEP2 --> D1["Displacement: positive if x is greater than x0"]
+    STEP2 --> D2["Velocity: positive if moving in positive direction"]
+    STEP2 --> D3["Acceleration: positive if in positive direction"]
+
+    ROOT --> MISTAKES["COMMON EXAM MISTAKES"]
+
+    MISTAKES --> M1["MISTAKE 1 — Negative a always means slowing down"]
+    M1 --> M1A["CORRECT: Slowing down only when sign of v and sign of a differ"]
+    M1A --> M1B["v positive, a negative — slowing down"]
+    M1A --> M1C["v negative, a negative — speeding up in negative direction"]
+    M1A --> M1D["v positive, a positive — speeding up"]
+    M1A --> M1E["v negative, a positive — slowing down"]
+
+    MISTAKES --> M2["MISTAKE 2 — v = 0 means a = 0"]
+    M2 --> M2FIX["CORRECT: At highest point of throw, v = 0 but a = g (not zero)"]
+
+    MISTAKES --> M3["MISTAKE 3 — Average speed equals |average velocity|"]
+    M3 --> M3FIX["CORRECT: Equal ONLY for unidirectional motion (no reversal)"]
+
+    MISTAKES --> M4["MISTAKE 4 — Using kinematic equations for variable acceleration"]
+    M4 --> M4FIX["CORRECT: Use calculus (integration) for variable acceleration"]
+
+    style ROOT fill:#2c3e50,color:#ecf0f1,stroke:#3498db
+    style MISTAKES fill:#3d1a1a,color:#f5b7b1,stroke:#e74c3c
+    style M1A fill:#1a3d2e,color:#a9dfbf,stroke:#27ae60
+    style M2FIX fill:#1a3d2e,color:#a9dfbf,stroke:#27ae60
+    style M3FIX fill:#1a3d2e,color:#a9dfbf,stroke:#27ae60
+    style M4FIX fill:#1a3d2e,color:#a9dfbf,stroke:#27ae60
 ```
 
 ---
 
-# 🗺️ MIND MAP 5 — Sign Convention & Common Mistakes
+# 🗺️ MIND MAP 6 — Free Fall and Galileo's Laws
 
-```
-                    ┌──────────────────────────────────┐
-                    │       SIGN CONVENTION            │
-                    └─────────────────┬────────────────┘
-                                      │
-                      Choose origin and +ve direction FIRST
-                                      │
-          ┌───────────────────────────┼───────────────────────────┐
-          │                           │                           │
-          ▼                           ▼                           ▼
-  ┌──────────────┐           ┌──────────────┐           ┌──────────────┐
-  │  Displacement│           │  Velocity    │           │ Acceleration │
-  │              │           │              │           │              │
-  │ + if x > x₀  │           │ + if moving  │           │ + if v incr. │
-  │ − if x < x₀  │           │   in +ve dir │           │   in +ve dir │
-  │ 0 if x = x₀  │           │ − if moving  │           │ − if v decr. │
-  │              │           │   in −ve dir │           │   in +ve dir │
-  └──────────────┘           └──────────────┘           └──────────────┘
+```mermaid
+flowchart TD
+    ROOT(["FREE FALL"])
+    ROOT --> DEF["Object under gravity alone — no air resistance"]
+    DEF --> ACC["Acceleration = g = 9.8 m s^-2 downward (constant)"]
+    ACC --> UNIFORM["Special case of uniformly accelerated motion"]
 
-  ⚠️ COMMON MISTAKES:
+    ROOT --> DROP["DROPPED FROM REST"]
+    ROOT --> THROW["THROWN UPWARD"]
+    ROOT --> GALILEO["GALILEO'S ODD NUMBERS"]
 
-  MISTAKE 1: "Negative a = slowing down"
-  CORRECT: Slowing down when sign(v) ≠ sign(a)
-  ┌────────────────────────────────────────────┐
-  │ v > 0, a < 0  →  slowing down ✓           │
-  │ v < 0, a < 0  →  speeding up in -ve dir   │
-  │ v > 0, a > 0  →  speeding up in +ve dir   │
-  │ v < 0, a > 0  →  slowing down ✓           │
-  └────────────────────────────────────────────┘
+    DROP --> D1["v0 = 0"]
+    DROP --> D2["v = gt"]
+    DROP --> D3["h = (1/2)g t^2"]
+    DROP --> D4["v^2 = 2gh"]
 
-  MISTAKE 2: "v = 0 means a = 0"
-  CORRECT: At highest point of throw: v = 0 but a = g ≠ 0
+    THROW --> T1["Initial velocity v0 = u (take upward as positive)"]
+    THROW --> T2["v = u - gt"]
+    THROW --> T3["At maximum height: v = 0 but a = g (not zero)"]
+    THROW --> T4["Time to top: t_up = u/g"]
+    THROW --> T5["Maximum height: H_max = u^2 / (2g)"]
+    THROW --> T6["Total time: t_total = 2u/g"]
+    THROW --> T7["Time of ascent = Time of descent (symmetric)"]
+    T7 --> T8["Speed at same height: same going up and coming down"]
 
-  MISTAKE 3: "Average speed = |average velocity|"
-  CORRECT: Only equal for unidirectional motion
+    GALILEO --> G1["Distances from rest in successive equal intervals t"]
+    G1 --> G2["Ratio: 1 : 3 : 5 : 7 : 9 ..."]
+    G2 --> G3["Total distance after n intervals: proportional to n^2"]
+    G3 --> G4["Ratios 1 : 4 : 9 : 16 ... (cumulative)"]
 
-  MISTAKE 4: Using kinematic equations for variable acceleration
-  CORRECT: Use calculus (integration) for variable acceleration
-```
-
----
-
-# 🗺️ MIND MAP 6 — Free Fall & Galileo's Laws
-
-```
-                    ┌──────────────────────────────────┐
-                    │           FREE FALL               │
-                    │  a = g = 9.8 m s⁻² (downward)   │
-                    └─────────────────┬────────────────┘
-                                      │
-          ┌───────────────────────────┼───────────────────────────┐
-          │                           │                           │
-          ▼                           ▼                           ▼
-  ┌──────────────┐           ┌──────────────┐           ┌──────────────┐
-  │ DROPPED      │           │ THROWN UP    │           │ GALILEO'S    │
-  │ FROM REST    │           │              │           │ ODD NUMBERS  │
-  │              │           │              │           │              │
-  │ v₀ = 0       │           │ v₀ = +u      │           │ From rest:   │
-  │ v = gt       │           │ v = u − gt   │           │ Intervals:   │
-  │ h = ½gt²     │           │ At max ht:   │           │ τ, τ, τ ...  │
-  │ v² = 2gh     │           │ v = 0,a ≠ 0  │           │ Distances:   │
-  │              │           │ t_up = u/g   │           │ 1:3:5:7:9..  │
-  │              │           │ H_max = u²/2g│           │              │
-  │              │           │ Total time:  │           │ y_total ∝ n² │
-  │              │           │ = 2u/g       │           │ (1,4,9,16..) │
-  └──────────────┘           └──────────────┘           └──────────────┘
-
-  KEY FACT: Time of ascent = Time of descent (symmetric in absence of air resistance)
-  KEY FACT: Speed at same height during ascent = speed during descent
+    style ROOT fill:#2c3e50,color:#ecf0f1,stroke:#3498db
+    style DROP fill:#1e3a5f,color:#aed6f1,stroke:#2980b9
+    style THROW fill:#1a3d2e,color:#a9dfbf,stroke:#27ae60
+    style GALILEO fill:#3d2a1a,color:#f0d0a8,stroke:#e67e22
+    style T3 fill:#3d1a1a,color:#f5b7b1,stroke:#e74c3c
 ```
 
 ---
 
 # 🗺️ MIND MAP 7 — Relative Velocity
 
-```
-                    ┌──────────────────────────────────────┐
-                    │         RELATIVE VELOCITY             │
-                    │     v_AB = v_A − v_B                  │
-                    └─────────────────┬────────────────────┘
-                                      │
-          ┌───────────────────────────┼──────────────────────────┐
-          │                           │                          │
-          ▼                           ▼                          ▼
-  ┌──────────────────┐      ┌──────────────────┐      ┌──────────────────┐
-  │  SAME DIRECTION  │      │ OPPOSITE DIRNS   │      │  MEETING/OVERTAKE│
-  │                  │      │                  │      │                  │
-  │  v_AB = v_A − v_B│      │  v_AB = v_A + v_B│      │  Set x_A = x_B   │
-  │                  │      │                  │      │  Solve for t     │
-  │  Example:        │      │  Example:        │      │                  │
-  │  Trains in same  │      │  Head-on trains  │      │  Overtaking:     │
-  │  direction       │      │  → add speeds    │      │  Cover = L_A+L_B │
-  │                  │      │  for relative    │      │  Relative speed  │
-  │  If v_A = v_B:   │      │  speed           │      │  = v_A − v_B     │
-  │  Relative v = 0  │      │                  │      │                  │
-  │  (feel stationary│      │                  │      │  Time = (L_A+L_B)│
-  │  to each other)  │      │                  │      │  / (v_A − v_B)   │
-  └──────────────────┘      └──────────────────┘      └──────────────────┘
+```mermaid
+flowchart TD
+    ROOT(["RELATIVE VELOCITY"])
+    ROOT --> DEF["v_AB = v_A - v_B"]
+    DEF --> DEF1["Velocity of A as seen from B's reference frame"]
 
-  REFERENCE FRAME NOTE:
-  ┌──────────────────────────────────────────────────────────────┐
-  │  Ground frame: both objects have their own velocities        │
-  │  Frame of B: A moves with v_AB = v_A − v_B, B appears fixed │
-  └──────────────────────────────────────────────────────────────┘
+    ROOT --> SAME["SAME DIRECTION"]
+    ROOT --> OPP["OPPOSITE DIRECTIONS"]
+    ROOT --> MEET["MEETING OR OVERTAKING"]
+
+    SAME --> S1["v_rel = v_A - v_B"]
+    SAME --> S2["If v_A equals v_B: relative velocity = 0"]
+    S2 --> S3["Objects appear stationary to each other"]
+    SAME --> S4["If v_A greater than v_B: A moves away from B"]
+
+    OPP --> O1["v_rel = v_A + v_B (add the speeds)"]
+    OPP --> O2["Closing speed is the sum of the two speeds"]
+    OPP --> O3["Example: two trains approaching head-on"]
+
+    MEET --> ME1["Set x_A(t) = x_B(t) and solve for t"]
+    MEET --> ME2["Overtaking two trains (lengths L_A and L_B)"]
+    ME2 --> ME3["Relative distance = L_A + L_B"]
+    ME3 --> ME4["Time = (L_A + L_B) / (v_A - v_B)"]
+
+    ROOT --> FRAME["REFERENCE FRAME NOTE"]
+    FRAME --> FR1["In frame of B: B is fixed, A moves at v_AB"]
+    FRAME --> FR2["In ground frame: both have their own velocities"]
+
+    style ROOT fill:#2c3e50,color:#ecf0f1,stroke:#3498db
+    style SAME fill:#1e3a5f,color:#aed6f1,stroke:#2980b9
+    style OPP fill:#3d1a1a,color:#f5b7b1,stroke:#e74c3c
+    style MEET fill:#1a3d2e,color:#a9dfbf,stroke:#27ae60
+    style FRAME fill:#3d2a1a,color:#f0d0a8,stroke:#e67e22
+    style S2 fill:#1a3d2e,color:#a9dfbf,stroke:#27ae60
 ```
 
 ---
 
 # 🗺️ MIND MAP 8 — Chapter Summary (Big Picture)
 
-```
-  INPUT: Initial conditions (x₀, v₀, a)
-         ↓
-  ┌──────────────────────────────────────────────────────────────┐
-  │                   MOTION ANALYSIS                            │
-  │                                                              │
-  │   If a = constant:              If a = variable:            │
-  │   Use kinematic equations       Use integration             │
-  │   v = v₀ + at                   v = ∫a dt + C               │
-  │   x = v₀t + ½at²               x = ∫v dt + C               │
-  │   v² = v₀² + 2ax                                            │
-  └──────────────────────────────────────────────────────────────┘
-         ↓
-  OUTPUT: Position x(t), velocity v(t), acceleration a(t)
-         ↓
-  ┌──────────────────────────────────────────────────────────────┐
-  │   Graphical outputs:                                         │
-  │   x–t: slope = v     v–t: slope = a, area = Δx             │
-  │                       a–t: area = Δv                        │
-  └──────────────────────────────────────────────────────────────┘
-         ↓
-  SPECIAL CASES:
-  ┌────────────────────┐  ┌──────────────────┐  ┌──────────────────────┐
-  │ Free Fall          │  │ Stopping distance│  │ Relative velocity    │
-  │ a = −g throughout  │  │ dₛ = v₀²/(2a)   │  │ v_AB = v_A − v_B     │
-  │ All eqns valid     │  │ ∝ v₀²            │  │ For meetings: x_A=x_B│
-  └────────────────────┘  └──────────────────┘  └──────────────────────┘
-```
+```mermaid
+flowchart TD
+    INPUT(["INPUT: Initial conditions x0, v0, a"])
 
----
+    INPUT --> CONST{"Is acceleration constant?"}
 
-# 📋 HIGH-YIELD FORMULA CARD (Cut-out Ready)
+    CONST -->|"YES — constant a"| KIN["KINEMATIC EQUATIONS"]
+    KIN --> KIN1["v = v0 + at"]
+    KIN --> KIN2["x = v0t + (1/2)at^2"]
+    KIN --> KIN3["v^2 = v0^2 + 2ax"]
+    KIN --> KIN4["x = (1/2)(v0 + v)t"]
 
-```
-┌─────────────────────────────────────────────────────────────────┐
-│              CHAPTER 2 — MOTION IN A STRAIGHT LINE             │
-│                    FORMULA QUICK REFERENCE                      │
-├─────────────────────────────────────────────────────────────────┤
-│  v = v₀ + at            (no displacement)                      │
-│  x = v₀t + ½at²         (no final velocity)                    │
-│  v² = v₀² + 2ax         (no time)                              │
-│  x = ½(v + v₀)t         (no acceleration)                      │
-│  sₙ = v₀ + a(n − ½)     (distance in nth second)               │
-├─────────────────────────────────────────────────────────────────┤
-│  v̄ = Δx/Δt = (v₀+v)/2 [const. a only]                        │
-│  v = dx/dt              a = dv/dt = v(dv/dx)                   │
-├─────────────────────────────────────────────────────────────────┤
-│  FREE FALL: a = g = 9.8 m s⁻²                                  │
-│  t_up = u/g   H_max = u²/(2g)   t_total = 2u/g                │
-│  Odd numbers: 1 : 3 : 5 : 7 : ... (from rest)                  │
-├─────────────────────────────────────────────────────────────────┤
-│  STOPPING: dₛ = v₀²/(2a) [∝ v₀²]                               │
-│  REACTION TIME: t = √(2d/g)                                     │
-├─────────────────────────────────────────────────────────────────┤
-│  RELATIVE: v_AB = v_A − v_B (same dir)                         │
-│            v_AB = v_A + v_B (opp. dir)                         │
-└─────────────────────────────────────────────────────────────────┘
+    CONST -->|"NO — variable a"| CALC["CALCULUS"]
+    CALC --> CALC1["v = integral of a dt plus C"]
+    CALC --> CALC2["x = integral of v dt plus C"]
+    CALC --> CALC3["a = v times (dv/dx) if t is absent"]
+
+    KIN --> OUTPUT["OUTPUT: x(t), v(t), a(t)"]
+    CALC --> OUTPUT
+
+    OUTPUT --> GRAPHS["GRAPHICAL INTERPRETATION"]
+    GRAPHS --> G1["x-t: slope = v, parabola for constant a"]
+    GRAPHS --> G2["v-t: slope = a, area under curve = displacement"]
+    GRAPHS --> G3["a-t: area under curve = change in velocity"]
+
+    OUTPUT --> SPECIAL["SPECIAL CASES"]
+    SPECIAL --> SC1["Free fall: a = -g throughout, all kinematic eqs valid"]
+    SPECIAL --> SC2["Stopping distance: ds = v0^2 / (2a) — proportional to v0^2"]
+    SPECIAL --> SC3["Relative velocity: v_AB = v_A - v_B (same direction)"]
+
+    style INPUT fill:#1e3a5f,color:#aed6f1,stroke:#2980b9
+    style CONST fill:#3d2a1a,color:#f0d0a8,stroke:#e67e22
+    style KIN fill:#1a3d2e,color:#a9dfbf,stroke:#27ae60
+    style CALC fill:#3d1a1a,color:#f5b7b1,stroke:#e74c3c
+    style OUTPUT fill:#2c3e50,color:#ecf0f1,stroke:#3498db
+    style GRAPHS fill:#1a2a3d,color:#cce5ff,stroke:#3498db
+    style SPECIAL fill:#2a1a3d,color:#ddaaff,stroke:#9b59b6
 ```
 
 ---
 
 *End of Rapid Revision + Mind Maps — Ch. 2: Motion in a Straight Line*
+*Exam Tags: Board · NEET · JEE Mains · JEE Advanced*

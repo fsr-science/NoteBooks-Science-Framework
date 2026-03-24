@@ -2631,11 +2631,6 @@
       "type": "file",
       "name": "index.html.old.000",
       "path": "index.html.old.000"
-    },
-    {
-      "type": "file",
-      "name": "obsidian-markdown-it.js.old",
-      "path": "obsidian-markdown-it.js.old"
     }
   ]
 }

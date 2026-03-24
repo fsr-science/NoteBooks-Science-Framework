@@ -2644,8 +2644,8 @@
     },
     {
       "type": "file",
-      "name": "obsidian-markdown-it.js",
-      "path": "obsidian-markdown-it.js"
+      "name": "obsidian-markdown-it.js.old",
+      "path": "obsidian-markdown-it.js.old"
     }
   ]
 }

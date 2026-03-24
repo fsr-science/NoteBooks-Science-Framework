@@ -11,7 +11,10 @@ EXCLUDED_ROOT_FILES = {
     "offline.html",
     "offline.png",
     "admins.json",
-    "obsidian-md.js"
+    "obsidian-md.js",
+    "obsidian-markdown-it.js",
+    "fallback.html",
+    "autopush.sh"
 }
 
 EXCLUDED_ROOT_DIRS = {

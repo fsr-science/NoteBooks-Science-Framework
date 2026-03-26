@@ -20,6 +20,11 @@
                   "children": [
                     {
                       "type": "file",
+                      "name": "Maths Chapter 1 (Glossary).md",
+                      "path": "Commerce/AI Notes/Mathematics/Chapter 1 (Sets)/Maths Chapter 1 (Glossary).md"
+                    },
+                    {
+                      "type": "file",
                       "name": "Maths Chapter 1 (Notes).md",
                       "path": "Commerce/AI Notes/Mathematics/Chapter 1 (Sets)/Maths Chapter 1 (Notes).md"
                     }

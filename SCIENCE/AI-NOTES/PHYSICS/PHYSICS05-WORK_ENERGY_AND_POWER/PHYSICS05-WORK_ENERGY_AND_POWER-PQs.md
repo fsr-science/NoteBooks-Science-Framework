@@ -318,7 +318,7 @@
 
 | Q | Ans | Brief Reason |
 |---|---|---|
-| 16 | (b) | W = ∫₁³ (4x+3)dx = [2x²+3x]₁³ = (18+9)−(2+3) = 27−5 = **22 J** → (d) is 22 J; correct ans = (d) |
+| 16 | (d) | $W = \int_1^3 (4x+3)\,dx = [2x^2+3x]_1^3 = (18+9)-(2+3) = 27-5 = 22 \text{ J}$ |
 | 17 | (b) | W = F cosθ × d = 50 × cos60° × 4 = 50 × 0.5 × 4 = 100 J |
 | 18 | (b) | mv = (m+M)vf; 4×3 = 6×vf; vf = 2 m s⁻¹ |
 | 19 | (b) | Ki = ½×4×9 = 18 J; Kf = ½×6×4 = 12 J; ΔK = 6 J |
@@ -328,13 +328,11 @@
 | 23 | (a) | Wgrav = mgh = 2×10×5 = 100 J; ΔK = ½×2×16 = 16 J; Wfrict = 16−100 = −84 J |
 | 24 | (b) | P = Fv = mav; at const P: ma×v = P → v dv/dt = P/m; v²/2 = Pt/m → v ∝ t^(1/2) |
 | 25 | (a) | V₁=½×1000×0.04=20 J; V₂=½×2000×0.01=10 J; ratio = 2:1 |
-| 26 | (b) | Displacement = 4î+3ĵ; W = F·d = (3)(4)+(4)(3) = 12+12 = 24 J → (a) |
+| 26 | (a) | Displacement = 4î+3ĵ; W = F·d = (3)(4)+(4)(3) = 12+12 = 24 J |
 | 27 | (d) | Elastic: KE + momentum both conserved; total energy = mechanical energy here |
 | 28 | (b) | v = 20 m/s; KE = ½×1500×400 = 300000 J; P = 300000/10 = 30000 W |
 | 29 | (b) | Equal mass elastic: first body stops (v₁f=0), second gets all KE. Ratio = 0:1 |
 | 30 | (c) | Same as Q29 — first ball stops in equal-mass head-on elastic collision |
-
-*Note Q16: correct answer is (d) 22 J; Q26: correct answer is (a) 24 J*
 
 ---
 
@@ -444,10 +442,8 @@
 | 36 | (c) | P = F·v = m(dv/dt)·v → mv dv = P dt → mv²/2 = Pt → v ∝ √t = t^(1/2) |
 | 37 | (b) | KE lost/Ki = M/(m+M) [derived from perfectly inelastic formula] |
 | 38 | (c) | F = −dV/dx = −(2x−4); at x=2: F = −(4−4) = 0 N (equilibrium point) |
-| 39 | (c) | At highest point: only horizontal component remains; vx = 20cos60°=10 m/s; K=½×1×100=100 J? Wait: vx = 20cos60° = 10 m/s; K = ½×1×100 = **50 J** → (b) |
+| 39 | (b) | At highest point: only horizontal component remains; $v_x = 20\cos 60° = 10$ m s⁻¹; $K = \tfrac{1}{2}\times 1 \times 100 = \mathbf{50 \text{ J}}$ |
 | 40 | (b) | In series, same force F acts on both; F = kx₁ = 2kx₂ → x₁ = 2x₂; PE₁/PE₂ = (½kx₁²)/(½×2k×x₂²) = kx₁²/(2kx₂²) = (2x₂)²/(2x₂²) = 2 → ratio 2:1 |
-
-*Note Q39: correct answer is (b) 50 J; at highest point vx = 20cos60° = 10 m s⁻¹; K = ½×1×100 = 50 J*
 
 ---
 
@@ -597,13 +593,6 @@
 
 * (a) 1 : 5
 * (b) 5 : 1
-* (c) 3 : 1
-* (d) 5 : 3
-
-? Wait — at A: K_A = 5mgL/2; at C: K_C = ½mv_C² = ½m(gL) = mgL/2. Ratio K_A:K_C = 5:1
-
-* (a) 1 : 5
-* (b) 5 : 1
 * (c) 5 : 2
 * (d) 3 : 1
 
@@ -632,7 +621,7 @@
 
 ## Case 2 — Spring Collision System 🟡🔴
 
-**Passage:** A car of mass 1200 kg moving at v = 54 km/h = 15 m s⁻¹ on a frictionless surface collides with a spring-bumper (spring constant k = 6 × 10³ N m⁻¹) fixed to a rigid wall. g = 10 m s⁻².
+**Passage:** A car of mass 1200 kg moving at v = 54 km/h = 15 m s⁻¹ on a frictionless surface collides with a spring-bumper (spring constant k = 3 × 10⁴ N m⁻¹) fixed to a rigid wall. g = 10 m s⁻².
 
 ---
 

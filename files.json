@@ -28,6 +28,29 @@
               ]
             }
           ]
+        },
+        {
+          "type": "folder",
+          "name": "NCERT Books",
+          "children": [
+            {
+              "type": "folder",
+              "name": "Mathematics",
+              "children": [
+                {
+                  "type": "folder",
+                  "name": "Chapter 1 (Sets)",
+                  "children": [
+                    {
+                      "type": "file",
+                      "name": "kemh101.pdf",
+                      "path": "Commerce/NCERT Books/Mathematics/Chapter 1 (Sets)/kemh101.pdf"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
         }
       ]
     },

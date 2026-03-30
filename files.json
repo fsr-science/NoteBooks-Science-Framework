@@ -118,6 +118,72 @@
             },
             {
               "type": "folder",
+              "name": "Business Studies",
+              "children": [
+                {
+                  "type": "file",
+                  "name": " Contents (Business Studies).pdf",
+                  "path": "Commerce/NCERT Textbook/Business Studies/ Contents (Business Studies).pdf"
+                },
+                {
+                  "type": "file",
+                  "name": "Business Studies Chapter 1 (Business, Trade and Commerce).pdf",
+                  "path": "Commerce/NCERT Textbook/Business Studies/Business Studies Chapter 1 (Business, Trade and Commerce).pdf"
+                },
+                {
+                  "type": "file",
+                  "name": "Business Studies Chapter 10 (Internal Trade).pdf",
+                  "path": "Commerce/NCERT Textbook/Business Studies/Business Studies Chapter 10 (Internal Trade).pdf"
+                },
+                {
+                  "type": "file",
+                  "name": "Business Studies Chapter 11 (International Business).pdf",
+                  "path": "Commerce/NCERT Textbook/Business Studies/Business Studies Chapter 11 (International Business).pdf"
+                },
+                {
+                  "type": "file",
+                  "name": "Business Studies Chapter 2 (Forms of Business Organisations).pdf",
+                  "path": "Commerce/NCERT Textbook/Business Studies/Business Studies Chapter 2 (Forms of Business Organisations).pdf"
+                },
+                {
+                  "type": "file",
+                  "name": "Business Studies Chapter 3 (Private, Public and Global Enterprises).pdf",
+                  "path": "Commerce/NCERT Textbook/Business Studies/Business Studies Chapter 3 (Private, Public and Global Enterprises).pdf"
+                },
+                {
+                  "type": "file",
+                  "name": "Business Studies Chapter 4 (Business Services).pdf",
+                  "path": "Commerce/NCERT Textbook/Business Studies/Business Studies Chapter 4 (Business Services).pdf"
+                },
+                {
+                  "type": "file",
+                  "name": "Business Studies Chapter 5 (Emerging Modes of Business).pdf",
+                  "path": "Commerce/NCERT Textbook/Business Studies/Business Studies Chapter 5 (Emerging Modes of Business).pdf"
+                },
+                {
+                  "type": "file",
+                  "name": "Business Studies Chapter 6 (Social Responsibilies of Business and Business Ethics).pdf",
+                  "path": "Commerce/NCERT Textbook/Business Studies/Business Studies Chapter 6 (Social Responsibilies of Business and Business Ethics).pdf"
+                },
+                {
+                  "type": "file",
+                  "name": "Business Studies Chapter 7 (Formation of a Company).pdf",
+                  "path": "Commerce/NCERT Textbook/Business Studies/Business Studies Chapter 7 (Formation of a Company).pdf"
+                },
+                {
+                  "type": "file",
+                  "name": "Business Studies Chapter 8 (Sources of Business Finance).pdf",
+                  "path": "Commerce/NCERT Textbook/Business Studies/Business Studies Chapter 8 (Sources of Business Finance).pdf"
+                },
+                {
+                  "type": "file",
+                  "name": "Business Studies Chapter 9 (MSME and Business Entrepreneurship).pdf",
+                  "path": "Commerce/NCERT Textbook/Business Studies/Business Studies Chapter 9 (MSME and Business Entrepreneurship).pdf"
+                }
+              ]
+            },
+            {
+              "type": "folder",
               "name": "Economics",
               "children": [
                 {

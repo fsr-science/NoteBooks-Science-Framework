@@ -68,6 +68,16 @@
                     },
                     {
                       "type": "file",
+                      "name": "Financial Accounting-I Chapter 3 (Recording of Transactions-I).pdf",
+                      "path": "Commerce/NCERT Textbook/Accountancy/Financial Accounting-I/Financial Accounting-I Chapter 3 (Recording of Transactions-I).pdf"
+                    },
+                    {
+                      "type": "file",
+                      "name": "Financial Accounting-I Chapter 4 (Recording of Transactions-II).pdf",
+                      "path": "Commerce/NCERT Textbook/Accountancy/Financial Accounting-I/Financial Accounting-I Chapter 4 (Recording of Transactions-II).pdf"
+                    },
+                    {
+                      "type": "file",
                       "name": "Financial Accounting-I Chapter 5 (Bank Reconciliation Statement).pdf",
                       "path": "Commerce/NCERT Textbook/Accountancy/Financial Accounting-I/Financial Accounting-I Chapter 5 (Bank Reconciliation Statement).pdf"
                     },
@@ -75,6 +85,11 @@
                       "type": "file",
                       "name": "Financial Accounting-I Chapter 6 (Trial Balance and Rectification of Errors).pdf",
                       "path": "Commerce/NCERT Textbook/Accountancy/Financial Accounting-I/Financial Accounting-I Chapter 6 (Trial Balance and Rectification of Errors).pdf"
+                    },
+                    {
+                      "type": "file",
+                      "name": "Financial Accounting-I Chapter 7 (Depreciation, Provisions and Reserves).pdf",
+                      "path": "Commerce/NCERT Textbook/Accountancy/Financial Accounting-I/Financial Accounting-I Chapter 7 (Depreciation, Provisions and Reserves).pdf"
                     }
                   ]
                 }

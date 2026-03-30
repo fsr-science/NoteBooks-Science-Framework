@@ -45,6 +45,33 @@
           "children": [
             {
               "type": "folder",
+              "name": "Accountancy",
+              "children": [
+                {
+                  "type": "folder",
+                  "name": "Financial Accounting-I",
+                  "children": [
+                    {
+                      "type": "file",
+                      "name": "Contents (Finanial Accounting-I).pdf",
+                      "path": "Commerce/NCERT Textbook/Accountancy/Financial Accounting-I/Contents (Finanial Accounting-I).pdf"
+                    },
+                    {
+                      "type": "file",
+                      "name": "Financial Accounting-I Chapter 1 (Introduction to Accounting).pdf",
+                      "path": "Commerce/NCERT Textbook/Accountancy/Financial Accounting-I/Financial Accounting-I Chapter 1 (Introduction to Accounting).pdf"
+                    },
+                    {
+                      "type": "file",
+                      "name": "Financial Accounting-I Chapter 2 (Theory Base of Accounting).pdf",
+                      "path": "Commerce/NCERT Textbook/Accountancy/Financial Accounting-I/Financial Accounting-I Chapter 2 (Theory Base of Accounting).pdf"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "folder",
               "name": "Mathematics",
               "children": [
                 {

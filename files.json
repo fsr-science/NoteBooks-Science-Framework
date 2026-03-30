@@ -38,6 +38,113 @@
               ]
             }
           ]
+        },
+        {
+          "type": "folder",
+          "name": "NCERT Textbook",
+          "children": [
+            {
+              "type": "folder",
+              "name": "Mathematics",
+              "children": [
+                {
+                  "type": "file",
+                  "name": "Contents (Mathematics).pdf",
+                  "path": "Commerce/NCERT Textbook/Mathematics/Contents (Mathematics).pdf"
+                },
+                {
+                  "type": "file",
+                  "name": "Maths Chapter 1 (Sets).pdf",
+                  "path": "Commerce/NCERT Textbook/Mathematics/Maths Chapter 1 (Sets).pdf"
+                },
+                {
+                  "type": "file",
+                  "name": "Maths Chapter 10 (Conic Sections).pdf",
+                  "path": "Commerce/NCERT Textbook/Mathematics/Maths Chapter 10 (Conic Sections).pdf"
+                },
+                {
+                  "type": "file",
+                  "name": "Maths Chapter 11 (Introduction to Three Dimensional Geometry).pdf",
+                  "path": "Commerce/NCERT Textbook/Mathematics/Maths Chapter 11 (Introduction to Three Dimensional Geometry).pdf"
+                },
+                {
+                  "type": "file",
+                  "name": "Maths Chapter 12 (Limits and Derivatives).pdf",
+                  "path": "Commerce/NCERT Textbook/Mathematics/Maths Chapter 12 (Limits and Derivatives).pdf"
+                },
+                {
+                  "type": "file",
+                  "name": "Maths Chapter 13 (Statistics).pdf",
+                  "path": "Commerce/NCERT Textbook/Mathematics/Maths Chapter 13 (Statistics).pdf"
+                },
+                {
+                  "type": "file",
+                  "name": "Maths Chapter 14 (Probability).pdf",
+                  "path": "Commerce/NCERT Textbook/Mathematics/Maths Chapter 14 (Probability).pdf"
+                },
+                {
+                  "type": "file",
+                  "name": "Maths Chapter 2 (Relations and Funcations).pdf",
+                  "path": "Commerce/NCERT Textbook/Mathematics/Maths Chapter 2 (Relations and Funcations).pdf"
+                },
+                {
+                  "type": "file",
+                  "name": "Maths Chapter 3 (Trigonometric Functions).pdf",
+                  "path": "Commerce/NCERT Textbook/Mathematics/Maths Chapter 3 (Trigonometric Functions).pdf"
+                },
+                {
+                  "type": "file",
+                  "name": "Maths Chapter 4 (Complex Numbers and Quadratic Equations).pdf",
+                  "path": "Commerce/NCERT Textbook/Mathematics/Maths Chapter 4 (Complex Numbers and Quadratic Equations).pdf"
+                },
+                {
+                  "type": "file",
+                  "name": "Maths Chapter 5 (Linear Inequalities).pdf",
+                  "path": "Commerce/NCERT Textbook/Mathematics/Maths Chapter 5 (Linear Inequalities).pdf"
+                },
+                {
+                  "type": "file",
+                  "name": "Maths Chapter 6 (Permutations and Combinations).pdf",
+                  "path": "Commerce/NCERT Textbook/Mathematics/Maths Chapter 6 (Permutations and Combinations).pdf"
+                },
+                {
+                  "type": "file",
+                  "name": "Maths Chapter 7 (Binomial Theorem).pdf",
+                  "path": "Commerce/NCERT Textbook/Mathematics/Maths Chapter 7 (Binomial Theorem).pdf"
+                },
+                {
+                  "type": "file",
+                  "name": "Maths Chapter 8 (Sequences and Series).pdf",
+                  "path": "Commerce/NCERT Textbook/Mathematics/Maths Chapter 8 (Sequences and Series).pdf"
+                },
+                {
+                  "type": "file",
+                  "name": "Maths Chapter 9 (Straight Lines).pdf",
+                  "path": "Commerce/NCERT Textbook/Mathematics/Maths Chapter 9 (Straight Lines).pdf"
+                },
+                {
+                  "type": "file",
+                  "name": "Maths-Appendix 1 (Infinite Series).pdf",
+                  "path": "Commerce/NCERT Textbook/Mathematics/Maths-Appendix 1 (Infinite Series).pdf"
+                },
+                {
+                  "type": "file",
+                  "name": "Maths-Appendix 2 (Mathematical Modelling).pdf",
+                  "path": "Commerce/NCERT Textbook/Mathematics/Maths-Appendix 2 (Mathematical Modelling).pdf"
+                },
+                {
+                  "type": "file",
+                  "name": "Maths_Answers.pdf",
+                  "path": "Commerce/NCERT Textbook/Mathematics/Maths_Answers.pdf"
+                },
+                {
+                  "type": "file",
+                  "name": "Maths_Suplementary Material.pdf",
+                  "path": "Commerce/NCERT Textbook/Mathematics/Maths_Suplementary Material.pdf"
+                }
+              ]
+            }
+          ]
         }
       ]
     },

@@ -349,6 +349,42 @@
                       "path": "Commerce/NCERT Textbook/English (Core)/Hornbill/Hornbill Writing Skills Chapter 6 (Creative Writing).pdf"
                     }
                   ]
+                },
+                {
+                  "type": "folder",
+                  "name": "Snapshots",
+                  "children": [
+                    {
+                      "type": "file",
+                      "name": "Contents (Snapshots).pdf",
+                      "path": "Commerce/NCERT Textbook/English (Core)/Snapshots/Contents (Snapshots).pdf"
+                    },
+                    {
+                      "type": "file",
+                      "name": "Snapshots Chapter 1 (The Summer of the Beautiful White House by William Saroyan).pdf",
+                      "path": "Commerce/NCERT Textbook/English (Core)/Snapshots/Snapshots Chapter 1 (The Summer of the Beautiful White House by William Saroyan).pdf"
+                    },
+                    {
+                      "type": "file",
+                      "name": "Snapshots Chapter 2 (The Address by Marga Minco).pdf",
+                      "path": "Commerce/NCERT Textbook/English (Core)/Snapshots/Snapshots Chapter 2 (The Address by Marga Minco).pdf"
+                    },
+                    {
+                      "type": "file",
+                      "name": "Snapshots Chapter 3 (Mother's Day by J. B. Priestley).pdf",
+                      "path": "Commerce/NCERT Textbook/English (Core)/Snapshots/Snapshots Chapter 3 (Mother's Day by J. B. Priestley).pdf"
+                    },
+                    {
+                      "type": "file",
+                      "name": "Snapshots Chapter 4 (Birth by A. J. Cronin).pdf",
+                      "path": "Commerce/NCERT Textbook/English (Core)/Snapshots/Snapshots Chapter 4 (Birth by A. J. Cronin).pdf"
+                    },
+                    {
+                      "type": "file",
+                      "name": "Snapshots Chapter 5 (The Tale of Melon City by Vikram Seth).pdf",
+                      "path": "Commerce/NCERT Textbook/English (Core)/Snapshots/Snapshots Chapter 5 (The Tale of Melon City by Vikram Seth).pdf"
+                    }
+                  ]
                 }
               ]
             },

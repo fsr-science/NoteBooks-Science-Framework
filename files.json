@@ -122,6 +122,22 @@
               "children": [
                 {
                   "type": "folder",
+                  "name": "Introductory Microeconomics",
+                  "children": [
+                    {
+                      "type": "file",
+                      "name": "Contents (Introductory Microeconomics).pdf",
+                      "path": "Commerce/NCERT Textbook/Economics/Introductory Microeconomics/Contents (Introductory Microeconomics).pdf"
+                    },
+                    {
+                      "type": "file",
+                      "name": "Introductory Microeconomics Chapter 1 (Introduction).pdf",
+                      "path": "Commerce/NCERT Textbook/Economics/Introductory Microeconomics/Introductory Microeconomics Chapter 1 (Introduction).pdf"
+                    }
+                  ]
+                },
+                {
+                  "type": "folder",
                   "name": "Statistics for Economics",
                   "children": [
                     {

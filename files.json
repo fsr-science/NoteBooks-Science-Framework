@@ -118,6 +118,63 @@
             },
             {
               "type": "folder",
+              "name": "Economics",
+              "children": [
+                {
+                  "type": "folder",
+                  "name": "Statistics for Economics",
+                  "children": [
+                    {
+                      "type": "file",
+                      "name": "Contents (Statistics for Economics).pdf",
+                      "path": "Commerce/NCERT Textbook/Economics/Statistics for Economics/Contents (Statistics for Economics).pdf"
+                    },
+                    {
+                      "type": "file",
+                      "name": "Statistics for Economics Chapter 1 (Introduction).pdf",
+                      "path": "Commerce/NCERT Textbook/Economics/Statistics for Economics/Statistics for Economics Chapter 1 (Introduction).pdf"
+                    },
+                    {
+                      "type": "file",
+                      "name": "Statistics for Economics Chapter 2 (Collection of Data).pdf",
+                      "path": "Commerce/NCERT Textbook/Economics/Statistics for Economics/Statistics for Economics Chapter 2 (Collection of Data).pdf"
+                    },
+                    {
+                      "type": "file",
+                      "name": "Statistics for Economics Chapter 3 (Organisation of Data).pdf",
+                      "path": "Commerce/NCERT Textbook/Economics/Statistics for Economics/Statistics for Economics Chapter 3 (Organisation of Data).pdf"
+                    },
+                    {
+                      "type": "file",
+                      "name": "Statistics for Economics Chapter 4 (Presentation of Data).pdf",
+                      "path": "Commerce/NCERT Textbook/Economics/Statistics for Economics/Statistics for Economics Chapter 4 (Presentation of Data).pdf"
+                    },
+                    {
+                      "type": "file",
+                      "name": "Statistics for Economics Chapter 5 (Measures of Central Tendency).pdf",
+                      "path": "Commerce/NCERT Textbook/Economics/Statistics for Economics/Statistics for Economics Chapter 5 (Measures of Central Tendency).pdf"
+                    },
+                    {
+                      "type": "file",
+                      "name": "Statistics for Economics Chapter 6 (Correlation).pdf",
+                      "path": "Commerce/NCERT Textbook/Economics/Statistics for Economics/Statistics for Economics Chapter 6 (Correlation).pdf"
+                    },
+                    {
+                      "type": "file",
+                      "name": "Statistics for Economics Chapter 7 (Index Numbers).pdf",
+                      "path": "Commerce/NCERT Textbook/Economics/Statistics for Economics/Statistics for Economics Chapter 7 (Index Numbers).pdf"
+                    },
+                    {
+                      "type": "file",
+                      "name": "Statistics for Economics Chapter 8 (Use of Statistical Tools).pdf",
+                      "path": "Commerce/NCERT Textbook/Economics/Statistics for Economics/Statistics for Economics Chapter 8 (Use of Statistical Tools).pdf"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "folder",
               "name": "Mathematics",
               "children": [
                 {

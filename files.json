@@ -92,6 +92,27 @@
                       "path": "Commerce/NCERT Textbook/Accountancy/Financial Accounting-I/Financial Accounting-I Chapter 7 (Depreciation, Provisions and Reserves).pdf"
                     }
                   ]
+                },
+                {
+                  "type": "folder",
+                  "name": "Financial Accounting-II",
+                  "children": [
+                    {
+                      "type": "file",
+                      "name": "Contents (Financial Accounting-II).pdf",
+                      "path": "Commerce/NCERT Textbook/Accountancy/Financial Accounting-II/Contents (Financial Accounting-II).pdf"
+                    },
+                    {
+                      "type": "file",
+                      "name": "Financial Accounting-II Chapter 8 (Financial Statements-I).pdf",
+                      "path": "Commerce/NCERT Textbook/Accountancy/Financial Accounting-II/Financial Accounting-II Chapter 8 (Financial Statements-I).pdf"
+                    },
+                    {
+                      "type": "file",
+                      "name": "Financial Accounting-II Chapter 9 (Financial Statements-II).pdf",
+                      "path": "Commerce/NCERT Textbook/Accountancy/Financial Accounting-II/Financial Accounting-II Chapter 9 (Financial Statements-II).pdf"
+                    }
+                  ]
                 }
               ]
             },

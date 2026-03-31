@@ -2621,6 +2621,11 @@
           ]
         }
       ]
+    },
+    {
+      "type": "file",
+      "name": "flag",
+      "path": "flag"
     }
   ]
 }

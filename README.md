@@ -1,4 +1,4 @@
-# NoteBooks-Science
+# NoteBooks-Framework
 
 > A modern, structured knowledge management system for the Science Administration Department
 > Designed by the **Federation of Socialist Republics (FSR)** to centralize, organize, and democratize academic study materials

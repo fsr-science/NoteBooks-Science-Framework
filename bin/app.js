@@ -678,9 +678,44 @@ async function fetchFileContent(path, filename, container, winElement = null) {
   container.innerHTML = '<div style="display:flex;justify-content:center;align-items:center;height:100%;"><span class="loader"></span> Loading...</div>';
 
   const isGitHubPages = window.location.hostname.endsWith('github.io');
-  const fetchUrl = (p) => isGitHubPages
-    ? `https://raw.githubusercontent.com/${appConfig.GITHUB_REPO}/${appConfig.GITHUB_BRANCH}/${p}`
-    : `${window.location.origin}/api/raw?path=${encodeURIComponent(p)}`;
+  const isLocalDev = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+  
+  // In local development, try direct file access first (for static servers like `serve`)
+  // On GitHub Pages, use raw.githubusercontent.com
+  // On Vercel, use /api/raw endpoint
+  const fetchUrl = (p) => {
+    if (isGitHubPages) {
+      return `https://raw.githubusercontent.com/${appConfig.GITHUB_REPO}/${appConfig.GITHUB_BRANCH}/${p}`;
+    }
+    // For local dev or when API might not be available, try direct file path first
+    return `${window.location.origin}/${p}`;
+  };
+  
+  // Fallback to API if direct file access fails (for Vercel deployments with private repos)
+  const fetchUrlWithFallback = async (p) => {
+    const directUrl = `${window.location.origin}/${p}`;
+    const apiUrl = `${window.location.origin}/api/raw?path=${encodeURIComponent(p)}`;
+    
+    // Try direct file access first
+    try {
+      const response = await fetch(directUrl);
+      if (response.ok) {
+        const contentType = response.headers.get('content-type') || '';
+        // Make sure we got actual file content, not an HTML error page
+        if (!contentType.includes('text/html') || directUrl.endsWith('.html') || directUrl.endsWith('.htm')) {
+          return await response.text();
+        }
+      }
+    } catch (e) {
+      // Direct access failed, try API
+    }
+    
+    // Fallback to API endpoint
+    const apiResponse = await fetch(apiUrl);
+    if (!apiResponse.ok) throw new Error(`HTTP ${apiResponse.status}`);
+    return await apiResponse.text();
+  };
+  
   const rawUrl = `${window.location.origin}/api/raw?path=${path}`;
 
   try {
@@ -707,9 +742,7 @@ async function fetchFileContent(path, filename, container, winElement = null) {
       container.innerHTML = `<iframe src="${fetchUrl(path)}" style="flex:1;min-height:0;width:100%;border:none;display:block;"></iframe>`;
 
     } else if (ext === 'md' || ext === 'markdown') {
-      const response = await fetch(fetchUrl(path));
-      if (!response.ok) throw new Error(`HTTP ${response.status}`);
-      const text = await response.text();
+      const text = await fetchUrlWithFallback(path);
 
       // ✅ Fixed: use the directly-passed winElement reference, not stale previewId
       if (winElement) {

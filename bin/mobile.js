@@ -116,6 +116,8 @@ document.addEventListener('click', (e) => {
 
 // ===== OVERRIDE openPreview FOR MOBILE MINIMIZE SUPPORT =====
 function openPreview(path, filename) {
+  injectSplitViewStyles();
+  
   const id = 'preview-' + (++previewId);
   const win = document.createElement('div');
   win.className = 'floating-window';
@@ -129,22 +131,38 @@ function openPreview(path, filename) {
 
   win.dataset.id = id;
   const ext = filename.split('.').pop().toLowerCase();
+  const isMarkdown = ext === 'md' || ext === 'markdown';
 
   const minBtn = isMobile
     ? `<button onclick="minimizeWindowMobile('${id}')">🗕</button>`
     : `<button onclick="minimizeWindow('${id}')">🗕</button>`;
   const fsBtn  = isMobile ? '' : `<button onclick="toggleFullscreen('${id}')">🗖</button>`;
+  
+  // Edit button — only for markdown files
+  const editBtnHTML = isMarkdown
+    ? `<button class="btn-edit-split" id="${id}-editbtn" title="Toggle split editor" onclick="toggleSplitEditor('${id}')">
+         <span>✎ Edit</span><span class="sv-dot"></span>
+       </button>`
+    : '';
 
   win.innerHTML = `
     <div class="title-bar" onmousedown="${isMobile ? '' : `startDrag(event,'${id}')`}">
       <div class="title">${filename}</div>
-      <div class="buttons">${minBtn}${fsBtn}<button onclick="closeWindow('${id}')">✖</button></div>
+      <div class="buttons">${editBtnHTML}${minBtn}${fsBtn}<button onclick="closeWindow('${id}')">✖</button></div>
     </div>
     <div class="preview-body" id="${id}-body">Loading...</div>`;
 
   previewContainer.appendChild(win);
   windows[id] = win;
-  fetchFileContent(path, filename, document.getElementById(id + '-body'));
+  
+  // Metadata stored on the element
+  win._filePath        = path;
+  win._filename        = filename;
+  win._isMarkdown      = isMarkdown;
+  win._originalContent = null;   // populated by fetchFileContent
+  win._splitActive     = false;
+  
+  fetchFileContent(path, filename, document.getElementById(id + '-body'), win);
 
   if (!isMobile) {
     updateTaskbar();

@@ -14,13 +14,21 @@ EXCLUDED_ROOT_FILES = {
     "obsidian-md.js",
     "obsidian-markdown-it.js",
     "fallback.html",
-    "autopush.sh"
+    "autopush.sh",
+    "installer.html",
+    "package.json",
+    "package-lock.json",
+    "tree.txt",
+    "zip.sh"
 }
 
 EXCLUDED_ROOT_DIRS = {
     "community",
     "waiting-list",
-    "api"
+    "api",
+    "node_modules",
+    "bin",
+    "GH Fix"
 }
 
 def build_tree(path, rel_path=""):

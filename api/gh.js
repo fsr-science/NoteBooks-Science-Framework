@@ -2,13 +2,9 @@
 // Proxies GitHub Contents API calls so the PAT never has to be stored in the repo.
 //
 // Required Vercel environment variables:
-//   WM_PAT      — GitHub PAT (classic `repo` scope, or fine-grained Contents: read+write)
-//   WM_SATOKEN  — 6-character Super Admin code
+//   GITHUB_PAT      — GitHub PAT (classic `repo` scope, or fine-grained Contents: read+write)
 //
 // Supported POST actions:
-//   { action: "config" }
-//     → { satoken }
-//
 //   { action: "getFile", path }
 //     → { sha }  (null if file doesn't exist)
 //
@@ -21,7 +17,7 @@
 //   { action: "deleteFile", path, sha, message }
 //     → { ok: true }
 
-const REPO = 'fsr-official/NoteBooks-XI';
+const REPO = process.env.GITHUB_REPO;
 
 function authHeader(pat) {
   return pat.startsWith('github_pat_') ? `Bearer ${pat}` : `token ${pat}`;
@@ -34,16 +30,10 @@ export default async function handler(req, res) {
 
   const { action, path: filePath, content, sha, message } = req.body || {};
 
-  // ── CONFIG ────────────────────────────────────────────────────────────────
-  if (action === 'config') {
-    const satoken = (process.env.WM_SATOKEN || '').trim().toUpperCase();
-    return res.status(200).json({ satoken });
-  }
-
-  // ── All other actions require the PAT ─────────────────────────────────────
-  const pat = (process.env.WM_PAT || '').trim();
+  // ── All actions require the PAT ──────────────────────────────────────────
+  const pat = (process.env.GITHUB_PAT || '').trim();
   if (!pat) {
-    return res.status(503).json({ error: 'WM_PAT is not configured in Vercel environment variables.' });
+    return res.status(503).json({ error: 'GITHUB_PAT is not configured in Vercel environment variables.' });
   }
 
   const auth = authHeader(pat);
@@ -56,7 +46,7 @@ export default async function handler(req, res) {
   // ── LATEST COMMIT SHA ────────────────────────────────────────────────────
   if (action === 'latestCommit') {
     const r = await fetch(`https://api.github.com/repos/${REPO}/commits?per_page=1`, {
-      headers: { Authorization: auth, Accept: 'application/vnd.github.v3+json' }
+      headers: { Authorization: auth, Accept: 'application/vnd.github.v3+json', 'User-Agent': 'Vercel-Serverless-Proxy' }
     });
     if (r.ok) {
       const data = await r.json();
@@ -71,7 +61,7 @@ export default async function handler(req, res) {
   if (action === 'getFile') {
     if (!filePath) return res.status(400).json({ error: 'Missing path' });
     const r = await fetch(`${ghBase}/${encodePath(filePath)}`, {
-      headers: { Authorization: auth, Accept: 'application/vnd.github.v3+json' }
+      headers: { Authorization: auth, Accept: 'application/vnd.github.v3+json', 'User-Agent': 'Vercel-Serverless-Proxy' }
     });
     if (r.ok) { const d = await r.json(); return res.status(200).json({ sha: d.sha }); }
     if (r.status === 404) return res.status(200).json({ sha: null });
@@ -83,7 +73,7 @@ export default async function handler(req, res) {
   if (action === 'getFileContent') {
     if (!filePath) return res.status(400).json({ error: 'Missing path' });
     const r = await fetch(`${ghBase}/${encodePath(filePath)}`, {
-      headers: { Authorization: auth, Accept: 'application/vnd.github.v3+json' }
+      headers: { Authorization: auth, Accept: 'application/vnd.github.v3+json', 'User-Agent': 'Vercel-Serverless-Proxy' }
     });
     if (r.ok) {
       const d = await r.json();
@@ -104,7 +94,7 @@ export default async function handler(req, res) {
     if (sha) body.sha = sha;
     const r = await fetch(`${ghBase}/${encodePath(filePath)}`, {
       method: 'PUT',
-      headers: { Authorization: auth, 'Content-Type': 'application/json' },
+      headers: { Authorization: auth, 'Content-Type': 'application/json', 'User-Agent': 'Vercel-Serverless-Proxy' },
       body: JSON.stringify(body)
     });
     if (r.ok) return res.status(200).json({ ok: true });
@@ -118,7 +108,7 @@ export default async function handler(req, res) {
     const body = { message: message || `Delete: ${filePath}`, sha };
     const r = await fetch(`${ghBase}/${encodePath(filePath)}`, {
       method: 'DELETE',
-      headers: { Authorization: auth, 'Content-Type': 'application/json' },
+      headers: { Authorization: auth, 'Content-Type': 'application/json', 'User-Agent': 'Vercel-Serverless-Proxy' },
       body: JSON.stringify(body)
     });
     if (r.ok) return res.status(200).json({ ok: true });

@@ -1,12 +1,12 @@
 // api/raw.js — Vercel serverless function
-// Fetches a file from the private GitHub repo using WM_PAT and pipes it back
+// Fetches a file from the private GitHub repo using GITHUB_PAT and pipes it back
 // with the correct Content-Type so the Microsoft Office Online viewer can reach it.
 //
 // Usage:  GET /api/raw?path=some/folder/file.docx
 // The Office viewer calls:
 //   https://view.officeapps.live.com/op/embed.aspx?src=https://your-app.vercel.app/api/raw?path=...
 
-const REPO = 'fsr-official/NoteBooks-XI';
+const REPO = process.env.GITHUB_REPO;
 
 const MIME_TYPES = {
   doc:  'application/msword',
@@ -41,6 +41,13 @@ function authHeader(pat) {
 }
 
 export default async function handler(req, res) {
+  if (req.method === 'OPTIONS') {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+    return res.status(204).end();
+  }
+
   if (req.method !== 'GET') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
@@ -50,9 +57,9 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Missing path query parameter' });
   }
 
-  const pat = (process.env.WM_PAT || '').trim();
+  const pat = (process.env.GITHUB_PAT || '').trim();
   if (!pat) {
-    return res.status(503).json({ error: 'WM_PAT is not configured.' });
+    return res.status(503).json({ error: 'GITHUB_PAT is not configured.' });
   }
 
   // Normalise path — files.json may store full raw.githubusercontent.com URLs.
@@ -105,6 +112,10 @@ export default async function handler(req, res) {
   // Cache for 5 minutes — short enough to stay fresh, long enough for the viewer to load
   res.setHeader('Content-Type', contentType);
   res.setHeader('Cache-Control', 'public, max-age=300');
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  res.setHeader('Cross-Origin-Resource-Policy', 'cross-origin');
 
   const buffer = Buffer.from(await rawRes.arrayBuffer());
   return res.status(200).send(buffer);

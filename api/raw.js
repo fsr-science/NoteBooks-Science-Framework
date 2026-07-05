@@ -5,6 +5,11 @@
 // Usage:  GET /api/raw?path=some/folder/file.docx
 // The Office viewer calls:
 //   https://view.officeapps.live.com/op/embed.aspx?src=https://your-app.vercel.app/api/raw?path=...
+//
+// Fallback: If GITHUB_PAT is not configured, serves local files from the project directory.
+
+import { readFile } from 'fs/promises';
+import { join, resolve, normalize } from 'path';
 
 const REPO = process.env.GITHUB_REPO;
 
@@ -40,6 +45,35 @@ function authHeader(pat) {
   return pat.startsWith('github_pat_') ? `Bearer ${pat}` : `token ${pat}`;
 }
 
+// Serve local file when GITHUB_PAT is not configured (development fallback)
+async function serveLocalFile(filePath, res) {
+  // Security: prevent directory traversal attacks
+  const projectRoot = process.cwd();
+  const normalizedPath = normalize(filePath).replace(/^(\.\.(\/|\\|$))+/, '');
+  const absolutePath = resolve(projectRoot, normalizedPath);
+  
+  // Ensure the file is within the project root
+  if (!absolutePath.startsWith(projectRoot)) {
+    return res.status(403).json({ error: 'Access denied' });
+  }
+  
+  try {
+    const content = await readFile(absolutePath);
+    const ext = filePath.split('.').pop().toLowerCase();
+    const contentType = MIME_TYPES[ext] || 'application/octet-stream';
+    
+    res.setHeader('Content-Type', contentType);
+    res.setHeader('Cache-Control', 'no-cache');
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    return res.status(200).send(content);
+  } catch (err) {
+    if (err.code === 'ENOENT') {
+      return res.status(404).json({ error: 'File not found' });
+    }
+    return res.status(500).json({ error: 'Failed to read file' });
+  }
+}
+
 export default async function handler(req, res) {
   if (req.method === 'OPTIONS') {
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -58,8 +92,10 @@ export default async function handler(req, res) {
   }
 
   const pat = (process.env.GITHUB_PAT || '').trim();
+  
+  // Fallback: serve local files when GITHUB_PAT is not configured
   if (!pat) {
-    return res.status(503).json({ error: 'GITHUB_PAT is not configured.' });
+    return serveLocalFile(filePath, res);
   }
 
   // Normalise path — files.json may store full raw.githubusercontent.com URLs.

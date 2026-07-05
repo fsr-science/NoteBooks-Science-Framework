@@ -17,6 +17,9 @@ const MarkdownEditor = (() => {
     quote:   { before: '> ',  after: ''    },
     ul:      { before: '- ',  after: ''    },
     ol:      { before: '1. ', after: ''    },
+    h2:      { before: '## ', after: ''    },
+    h3:      { before: '### ', after: ''   },
+    codeblock: { before: '```\n', after: '\n```' },
   };
 
   // ─── Internal helpers ─────────────────────────────────────────────────────
@@ -76,6 +79,58 @@ const MarkdownEditor = (() => {
     ta.focus();
   }
 
+  function insertMath(ta, isBlock) {
+    if (!ta) return;
+    var before = isBlock ? '\n$$\n' : '$';
+    var after = isBlock ? '\n$$\n' : '$';
+    var start = ta.selectionStart;
+    var sel = ta.value.substring(start, ta.selectionEnd) || 'a^2 + b^2 = c^2';
+    ta.value = ta.value.substring(0, start) + before + sel + after + ta.value.substring(ta.selectionEnd);
+    ta.selectionStart = start + before.length;
+    ta.selectionEnd = start + before.length + sel.length;
+    ta.dispatchEvent(new Event('input', { bubbles: true }));
+    ta.focus();
+  }
+
+  function insertDesmos(ta) {
+    if (!ta) return;
+    var desmosCode = '```desmos\n// Graph goes here\ny = x^2\n```';
+    var start = ta.selectionStart;
+    ta.value = ta.value.substring(0, start) + '\n' + desmosCode + '\n' + ta.value.substring(ta.selectionEnd);
+    ta.selectionStart = ta.selectionEnd = start + desmosCode.length + 2;
+    ta.dispatchEvent(new Event('input', { bubbles: true }));
+    ta.focus();
+  }
+
+  function insertTikz(ta) {
+    if (!ta) return;
+    var tikzCode = '```tikz\n\\draw (0,0) -- (1,1);\n\\draw (1,0) -- (0,1);\n```';
+    var start = ta.selectionStart;
+    ta.value = ta.value.substring(0, start) + '\n' + tikzCode + '\n' + ta.value.substring(ta.selectionEnd);
+    ta.selectionStart = ta.selectionEnd = start + tikzCode.length + 2;
+    ta.dispatchEvent(new Event('input', { bubbles: true }));
+    ta.focus();
+  }
+
+  function insertCallout(ta, type) {
+    if (!ta) return;
+    type = type || 'note';
+    var titles = {
+      note: 'Note',
+      info: 'Info',
+      tip: 'Tip',
+      warning: 'Warning',
+      danger: 'Danger',
+      example: 'Example'
+    };
+    var calloutText = '> [!' + type.toUpperCase() + '] ' + titles[type] + '\n> Your content here';
+    var start = ta.selectionStart;
+    ta.value = ta.value.substring(0, start) + '\n' + calloutText + '\n' + ta.value.substring(ta.selectionEnd);
+    ta.selectionStart = ta.selectionEnd = start + calloutText.length + 2;
+    ta.dispatchEvent(new Event('input', { bubbles: true }));
+    ta.focus();
+  }
+
   // ─── Stats ────────────────────────────────────────────────────────────────
 
   function updateStats(ta, statsEl) {
@@ -95,6 +150,17 @@ const MarkdownEditor = (() => {
       if (k === 'b') { e.preventDefault(); insertFormat('**', '**', ta); return; }
       if (k === 'i') { e.preventDefault(); insertFormat('*',  '*',  ta); return; }
       if (k === 'k') { e.preventDefault(); insertLink(ta); return; }
+      if (k === 'm') { 
+        e.preventDefault(); 
+        if (e.shiftKey) {
+          insertMath(ta, true); // Ctrl+Shift+M = block math
+        } else {
+          insertMath(ta, false); // Ctrl+M = inline math
+        }
+        return; 
+      }
+      if (k === 'd') { e.preventDefault(); insertDesmos(ta); return; }
+      if (k === 't') { e.preventDefault(); insertTikz(ta); return; }
       if (k === 's') {
         e.preventDefault();
         sessionStorage.setItem(storageKey, ta.value);
@@ -125,16 +191,16 @@ const MarkdownEditor = (() => {
       '.mde-wrapper{display:flex;flex-direction:column;height:100%;font-family:system-ui,sans-serif;',
         'background:#0a0e1a;color:#e2e8f0;overflow:hidden;position:relative;}',
       '.mde-toolbar{display:flex;align-items:center;gap:3px;padding:6px 10px;background:#0f1525;',
-        'border-bottom:1px solid #1e293b;flex-shrink:0;flex-wrap:wrap;row-gap:4px;}',
+        'border-bottom:1px solid #1e293b;flex-shrink:0;flex-wrap:wrap;row-gap:4px;overflow-x:auto;max-width:100%;}',
       '.mde-toolbar-sep{width:1px;height:18px;background:#1e293b;margin:0 3px;flex-shrink:0;}',
       '.mde-toolbar-right{margin-left:auto;display:flex;gap:5px;align-items:center;}',
       '.mde-btn{display:inline-flex;align-items:center;justify-content:center;gap:4px;',
-        'padding:3px 8px;border:1px solid transparent;border-radius:4px;font-size:12px;',
+        'padding:4px 10px;border:1px solid transparent;border-radius:5px;font-size:11px;',
         'cursor:pointer;background:transparent;color:#64748b;line-height:1;font-family:inherit;',
-        'min-width:26px;height:26px;transition:background .12s,color .12s,border-color .12s;',
-        'white-space:nowrap;flex-shrink:0;}',
-      '.mde-btn:hover{background:#1e293b;color:#e2e8f0;border-color:#334155;}',
-      '.mde-btn:active{transform:scale(0.95);}',
+        'min-width:30px;height:28px;transition:background .12s,color .12s,border-color .12s;',
+        'white-space:nowrap;flex-shrink:0;font-weight:500;}',
+      '.mde-btn:hover{background:#334155;color:#e2e8f0;border-color:#475569;}',
+      '.mde-btn:active{transform:scale(0.95);background:#1e293b;}',
       '.mde-btn-primary{background:#1d4ed8;color:#fff;border-color:#2563eb;padding:3px 12px;}',
       '.mde-btn-primary:hover{background:#1e40af;color:#fff;border-color:#1d4ed8;}',
       '.mde-btn-danger{color:#f87171;border-color:transparent;}',
@@ -191,19 +257,47 @@ const MarkdownEditor = (() => {
     }
 
     var fmtButtons = [
-      { html: '<strong>B</strong>', title: 'Bold (Ctrl+B)',  key: 'bold'    },
-      { html: '<em>I</em>',         title: 'Italic (Ctrl+I)',key: 'italic'  },
-      { html: '<del>S</del>',       title: 'Strikethrough',  key: 'strike'  },
-      { html: 'H',                  title: 'Heading',        key: 'heading' },
-      { html: '&lt;/&gt;',          title: 'Inline code',    key: 'code'    },
-      { html: '&#10078;',           title: 'Blockquote',     key: 'quote'   },
-      { html: '&bull; List',        title: 'Unordered list', key: 'ul'      },
-      { html: '1. List',            title: 'Ordered list',   key: 'ol'      },
+      { html: '𝗕', title: 'Bold (Ctrl+B)',  key: 'bold'    },
+      { html: '𝗜', title: 'Italic (Ctrl+I)',key: 'italic'  },
+      { html: '~~S~~', title: 'Strikethrough',  key: 'strike'  },
+      { html: '⎘', title: 'Code',        key: 'code'    },
+    ];
+
+    var headingButtons = [
+      { html: 'H1', title: 'Heading 1', key: 'heading' },
+      { html: 'H2', title: 'Heading 2', key: 'h2' },
+      { html: 'H3', title: 'Heading 3', key: 'h3' },
+    ];
+
+    var listButtons = [
+      { html: '• List', title: 'Unordered list', key: 'ul' },
+      { html: '1. List', title: 'Ordered list', key: 'ol' },
+      { html: '┐ Quote', title: 'Blockquote', key: 'quote' },
+    ];
+
+    var insertButtons = [
+      { html: '🔗 Link', title: 'Insert link (Ctrl+K)' },
+      { html: '⊞ Table', title: 'Insert table' },
+      { html: '∑ Math', title: 'Inline math (Ctrl+M)' },
+      { html: '∑∑ Block Math', title: 'Block math (Ctrl+Shift+M)' },
+    ];
+
+    var advancedButtons = [
+      { html: '📊 Desmos', title: 'Insert Desmos graph (Ctrl+D)' },
+      { html: '📐 TikZ', title: 'Insert TikZ diagram (Ctrl+T)' },
+    ];
+
+    var calloutButtons = [
+      { html: '📝 Note', title: 'Insert note callout' },
+      { html: '⚠️ Warning', title: 'Insert warning callout' },
+      { html: 'ℹ️ Info', title: 'Insert info callout' },
+      { html: '✓ Tip', title: 'Insert tip callout' },
     ];
 
     // textarea is declared here so closures below can reference it
     var textarea = document.createElement('textarea');
 
+    // Format buttons
     fmtButtons.forEach(function(item) {
       var before = FORMAT_ACTIONS[item.key].before;
       var after  = FORMAT_ACTIONS[item.key].after;
@@ -212,12 +306,64 @@ const MarkdownEditor = (() => {
       }));
     });
 
-    var sep = document.createElement('div');
-    sep.className = 'mde-toolbar-sep';
-    toolbar.appendChild(sep);
+    // Separator
+    var sep1 = document.createElement('div');
+    sep1.className = 'mde-toolbar-sep';
+    toolbar.appendChild(sep1);
 
-    toolbar.appendChild(makeBtn('&#128279; Link',  'Insert link (Ctrl+K)', '', function() { insertLink(textarea); }));
-    toolbar.appendChild(makeBtn('&#8862; Table',   'Insert table',          '', function() { insertTable(textarea); }));
+    // Heading buttons
+    headingButtons.forEach(function(item) {
+      var before = FORMAT_ACTIONS[item.key].before;
+      var after  = FORMAT_ACTIONS[item.key].after;
+      toolbar.appendChild(makeBtn(item.html, item.title, '', function() {
+        insertFormat(before, after, textarea);
+      }));
+    });
+
+    // Separator
+    var sep2 = document.createElement('div');
+    sep2.className = 'mde-toolbar-sep';
+    toolbar.appendChild(sep2);
+
+    // List buttons
+    listButtons.forEach(function(item) {
+      var before = FORMAT_ACTIONS[item.key].before;
+      var after  = FORMAT_ACTIONS[item.key].after;
+      toolbar.appendChild(makeBtn(item.html, item.title, '', function() {
+        insertFormat(before, after, textarea);
+      }));
+    });
+
+    // Separator
+    var sep3 = document.createElement('div');
+    sep3.className = 'mde-toolbar-sep';
+    toolbar.appendChild(sep3);
+
+    // Insert buttons
+    toolbar.appendChild(makeBtn(insertButtons[0].html, insertButtons[0].title, '', function() { insertLink(textarea); }));
+    toolbar.appendChild(makeBtn(insertButtons[1].html, insertButtons[1].title, '', function() { insertTable(textarea); }));
+    toolbar.appendChild(makeBtn(insertButtons[2].html, insertButtons[2].title, '', function() { insertMath(textarea, false); }));
+    toolbar.appendChild(makeBtn(insertButtons[3].html, insertButtons[3].title, '', function() { insertMath(textarea, true); }));
+
+    // Separator
+    var sep4 = document.createElement('div');
+    sep4.className = 'mde-toolbar-sep';
+    toolbar.appendChild(sep4);
+
+    // Advanced buttons
+    toolbar.appendChild(makeBtn(advancedButtons[0].html, advancedButtons[0].title, '', function() { insertDesmos(textarea); }));
+    toolbar.appendChild(makeBtn(advancedButtons[1].html, advancedButtons[1].title, '', function() { insertTikz(textarea); }));
+
+    // Separator
+    var sep5 = document.createElement('div');
+    sep5.className = 'mde-toolbar-sep';
+    toolbar.appendChild(sep5);
+
+    // Callout buttons
+    toolbar.appendChild(makeBtn(calloutButtons[0].html, calloutButtons[0].title, '', function() { insertCallout(textarea, 'note'); }));
+    toolbar.appendChild(makeBtn(calloutButtons[1].html, calloutButtons[1].title, '', function() { insertCallout(textarea, 'warning'); }));
+    toolbar.appendChild(makeBtn(calloutButtons[2].html, calloutButtons[2].title, '', function() { insertCallout(textarea, 'info'); }));
+    toolbar.appendChild(makeBtn(calloutButtons[3].html, calloutButtons[3].title, '', function() { insertCallout(textarea, 'tip'); }));
 
     var right = document.createElement('div');
     right.className = 'mde-toolbar-right';
@@ -262,7 +408,7 @@ const MarkdownEditor = (() => {
 
     var hint = document.createElement('span');
     hint.className = 'mde-hint';
-    hint.textContent = 'Ctrl+B Bold \u00b7 Ctrl+I Italic \u00b7 Ctrl+K Link \u00b7 Ctrl+S Save \u00b7 Tab \u2192 2 spaces';
+    hint.textContent = 'Ctrl+B Bold \u00b7 Ctrl+I Italic \u00b7 Ctrl+K Link \u00b7 Ctrl+M Math \u00b7 Ctrl+D Desmos \u00b7 Ctrl+T TikZ \u00b7 Ctrl+S Save';
 
     footer.appendChild(statsEl);
     footer.appendChild(hint);

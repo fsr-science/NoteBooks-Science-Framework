@@ -536,34 +536,44 @@ function injectSplitViewStyles() {
     .sv-preview-pane {
       flex: 1;
       overflow-y: auto;
-      padding: 20px 24px;
+      padding: 24px 28px;
       min-width: 0;
-      background: var(--bg, #0f172a);
+      background: linear-gradient(135deg, rgba(15, 23, 42, 0.95) 0%, rgba(30, 41, 59, 0.95) 100%);
+      border-right: 1px solid rgba(52, 211, 153, 0.05);
     }
 
     /* Drag handle between panes */
     .sv-divider {
-      width: 5px;
+      width: 6px;
       background: #1e293b;
       cursor: col-resize;
       flex-shrink: 0;
       position: relative;
-      transition: background 0.15s;
-      border-left: 1px solid #2d3148;
-      border-right: 1px solid #2d3148;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      border-left: 1px solid rgba(52, 211, 153, 0.1);
+      border-right: 1px solid rgba(52, 211, 153, 0.1);
     }
-    .sv-divider:hover, .sv-divider.dragging { background: #3b82f6; }
+    .sv-divider:hover, .sv-divider.dragging { 
+      background: linear-gradient(180deg, rgba(52, 211, 153, 0.4) 0%, rgba(52, 211, 153, 0.2) 100%);
+      border-left-color: rgba(52, 211, 153, 0.3);
+      border-right-color: rgba(52, 211, 153, 0.3);
+      box-shadow: inset 0 0 12px rgba(52, 211, 153, 0.2);
+    }
     .sv-divider::after {
-      content: '⋮';
+      content: '::';
       position: absolute;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      color: #475569;
-      font-size: 14px;
+      color: #34d399;
+      font-size: 12px;
       pointer-events: none;
-      letter-spacing: -2px;
+      letter-spacing: 2px;
+      font-weight: bold;
+      opacity: 0;
+      transition: opacity 0.2s;
     }
+    .sv-divider:hover::after { opacity: 0.7; }
 
     /* Right pane: markdown editor */
     .sv-editor-pane {
@@ -572,44 +582,67 @@ function injectSplitViewStyles() {
       display: flex;
       flex-direction: column;
       min-width: 0;
-      background: #0a0e1a;
-      border-left: 1px solid #1e293b;
+      background: linear-gradient(135deg, #0f172a 0%, #1a202c 100%);
+      border-left: 1px solid rgba(52, 211, 153, 0.1);
     }
 
     /* Edit toggle button in the title bar */
     .title-bar .btn-edit-split {
       display: inline-flex;
       align-items: center;
-      gap: 5px;
-      padding: 3px 10px;
-      border-radius: 5px;
+      justify-content: center;
+      gap: 8px;
+      padding: 8px 20px;
+      border-radius: 8px;
       font-size: 12px;
-      border: 1px solid #2d3148;
-      background: transparent;
-      color: #94a3b8;
+      font-weight: 600;
+      border: 1px solid transparent;
+      background: rgba(52, 211, 153, 0.12);
+      color: #34d399;
       cursor: pointer;
-      transition: all 0.15s;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
       font-family: inherit;
-      height: 24px;
+      height: 32px;
+      position: relative;
+      letter-spacing: 0px;
+      text-transform: none;
+      white-space: nowrap;
+      flex-shrink: 0;
+      min-width: fit-content;
     }
     .title-bar .btn-edit-split:hover {
-      background: #1e293b;
-      color: #e2e8f0;
-      border-color: #3b82f6;
+      background: rgba(52, 211, 153, 0.18);
+      color: #34d399;
+      border-color: rgba(52, 211, 153, 0.3);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(52, 211, 153, 0.2);
+    }
+    .title-bar .btn-edit-split:active {
+      transform: translateY(0);
     }
     .title-bar .btn-edit-split.active {
-      background: #1d4ed8;
-      color: #fff;
-      border-color: #2563eb;
+      background: linear-gradient(135deg, rgba(52, 211, 153, 0.25) 0%, rgba(34, 197, 94, 0.25) 100%);
+      color: #10b981;
+      border-color: #10b981;
+      box-shadow: 0 0 20px rgba(52, 211, 153, 0.3);
     }
     .title-bar .btn-edit-split .sv-dot {
-      width: 6px;
-      height: 6px;
+      width: 7px;
+      height: 7px;
       border-radius: 50%;
-      background: #facc15;
+      background: #fbbf24;
       display: none;
+      animation: pulse-dot 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+      position: absolute;
+      right: 6px;
+      top: 6px;
+      box-shadow: 0 0 4px #fbbf24;
     }
     .title-bar .btn-edit-split.has-edits .sv-dot { display: inline-block; }
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.7; transform: scale(1.2); }
+    }
   `;
   document.head.appendChild(style);
 }
@@ -634,8 +667,8 @@ function openPreview(path, filename) {
 
   // Edit button — only for markdown files
   const editBtnHTML = isMarkdown
-    ? `<button class="btn-edit-split" id="${id}-editbtn" title="Toggle split editor" onclick="toggleSplitEditor('${id}')">
-         <span>✎ Edit</span><span class="sv-dot"></span>
+    ? `<button class="btn-edit-split" id="${id}-editbtn" title="Toggle markdown editor" onclick="toggleSplitEditor('${id}')">
+         MarkDown Editor<span class="sv-dot"></span>
        </button>`
     : '';
 
@@ -802,7 +835,7 @@ function toggleSplitEditor(windowId) {
   if (win._splitActive) {
     // ── Close split view ─────────────────────────────────────────────────────
     win._splitActive = false;
-    if (editBtn) { editBtn.classList.remove('active'); editBtn.querySelector('span').textContent = '✎ Edit'; }
+    if (editBtn) { editBtn.classList.remove('active'); }
 
     // Re-render plain preview into body
     body.className = 'preview-body';
@@ -822,7 +855,7 @@ function toggleSplitEditor(windowId) {
     }
 
     win._splitActive = true;
-    if (editBtn) { editBtn.classList.add('active'); editBtn.querySelector('span').textContent = '✕ Close editor'; }
+    if (editBtn) { editBtn.classList.add('active'); }
 
     // Build split layout
     body.innerHTML = '';

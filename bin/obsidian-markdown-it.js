@@ -256,83 +256,195 @@
     });
   }
 
+  /* ── Rule: math block promotion ──────────────────────────────────────────
+     Runs as a CORE rule (after the paragraph/inline pass) so it can see the
+     *actual* raw text of every paragraph regardless of what container it's
+     nested inside — blockquote, callout, list item, whatever. If a whole
+     paragraph's raw content is nothing but `$$...$$` (or `\[...\]`), we
+     promote it from an inline "<span>" into a real block-level "<div>",
+     matching Obsidian's own behaviour. This complements — and covers gaps
+     left by — the block-level obs_math_block rule below, which can only see
+     raw source lines and therefore misses cases where our syntax doesn't get
+     a chance to interrupt an already-open paragraph (e.g. a callout's
+     "> [!NOTE]" title line followed by "> $$ ... $$" on the next line —
+     without this, the two lines get glued into one paragraph). ── */
+
+  function ruleMathBlockPromote(md) {
+    md.core.ruler.push('obs_math_block_promote', function (state) {
+      var tokens = state.tokens;
+      for (var i = 0; i < tokens.length; i++) {
+        if (tokens[i].type !== 'inline') continue;
+        var prev = tokens[i - 1];
+        var next = tokens[i + 1];
+        if (!prev || prev.type !== 'paragraph_open') continue;
+        if (!next || next.type !== 'paragraph_close') continue;
+
+        var raw = tokens[i].content;
+        if (typeof raw !== 'string') continue;
+        var trimmed = raw.trim();
+        if (!trimmed) continue;
+
+        var math = null;
+        var m = trimmed.match(/^\$\$([\s\S]+)\$\$$/);
+        if (m && trimmed.length >= 4 && trimmed !== '$$') {
+          math = m[1].trim();
+        } else {
+          var m2 = trimmed.match(/^\\\[([\s\S]+)\\\]$/);
+          if (m2) math = m2[1].trim();
+        }
+        if (math === null || math === '') continue;
+
+        var tok = new state.Token('obs_math_block', '', 0);
+        tok.content = math;
+        tok.block = true;
+        tok.map = prev.map;
+
+        tokens.splice(i - 1, 3, tok);
+        i -= 1; /* the token that followed paragraph_close is now at index i */
+      }
+    });
+  }
+
   /* ── Rule: raw LaTeX delimiters \(...\) and \[...\] ──────────────────────── */
   /* Handles math pasted from other editors / AI outputs that use backslash      */
-  /* delimiter style rather than dollar-sign style. Must run BEFORE dollar rules  */
-  /* so it consumes these tokens first.                                           */
+  /* delimiter style rather than dollar-sign style.                               */
+  /*                                                                              */
+  /* IMPORTANT: this must be a real INLINE-ruler rule, registered *before*        */
+  /* markdown-it's own built-in 'escape' rule — not a core rule operating on      */
+  /* already-tokenized text children. `(`, `)`, `[`, `]` are all in CommonMark's  */
+  /* standard escapable-punctuation set, so by the time any core rule sees a      */
+  /* paragraph's `.children`, "\(" and "\[" have *already* been consumed by the   */
+  /* built-in escape rule and turned into a plain "(" / "[" with no trace of the  */
+  /* backslash. A core-rule regex like /\\\(.../ against that text can never      */
+  /* match — this is why raw \( \) / \[ \] math silently failed to render at all. */
 
   function ruleMathRawDelimiters(md) {
-    /* Inline: \( ... \) */
-    md.core.ruler.push('obs_math_raw_inline', function (state) {
-      var i, bt;
-      for (i = 0; i < state.tokens.length; i++) {
-        bt = state.tokens[i];
-        if (bt.type !== 'inline' || !bt.children) continue;
-        bt.children = processInline(bt.children, state, function (child) {
-          return splitInlineText(child, state, /\\\((.+?)\\\)/gs, function (inner) {
-            return '<span class="math math-inline" data-math="' + esc(inner) + '">\\(' + esc(inner) + '\\)</span>';
-          });
-        });
+    function mathRawInline(state, silent) {
+      var src = state.src, pos = state.pos;
+      if (src.charCodeAt(pos) !== 0x5C /* \ */ || src[pos + 1] !== '(') return false;
+      var end = src.indexOf('\\)', pos + 2);
+      if (end === -1) return false;
+      if (!silent) {
+        var inner = src.slice(pos + 2, end).trim();
+        var token = state.push('html_inline', '', 0);
+        token.content = '<span class="math math-inline" data-math="' + esc(inner) + '">\\(' + esc(inner) + '\\)</span>';
       }
-    });
-    /* Block: \[ ... \] */
-    md.core.ruler.push('obs_math_raw_block', function (state) {
-      var i, bt;
-      for (i = 0; i < state.tokens.length; i++) {
-        bt = state.tokens[i];
-        if (bt.type !== 'inline' || !bt.children) continue;
-        bt.children = processInline(bt.children, state, function (child) {
-          return splitInlineText(child, state, /\\\[(.+?)\\\]/gs, function (inner) {
-            return '<span class="math math-block math-inline-display" data-math="' + esc(inner) + '">\\[' + esc(inner) + '\\]</span>';
-          });
-        });
+      state.pos = end + 2;
+      return true;
+    }
+
+    function mathRawBlock(state, silent) {
+      var src = state.src, pos = state.pos;
+      if (src.charCodeAt(pos) !== 0x5C /* \ */ || src[pos + 1] !== '[') return false;
+      var end = src.indexOf('\\]', pos + 2);
+      if (end === -1) return false;
+      if (!silent) {
+        var inner = src.slice(pos + 2, end).trim();
+        var token = state.push('html_inline', '', 0);
+        token.content = '<span class="math math-block math-inline-display" data-math="' + esc(inner) + '">\\[' + esc(inner) + '\\]</span>';
       }
-    });
+      state.pos = end + 2;
+      return true;
+    }
+
+    md.inline.ruler.before('escape', 'obs_math_raw_bracket', mathRawBlock);
+    md.inline.ruler.before('escape', 'obs_math_raw_paren', mathRawInline);
   }
 
   /* ── Rule: inline display math  $$...$$  (inline within a paragraph) ────── */
-  /* The block rule only fires when $$ starts a line. This catches $$...$$ that  */
-  /* appears mid-paragraph, e.g. "Heat capacity: $$S=\frac{…}{}$$ Unit: J K⁻¹" */
+  /* The block rule only fires when $$ starts a line, and the promotion rule    */
+  /* only fires when $$...$$ is a whole paragraph's entire content. This one    */
+  /* catches $$...$$ that appears mid-paragraph, e.g.                          */
+  /* "Heat capacity: $$S=\frac{…}{}$$ Unit: J K⁻¹".                            */
+  /*                                                                           */
+  /* Implemented as a real INLINE-ruler rule (not a core rule scanning already-*/
+  /* tokenized text) for the same reason as the raw \( \)/\[ \] delimiters      */
+  /* above: any *other* inline plugin the host app also loads — a caret-based  */
+  /* superscript plugin being the most common real-world case — runs during    */
+  /* the same initial tokenization pass. If our detection ran afterward (as a  */
+  /* core rule), a stray "^" pair inside the LaTeX (e.g. two separate "^2"      */
+  /* exponents in one expression) gets mistaken for a superscript span first,   */
+  /* splitting the math across multiple text tokens so the two "$$" can never   */
+  /* be reunited. Claiming the whole "$$...$$" span atomically, before any      */
+  /* other rule gets a look at its interior, makes it immune to that — and to   */
+  /* any other inline plugin, not just this one specific one. Ruler *position*  */
+  /* (anchored right before 'escape', which sits ahead of essentially every     */
+  /* other inline rule including third-party ones) determines precedence here, */
+  /* not which plugin called `.use()` first, so this holds regardless of load   */
+  /* order in the host app. */
 
   function ruleMathInlineDisplay(md) {
-    md.core.ruler.push('obs_math_inline_display', function (state) {
-      var i, bt;
-      for (i = 0; i < state.tokens.length; i++) {
-        bt = state.tokens[i];
-        if (bt.type !== 'inline' || !bt.children) continue;
-        bt.children = processInline(bt.children, state, function (child, st) {
-          return splitInlineText(child, st, /\$\$((?:[^$]|\$(?!\$))+?)\$\$/g, function (inner) {
-            return '<span class="math math-block math-inline-display" data-math="' + esc(inner) + '">\\[' + esc(inner) + '\\]</span>';
-          });
-        });
+    function mathInlineDouble(state, silent) {
+      var src = state.src, pos = state.pos, max = state.posMax;
+      if (src.charCodeAt(pos) !== 0x24 /* $ */ || src.charCodeAt(pos + 1) !== 0x24) return false;
+
+      var closeIdx = src.indexOf('$$', pos + 2);
+      if (closeIdx === -1 || closeIdx + 2 > max) return false;
+      if (closeIdx === pos + 2) return false; /* "$$$$" — empty, not real math */
+
+      if (!silent) {
+        var inner = src.slice(pos + 2, closeIdx).trim();
+        var token = state.push('html_inline', '', 0);
+        token.content = '<span class="math math-block math-inline-display" data-math="' + esc(inner) + '">\\[' + esc(inner) + '\\]</span>';
       }
-    });
+      state.pos = closeIdx + 2;
+      return true;
+    }
+
+    md.inline.ruler.before('escape', 'obs_math_dollar_display', mathInlineDouble);
   }
 
   /* ── Rule: inline math  $...$  (not $$) ────────────────────────────────── */
+  /* Same inline-ruler approach as above, for the same reason: claim the span   */
+  /* atomically before any other plugin's rule can slice up its interior.       */
+  /* Registered *after* the $$ rule above (both anchored before 'escape'),      */
+  /* so $$ always gets first crack at a position — though the explicit "next    */
+  /* char is $" bail-out below means the order wouldn't actually matter either  */
+  /* way; a "$$" is never mistaken for two single "$"s. */
 
   function ruleMathInline(md) {
-    md.core.ruler.push('obs_math_inline', function (state) {
-      var i, bt;
-      for (i = 0; i < state.tokens.length; i++) {
-        bt = state.tokens[i];
-        if (bt.type !== 'inline' || !bt.children) continue;
-        bt.children = processInline(bt.children, state, function (child, st) {
-          // Match $...$ but not $$
-          return splitInlineText(child, st, /(?<!\$)\$(?!\$)((?:[^$]|\\\$)+?)\$(?!\$)/g, function (inner) {
-            return '<span class="math math-inline" data-math="' + esc(inner) + '">\\(' + esc(inner) + '\\)</span>';
-          });
-        });
+    function mathInlineSingle(state, silent) {
+      var src = state.src, pos = state.pos, max = state.posMax;
+      if (src.charCodeAt(pos) !== 0x24 /* $ */) return false;
+      if (src.charCodeAt(pos + 1) === 0x24) return false; /* leave "$$" to the display rule */
+
+      var searchPos = pos + 1, closeIdx = -1;
+      while (searchPos < max) {
+        var idx = src.indexOf('$', searchPos);
+        if (idx === -1 || idx >= max) break;
+        /* an odd number of backslashes right before this "$" means it's an
+           escaped "\$" — a literal dollar sign inside the math, not a closer */
+        var bsCount = 0, k = idx - 1;
+        while (k >= pos + 1 && src[k] === '\\') { bsCount++; k--; }
+        if (bsCount % 2 === 1) { searchPos = idx + 1; continue; }
+        closeIdx = idx;
+        break;
       }
-    });
+      if (closeIdx === -1 || closeIdx === pos + 1) return false; /* no close, or empty "$$" */
+
+      if (!silent) {
+        var inner = src.slice(pos + 1, closeIdx);
+        var token = state.push('html_inline', '', 0);
+        token.content = '<span class="math math-inline" data-math="' + esc(inner) + '">\\(' + esc(inner) + '\\)</span>';
+      }
+      state.pos = closeIdx + 1;
+      return true;
+    }
+
+    md.inline.ruler.before('escape', 'obs_math_dollar_inline', mathInlineSingle);
   }
 
   /* ── Rule: block math  $$ ... $$ ───────────────────────────────────────── */
 
   function ruleMathBlock(md) {
     md.block.ruler.before('fence', 'obs_math_block', function (state, startLine, endLine, silent) {
-      var max  = state.eMarks[startLine];
-      var line = state.src.slice(state.bMarks[startLine], max).trim();
+      var max   = state.eMarks[startLine];
+      /* bMarks[startLine] alone can still include an un-stripped list marker
+         ("- ", "1. ") — tShift[startLine] is what accounts for that (and for
+         blockquote indent). Reading only bMarks was why "$$...$$" silently
+         failed to become block math inside list items. */
+      var start = state.bMarks[startLine] + state.tShift[startLine];
+      var line  = state.src.slice(start, max).trim();
       if (line.slice(0, 2) !== '$$') return false;
 
       /* Single-line  $$...$$ */
@@ -362,7 +474,12 @@
       tok2.content = content; tok2.map = [startLine, nextLine + 1];
       state.line = nextLine + 1;
       return true;
-    });
+    }, { alt: ['paragraph', 'reference', 'blockquote', 'list'] });
+    /* Registering `alt` lets this rule be tried as a paragraph *terminator*,
+       not just a fresh-block starter — otherwise a "$$ ... $$" line sitting
+       right under other text (e.g. a callout's "[!NOTE]" title line) just
+       gets glued onto that text as lazy paragraph continuation instead of
+       ever being tried as its own block. */
 
     md.renderer.rules['obs_math_block'] = function (tokens, idx) {
       var m = esc(tokens[idx].content);
@@ -483,6 +600,21 @@
           inlineTok.children[0].content = inlineTok.children[0].content
             .replace(/^\[![a-zA-Z]+\][+-]?\s*.*/, '').replace(/^\s+/,'');
           if (!inlineTok.children[0].content) inlineTok.children.shift();
+        }
+
+        /* If nothing was left after stripping the title marker (either the
+           title was on its own line, or — now that obs_math_block can
+           interrupt a paragraph — the next line became its own separate
+           block) the title's paragraph is completely empty. Drop the whole
+           paragraph_open/inline/paragraph_close triple so we don't emit a
+           stray empty "<p></p>" above the callout's real content. */
+        if (!inlineTok.children || inlineTok.children.length === 0) {
+          var pOpenIdx = j - 1;
+          if (pOpenIdx >= 0 && tokens[pOpenIdx].type === 'paragraph_open' &&
+              tokens[j + 1] && tokens[j + 1].type === 'paragraph_close') {
+            tokens.splice(pOpenIdx, 3);
+            /* i (< pOpenIdx) is unaffected by this splice, loop continues normally */
+          }
         }
       }
     });
@@ -727,12 +859,11 @@
   function initMath(root) {
     var el = root || document;
 
-    /* Mark unprocessed math nodes so MathJax doesn't double-process on re-calls */
-    el.querySelectorAll('.math[data-math]:not([data-mj-rendered])').forEach(function (node) {
-      node.setAttribute('data-mj-rendered', 'true');
-    });
-
-    /* Skip if MathJax not loaded yet — caller can retry */
+    /* Skip if MathJax not loaded yet — caller can retry. Nothing is marked
+       here, so the retry will still see these nodes as pending; previously
+       this marked every node "rendered" even on this early-exit path, which
+       made the marker meaningless and (if a caller ever trusted it) able to
+       permanently skip math that was never actually typeset. */
     if (typeof MathJax === 'undefined') return Promise.resolve();
 
     var ready = (MathJax.startup && MathJax.startup.promise)
@@ -741,9 +872,14 @@
 
     return ready.then(function () {
       if (typeof MathJax.typesetPromise !== 'function') return;
-      /* Collect only unfinished math nodes to minimise re-layout cost */
-      var pending = Array.from(el.querySelectorAll('.math[data-math]'));
+      /* Only nodes not already marked — lets repeat calls (e.g. after more
+         content streams into the page) skip math that's already typeset
+         instead of re-scanning/re-typesetting the whole root every time. */
+      var pending = Array.from(el.querySelectorAll('.math[data-math]:not([data-mj-rendered])'));
       if (!pending.length) return;
+      /* Mark right before handing off to MathJax, so a node only ever
+         counts as "rendered" once it's actually been queued for typeset. */
+      pending.forEach(function (node) { node.setAttribute('data-mj-rendered', 'true'); });
       return MathJax.typesetPromise(pending.length < 50 ? pending : [el]);
     }).catch(function (e) {
       console.warn('[obsidian-markdown-it] MathJax typeset error:', e);
@@ -1375,6 +1511,7 @@
       }
     }
 
+    if (opts.enableMath)            ruleMathBlockPromote(md); /* must run before any other custom core rule */
     if (opts.enableComments)       ruleComments(md);
     if (opts.enableMath)           { ruleMathRawDelimiters(md); ruleMathBlock(md); ruleMathInlineDisplay(md); ruleMathInline(md); }
     if (opts.enableHighlight)      ruleHighlight(md);

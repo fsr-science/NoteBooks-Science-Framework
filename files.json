@@ -4,6 +4,11 @@
   "children": [
     {
       "type": "file",
+      "name": "EDITOR_UPGRADES.md",
+      "path": "EDITOR_UPGRADES.md"
+    },
+    {
+      "type": "file",
       "name": "LICENSE",
       "path": "LICENSE"
     },

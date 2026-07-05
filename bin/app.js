@@ -591,55 +591,52 @@ function injectSplitViewStyles() {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 6px;
-      padding: 6px 12px;
-      border-radius: 7px;
+      gap: 8px;
+      padding: 8px 20px;
+      border-radius: 8px;
       font-size: 12px;
-      font-weight: 500;
+      font-weight: 600;
       border: 1px solid transparent;
-      background: rgba(52, 211, 153, 0.1);
+      background: rgba(52, 211, 153, 0.12);
       color: #34d399;
       cursor: pointer;
       transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
       font-family: inherit;
-      height: 28px;
+      height: 32px;
       position: relative;
-    }
-    .title-bar .btn-edit-split .btn-edit-icon {
-      font-size: 14px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .title-bar .btn-edit-split .btn-edit-text {
-      display: inline;
+      letter-spacing: 0px;
+      text-transform: none;
+      white-space: nowrap;
+      flex-shrink: 0;
+      min-width: fit-content;
     }
     .title-bar .btn-edit-split:hover {
-      background: rgba(52, 211, 153, 0.2);
+      background: rgba(52, 211, 153, 0.18);
       color: #34d399;
-      border-color: rgba(52, 211, 153, 0.4);
+      border-color: rgba(52, 211, 153, 0.3);
       transform: translateY(-1px);
-      box-shadow: 0 2px 8px rgba(52, 211, 153, 0.15);
+      box-shadow: 0 4px 12px rgba(52, 211, 153, 0.2);
     }
     .title-bar .btn-edit-split:active {
       transform: translateY(0);
     }
     .title-bar .btn-edit-split.active {
-      background: linear-gradient(135deg, rgba(52, 211, 153, 0.3) 0%, rgba(34, 197, 94, 0.3) 100%);
+      background: linear-gradient(135deg, rgba(52, 211, 153, 0.25) 0%, rgba(34, 197, 94, 0.25) 100%);
       color: #10b981;
       border-color: #10b981;
-      box-shadow: 0 0 16px rgba(52, 211, 153, 0.25);
+      box-shadow: 0 0 20px rgba(52, 211, 153, 0.3);
     }
     .title-bar .btn-edit-split .sv-dot {
-      width: 6px;
-      height: 6px;
+      width: 7px;
+      height: 7px;
       border-radius: 50%;
       background: #fbbf24;
       display: none;
       animation: pulse-dot 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
       position: absolute;
-      right: 4px;
-      top: 4px;
+      right: 6px;
+      top: 6px;
+      box-shadow: 0 0 4px #fbbf24;
     }
     .title-bar .btn-edit-split.has-edits .sv-dot { display: inline-block; }
     @keyframes pulse-dot {
@@ -670,8 +667,8 @@ function openPreview(path, filename) {
 
   // Edit button — only for markdown files
   const editBtnHTML = isMarkdown
-    ? `<button class="btn-edit-split" id="${id}-editbtn" title="Toggle split editor" onclick="toggleSplitEditor('${id}')">
-         <span class="btn-edit-icon">⚙️</span><span class="btn-edit-text">Edit</span><span class="sv-dot"></span>
+    ? `<button class="btn-edit-split" id="${id}-editbtn" title="Toggle markdown editor" onclick="toggleSplitEditor('${id}')">
+         MarkDown Editor<span class="sv-dot"></span>
        </button>`
     : '';
 
@@ -838,7 +835,7 @@ function toggleSplitEditor(windowId) {
   if (win._splitActive) {
     // ── Close split view ─────────────────────────────────────────────────────
     win._splitActive = false;
-    if (editBtn) { editBtn.classList.remove('active'); editBtn.querySelector('.btn-edit-text').textContent = 'Edit'; editBtn.querySelector('.btn-edit-icon').textContent = '⚙️'; }
+    if (editBtn) { editBtn.classList.remove('active'); }
 
     // Re-render plain preview into body
     body.className = 'preview-body';
@@ -858,7 +855,7 @@ function toggleSplitEditor(windowId) {
     }
 
     win._splitActive = true;
-    if (editBtn) { editBtn.classList.add('active'); editBtn.querySelector('.btn-edit-text').textContent = 'Close'; editBtn.querySelector('.btn-edit-icon').textContent = '✕'; }
+    if (editBtn) { editBtn.classList.add('active'); }
 
     // Build split layout
     body.innerHTML = '';

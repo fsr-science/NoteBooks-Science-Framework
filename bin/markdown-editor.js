@@ -200,15 +200,15 @@ const MarkdownEditor = (() => {
         '--mde-btn-hover:#303849;--mde-input-bg:#0f1419;--mde-accent:#10b981;--mde-shadow:0 8px 24px rgba(0,0,0,0.3);}}',
       '.mde-wrapper{display:flex;flex-direction:column;height:100%;font-family:"JetBrains Mono","Fira Code","Consolas",monospace;',
         'background:var(--mde-bg);color:var(--mde-text);overflow:hidden;position:relative;transition:background-color 0.3s,color 0.3s;}',
-      '.mde-toolbar{display:flex;align-items:center;gap:12px;padding:15px 20px;background:var(--mde-toolbar);',
-        'border-bottom:1px solid var(--mde-border);flex-shrink:0;flex-wrap:wrap;row-gap:12px;overflow-x:auto;max-width:100%;',
+      '.mde-toolbar{display:flex;align-items:center;gap:6px;padding:10px 14px;background:var(--mde-toolbar);',
+        'border-bottom:1px solid var(--mde-border);flex-shrink:0;flex-wrap:wrap;row-gap:8px;overflow-x:auto;max-width:100%;',
         'box-shadow:var(--mde-shadow);transition:background-color 0.3s;}',
-      '.mde-toolbar-sep{width:1px;height:26px;background:var(--mde-border);margin:0 10px;flex-shrink:0;opacity:0.3;}',
-      '.mde-toolbar-right{margin-left:auto;display:flex;gap:10px;align-items:center;flex-wrap:wrap;}',
-      '.mde-btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;',
-        'padding:8px 14px;border:1.5px solid var(--mde-border);border-radius:7px;font-size:12px;font-weight:500;',
+      '.mde-toolbar-sep{width:1px;height:20px;background:var(--mde-border);margin:0 2px;flex-shrink:0;opacity:0.2;}',
+      '.mde-toolbar-right{margin-left:auto;display:flex;gap:6px;align-items:center;flex-wrap:wrap;}',
+      '.mde-btn{display:inline-flex;align-items:center;justify-content:center;gap:3px;',
+        'padding:6px 10px;border:1.5px solid var(--mde-border);border-radius:6px;font-size:13px;font-weight:500;',
         'cursor:pointer;background:var(--mde-btn-bg);color:var(--mde-text-secondary);line-height:1;font-family:inherit;',
-        'min-width:auto;height:36px;transition:all 0.2s cubic-bezier(0.4,0,0.2,1);',
+        'min-width:auto;height:32px;transition:all 0.2s cubic-bezier(0.4,0,0.2,1);',
         'white-space:nowrap;flex-shrink:0;position:relative;}',
       '.mde-btn:hover{background:var(--mde-btn-hover);color:var(--mde-text);border-color:var(--mde-accent);',
         'transform:translateY(-2px);box-shadow:0 4px 16px rgba(16,185,129,0.15);}',
@@ -218,13 +218,13 @@ const MarkdownEditor = (() => {
       '.mde-btn-danger{color:#ef4444;border-color:var(--mde-border);}',
       '.mde-btn-danger:hover{background:rgba(239,68,68,0.08);border-color:#ef4444;color:#ef4444;}',
       '.mde-textarea{width:100%;flex:1;resize:none;border:none;outline:none;background:var(--mde-input-bg);',
-        'color:var(--mde-text);font-family:inherit;font-size:14px;line-height:1.85;padding:24px 28px;box-sizing:border-box;',
+        'color:var(--mde-text);font-family:inherit;font-size:14px;line-height:1.85;padding:18px 20px;box-sizing:border-box;',
         'tab-size:2;caret-color:var(--mde-accent);transition:all 0.3s;}',
       '.mde-textarea::selection{background:rgba(16,185,129,0.25);}',
       '.mde-textarea::placeholder{color:var(--mde-text-secondary);opacity:0.5;}',
-      '.mde-footer{display:flex;align-items:center;justify-content:space-between;padding:12px 18px;',
+      '.mde-footer{display:flex;align-items:center;justify-content:space-between;padding:9px 14px;',
         'background:var(--mde-toolbar);border-top:1px solid var(--mde-border);font-size:11px;color:var(--mde-text-secondary);',
-        'flex-shrink:0;gap:14px;transition:all 0.3s;}',
+        'flex-shrink:0;gap:12px;transition:all 0.3s;}',
       '.mde-stats{flex:1;display:flex;gap:8px;align-items:center;}',
       '.mde-stat{display:flex;align-items:center;gap:4px;font-size:11px;color:var(--mde-text-secondary);}',
       '.mde-stat strong{color:var(--mde-text);font-weight:600;font-size:12px;}',
@@ -274,41 +274,41 @@ const MarkdownEditor = (() => {
     }
 
     var fmtButtons = [
-      { html: '<strong>Bold</strong>', title: 'Bold text (Ctrl+B)',  key: 'bold'    },
-      { html: '<em>Italic</em>', title: 'Italic text (Ctrl+I)',key: 'italic'  },
-      { html: 'Strike', title: 'Strikethrough text',  key: 'strike'  },
-      { html: 'Code', title: 'Code snippet',        key: 'code'    },
+      { html: '<strong>B</strong>', title: 'Bold (Ctrl+B)',  key: 'bold'    },
+      { html: '<em>I</em>', title: 'Italic (Ctrl+I)',key: 'italic'  },
+      { html: '<del>S</del>', title: 'Strikethrough',  key: 'strike'  },
+      { html: '&lt;/&gt;', title: 'Code',        key: 'code'    },
     ];
 
     var headingButtons = [
-      { html: 'H1', title: 'Large heading', key: 'heading' },
-      { html: 'H2', title: 'Medium heading', key: 'h2' },
-      { html: 'H3', title: 'Small heading', key: 'h3' },
+      { html: 'H1', title: 'Heading 1', key: 'heading' },
+      { html: 'H2', title: 'Heading 2', key: 'h2' },
+      { html: 'H3', title: 'Heading 3', key: 'h3' },
     ];
 
     var listButtons = [
-      { html: 'List', title: 'Bullet point list', key: 'ul' },
-      { html: 'Ordered', title: 'Numbered list', key: 'ol' },
-      { html: 'Quote', title: 'Block quote', key: 'quote' },
+      { html: '&#10625;', title: 'Bullet list', key: 'ul' },
+      { html: '1.', title: 'Numbered list', key: 'ol' },
+      { html: '&#10625;', title: 'Quote', key: 'quote' },
     ];
 
     var insertButtons = [
-      { html: 'Link', title: 'Insert link' },
-      { html: 'Table', title: 'Insert table' },
-      { html: 'Math', title: 'Inline math equation' },
-      { html: 'Block Math', title: 'Centered math equation' },
+      { html: '🔗', title: 'Link' },
+      { html: '▦', title: 'Table' },
+      { html: '∑', title: 'Math' },
+      { html: '∑∑', title: 'Block Math' },
     ];
 
     var advancedButtons = [
-      { html: 'Graph', title: 'Interactive graph (Ctrl+D)' },
-      { html: 'Diagram', title: 'TikZ diagram (Ctrl+T)' },
+      { html: '📊', title: 'Graph' },
+      { html: '📐', title: 'Diagram' },
     ];
 
     var calloutButtons = [
-      { html: 'Note', title: 'Add a note' },
-      { html: 'Warning', title: 'Add a warning' },
-      { html: 'Info', title: 'Add info box' },
-      { html: 'Tip', title: 'Add a helpful tip' },
+      { html: '📝', title: 'Note' },
+      { html: '⚠️', title: 'Warning' },
+      { html: 'ℹ️', title: 'Info' },
+      { html: '✓', title: 'Tip' },
     ];
 
     // textarea is declared here so closures below can reference it

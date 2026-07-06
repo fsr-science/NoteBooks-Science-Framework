@@ -6,6 +6,54 @@
 
 const MarkdownEditor = (() => {
   const EDITOR_STORAGE_PREFIX = 'md-editor-';
+  const MAX_HISTORY_SIZE = 50;
+  const HISTORY_DEBOUNCE = 300;
+
+  // ─── Undo/Redo History System ─────────────────────────────────────────────
+  const EditorHistory = (() => {
+    let stack = [];
+    let currentIndex = -1;
+    let debounceTimer = null;
+
+    return {
+      init: function(initialValue) {
+        stack = [initialValue];
+        currentIndex = 0;
+      },
+      push: function(value) {
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(() => {
+          // Remove any future states if user made changes after undo
+          stack = stack.slice(0, currentIndex + 1);
+          // Add new state
+          stack.push(value);
+          if (stack.length > MAX_HISTORY_SIZE) {
+            stack.shift();
+          } else {
+            currentIndex++;
+          }
+        }, HISTORY_DEBOUNCE);
+      },
+      undo: function() {
+        clearTimeout(debounceTimer);
+        if (currentIndex > 0) {
+          currentIndex--;
+          return stack[currentIndex];
+        }
+        return null;
+      },
+      redo: function() {
+        clearTimeout(debounceTimer);
+        if (currentIndex < stack.length - 1) {
+          currentIndex++;
+          return stack[currentIndex];
+        }
+        return null;
+      },
+      canUndo: function() { return currentIndex > 0; },
+      canRedo: function() { return currentIndex < stack.length - 1; }
+    };
+  })();
 
   // ─── Format action table ──────────────────────────────────────────────────
   const FORMAT_ACTIONS = {
@@ -165,6 +213,26 @@ const MarkdownEditor = (() => {
       }
       if (k === 'd') { e.preventDefault(); insertDesmos(ta); return; }
       if (k === 't') { e.preventDefault(); insertTikz(ta); return; }
+      if (k === 'z') { 
+        e.preventDefault(); 
+        var undoVal = EditorHistory.undo();
+        if (undoVal !== null) {
+          ta.value = undoVal;
+          ta.dispatchEvent(new Event('input', { bubbles: true }));
+          showToast(wrapper, 'Undo');
+        }
+        return; 
+      }
+      if (k === 'y') { 
+        e.preventDefault(); 
+        var redoVal = EditorHistory.redo();
+        if (redoVal !== null) {
+          ta.value = redoVal;
+          ta.dispatchEvent(new Event('input', { bubbles: true }));
+          showToast(wrapper, 'Redo');
+        }
+        return; 
+      }
       if (k === 's') {
         e.preventDefault();
         sessionStorage.setItem(storageKey, ta.value);
@@ -394,9 +462,44 @@ const MarkdownEditor = (() => {
       unsavedDot.classList.remove('visible');
     });
 
+    var prBtn = makeBtn('\u2191 Submit PR', 'Push changes as pull request', 'mde-btn-primary', function() {
+      if (textarea.value === originalContent) {
+        showToast(wrapper, 'No changes to submit', 'error');
+        return;
+      }
+      prBtn.disabled = true;
+      prBtn.textContent = '\u2191 Submitting...';
+      fetch('/api/submit-pr', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          filePath: filePath,
+          content: textarea.value,
+          originalContent: originalContent
+        })
+      })
+      .then(r => r.json())
+      .then(data => {
+        prBtn.disabled = false;
+        prBtn.textContent = '\u2191 Submit PR';
+        if (data.success) {
+          showToast(wrapper, 'PR created: ' + (data.prUrl || 'Check GitHub'));
+          window.open(data.prUrl, '_blank');
+        } else {
+          showToast(wrapper, data.error || 'Failed to create PR', 'error');
+        }
+      })
+      .catch(err => {
+        prBtn.disabled = false;
+        prBtn.textContent = '\u2191 Submit PR';
+        showToast(wrapper, 'Error: ' + err.message, 'error');
+      });
+    });
+
     right.appendChild(unsavedDot);
     right.appendChild(doneBtn);
     right.appendChild(revertBtn);
+    right.appendChild(prBtn);
     toolbar.appendChild(right);
 
     // Textarea
@@ -430,10 +533,15 @@ const MarkdownEditor = (() => {
     wrapper.appendChild(toast);
 
     // Events
+    // Initialize history with starting content
+    EditorHistory.init(originalContent);
+    
     textarea.addEventListener('input', function() {
       sessionStorage.setItem(storageKey, textarea.value);
       updateStats(textarea, statsEl);
       unsavedDot.classList.add('visible');
+      // Track change in history
+      EditorHistory.push(textarea.value);
     });
 
     attachShortcuts(textarea, wrapper, storageKey, onClose);

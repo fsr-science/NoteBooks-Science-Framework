@@ -314,69 +314,58 @@ const MarkdownEditor = (() => {
     // textarea is declared here so closures below can reference it
     var textarea = document.createElement('textarea');
 
-    // Format buttons
-    fmtButtons.forEach(function(item) {
-      var before = FORMAT_ACTIONS[item.key].before;
-      var after  = FORMAT_ACTIONS[item.key].after;
-      toolbar.appendChild(makeBtn(item.html, item.title, '', function() {
-        insertFormat(before, after, textarea);
-      }));
-    });
+    // Helper function to create button groups
+    function createButtonGroup(buttons, formatActions) {
+      buttons.forEach(function(item) {
+        var before = formatActions ? formatActions[item.key].before : undefined;
+        var after = formatActions ? formatActions[item.key].after : undefined;
+        toolbar.appendChild(makeBtn(item.html, item.title, '', function() {
+          if (formatActions) {
+            insertFormat(before, after, textarea);
+          }
+        }));
+      });
+    }
 
-    // Separator
+    // GROUP 1: Text Formatting (Bold, Italic, Strike, Code)
+    createButtonGroup(fmtButtons, FORMAT_ACTIONS);
+    
     var sep1 = document.createElement('div');
     sep1.className = 'mde-toolbar-sep';
     toolbar.appendChild(sep1);
 
-    // Heading buttons
-    headingButtons.forEach(function(item) {
-      var before = FORMAT_ACTIONS[item.key].before;
-      var after  = FORMAT_ACTIONS[item.key].after;
-      toolbar.appendChild(makeBtn(item.html, item.title, '', function() {
-        insertFormat(before, after, textarea);
-      }));
-    });
-
-    // Separator
+    // GROUP 2: Structure (Headings, Lists, Quote)
+    createButtonGroup(headingButtons, FORMAT_ACTIONS);
+    
     var sep2 = document.createElement('div');
     sep2.className = 'mde-toolbar-sep';
     toolbar.appendChild(sep2);
 
-    // List buttons
-    listButtons.forEach(function(item) {
-      var before = FORMAT_ACTIONS[item.key].before;
-      var after  = FORMAT_ACTIONS[item.key].after;
-      toolbar.appendChild(makeBtn(item.html, item.title, '', function() {
-        insertFormat(before, after, textarea);
-      }));
-    });
-
-    // Separator
+    createButtonGroup(listButtons, FORMAT_ACTIONS);
+    
     var sep3 = document.createElement('div');
     sep3.className = 'mde-toolbar-sep';
     toolbar.appendChild(sep3);
 
-    // Insert buttons
+    // GROUP 3: Inserts (Link, Table, Math)
     toolbar.appendChild(makeBtn(insertButtons[0].html, insertButtons[0].title, '', function() { insertLink(textarea); }));
     toolbar.appendChild(makeBtn(insertButtons[1].html, insertButtons[1].title, '', function() { insertTable(textarea); }));
     toolbar.appendChild(makeBtn(insertButtons[2].html, insertButtons[2].title, '', function() { insertMath(textarea, false); }));
     toolbar.appendChild(makeBtn(insertButtons[3].html, insertButtons[3].title, '', function() { insertMath(textarea, true); }));
-
-    // Separator
+    
     var sep4 = document.createElement('div');
     sep4.className = 'mde-toolbar-sep';
     toolbar.appendChild(sep4);
 
-    // Advanced buttons
+    // GROUP 4: Advanced (Graphs, Diagrams)
     toolbar.appendChild(makeBtn(advancedButtons[0].html, advancedButtons[0].title, '', function() { insertDesmos(textarea); }));
     toolbar.appendChild(makeBtn(advancedButtons[1].html, advancedButtons[1].title, '', function() { insertTikz(textarea); }));
-
-    // Separator
+    
     var sep5 = document.createElement('div');
     sep5.className = 'mde-toolbar-sep';
     toolbar.appendChild(sep5);
 
-    // Callout buttons
+    // GROUP 5: Callouts (Note, Warning, Info, Tip)
     toolbar.appendChild(makeBtn(calloutButtons[0].html, calloutButtons[0].title, '', function() { insertCallout(textarea, 'note'); }));
     toolbar.appendChild(makeBtn(calloutButtons[1].html, calloutButtons[1].title, '', function() { insertCallout(textarea, 'warning'); }));
     toolbar.appendChild(makeBtn(calloutButtons[2].html, calloutButtons[2].title, '', function() { insertCallout(textarea, 'info'); }));

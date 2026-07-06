@@ -668,7 +668,7 @@ function openPreview(path, filename) {
   // Edit button — only for markdown files
   const editBtnHTML = isMarkdown
     ? `<button class="btn-edit-split" id="${id}-editbtn" title="Toggle markdown editor" onclick="toggleSplitEditor('${id}')">
-         MarkDown Editor<span class="sv-dot"></span>
+         Edit<span class="sv-dot"></span>
        </button>`
     : '';
 

@@ -6,6 +6,54 @@
 
 const MarkdownEditor = (() => {
   const EDITOR_STORAGE_PREFIX = 'md-editor-';
+  const MAX_HISTORY_SIZE = 50;
+  const HISTORY_DEBOUNCE = 300;
+
+  // ─── Undo/Redo History System ─────────────────────────────────────────────
+  const EditorHistory = (() => {
+    let stack = [];
+    let currentIndex = -1;
+    let debounceTimer = null;
+
+    return {
+      init: function(initialValue) {
+        stack = [initialValue];
+        currentIndex = 0;
+      },
+      push: function(value) {
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(() => {
+          // Remove any future states if user made changes after undo
+          stack = stack.slice(0, currentIndex + 1);
+          // Add new state
+          stack.push(value);
+          if (stack.length > MAX_HISTORY_SIZE) {
+            stack.shift();
+          } else {
+            currentIndex++;
+          }
+        }, HISTORY_DEBOUNCE);
+      },
+      undo: function() {
+        clearTimeout(debounceTimer);
+        if (currentIndex > 0) {
+          currentIndex--;
+          return stack[currentIndex];
+        }
+        return null;
+      },
+      redo: function() {
+        clearTimeout(debounceTimer);
+        if (currentIndex < stack.length - 1) {
+          currentIndex++;
+          return stack[currentIndex];
+        }
+        return null;
+      },
+      canUndo: function() { return currentIndex > 0; },
+      canRedo: function() { return currentIndex < stack.length - 1; }
+    };
+  })();
 
   // ─── Format action table ──────────────────────────────────────────────────
   const FORMAT_ACTIONS = {
@@ -138,7 +186,11 @@ const MarkdownEditor = (() => {
     var text  = ta.value;
     var words = text.trim() === '' ? 0 : text.trim().split(/\s+/).length;
     var lines = text === '' ? 0 : text.split('\n').length;
-    statsEl.textContent = words + ' words \u00b7 ' + text.length + ' chars \u00b7 ' + lines + ' lines';
+    statsEl.innerHTML = '<span class="mde-stat"><strong>' + words + '</strong> W</span>' +
+                        '<span class="mde-stat-sep">|</span>' +
+                        '<span class="mde-stat"><strong>' + text.length + '</strong> C</span>' +
+                        '<span class="mde-stat-sep">|</span>' +
+                        '<span class="mde-stat"><strong>' + lines + '</strong> L</span>';
   }
 
   // ─── Keyboard shortcuts ───────────────────────────────────────────────────
@@ -161,6 +213,26 @@ const MarkdownEditor = (() => {
       }
       if (k === 'd') { e.preventDefault(); insertDesmos(ta); return; }
       if (k === 't') { e.preventDefault(); insertTikz(ta); return; }
+      if (k === 'z') { 
+        e.preventDefault(); 
+        var undoVal = EditorHistory.undo();
+        if (undoVal !== null) {
+          ta.value = undoVal;
+          ta.dispatchEvent(new Event('input', { bubbles: true }));
+          showToast(wrapper, 'Undo');
+        }
+        return; 
+      }
+      if (k === 'y') { 
+        e.preventDefault(); 
+        var redoVal = EditorHistory.redo();
+        if (redoVal !== null) {
+          ta.value = redoVal;
+          ta.dispatchEvent(new Event('input', { bubbles: true }));
+          showToast(wrapper, 'Redo');
+        }
+        return; 
+      }
       if (k === 's') {
         e.preventDefault();
         sessionStorage.setItem(storageKey, ta.value);
@@ -188,49 +260,56 @@ const MarkdownEditor = (() => {
     var style = document.createElement('style');
     style.id = 'mde-styles';
     style.textContent = [
-      '.mde-wrapper{display:flex;flex-direction:column;height:100%;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Roboto","Oxygen","Ubuntu","Cantarell",sans-serif;',
-        'background:linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%);color:#1f2937;overflow:hidden;position:relative;}',
-      '.mde-toolbar{display:flex;align-items:center;gap:6px;padding:12px 16px;background:#fff;',
-        'border-bottom:1px solid #e5e7eb;flex-shrink:0;flex-wrap:wrap;row-gap:6px;overflow-x:auto;max-width:100%;',
-        'box-shadow:0 1px 3px rgba(0,0,0,0.08);}',
-      '.mde-toolbar-sep{width:1px;height:20px;background:#d1d5db;margin:0 4px;flex-shrink:0;opacity:0.5;}',
-      '.mde-toolbar-right{margin-left:auto;display:flex;gap:6px;align-items:center;}',
-      '.mde-btn{display:inline-flex;align-items:center;justify-content:center;gap:5px;',
-        'padding:6px 12px;border:1px solid #d1d5db;border-radius:6px;font-size:12px;',
-        'cursor:pointer;background:#fff;color:#4b5563;line-height:1;font-family:inherit;',
-        'min-width:32px;height:32px;transition:all 0.2s cubic-bezier(0.4,0,0.2,1);',
-        'white-space:nowrap;flex-shrink:0;font-weight:500;}',
-      '.mde-btn:hover{background:#f3f4f6;color:#1f2937;border-color:#9ca3af;',
-        'box-shadow:0 2px 8px rgba(0,0,0,0.1);transform:translateY(-1px);}',
-      '.mde-btn:active{transform:scale(0.98);background:#e5e7eb;}',
-      '.mde-btn-primary{background:#10b981;color:#fff;border-color:#059669;padding:6px 14px;}',
-      '.mde-btn-primary:hover{background:#059669;color:#fff;border-color:#047857;',
-        'box-shadow:0 4px 12px rgba(16,185,129,0.3);}',
-      '.mde-btn-danger{color:#ef4444;border-color:#fecaca;}',
-      '.mde-btn-danger:hover{background:#fef2f2;border-color:#ef4444;color:#dc2626;}',
-      '.mde-textarea{width:100%;flex:1;resize:none;border:none;outline:none;background:#fff;',
-        'color:#1f2937;font-family:"Consolas","Monaco","Courier New",monospace;',
-        'font-size:14px;line-height:1.8;padding:20px 24px;box-sizing:border-box;',
-        'tab-size:2;caret-color:#10b981;}',
-      '.mde-textarea::selection{background:rgba(16,185,129,0.2);}',
-      '.mde-textarea::placeholder{color:#9ca3af;}',
-      '.mde-footer{display:flex;align-items:center;justify-content:space-between;padding:10px 16px;',
-        'background:#fff;border-top:1px solid #e5e7eb;font-size:12px;color:#6b7280;',
-        'flex-shrink:0;gap:12px;}',
-      '.mde-stats{flex:1;}',
-      '.mde-hint{font-size:11px;color:#9ca3af;white-space:nowrap;overflow:auto;text-overflow:ellipsis;}',
-      '.mde-unsaved-dot{width:7px;height:7px;border-radius:50%;background:#f59e0b;',
+      ':root{--mde-bg:#ffffff;--mde-bg-secondary:#f5f7fa;--mde-text:#1a1a2e;--mde-text-secondary:#5a5a7a;',
+        '--mde-border:#d9dce5;--mde-toolbar:#ffffff;--mde-btn-bg:#f0f2f8;--mde-btn-hover:#e5e8f2;',
+        '--mde-input-bg:#ffffff;--mde-accent:#10b981;--mde-shadow:0 2px 8px rgba(0,0,0,0.08);}',
+      '@media(prefers-color-scheme:dark){:root{--mde-bg:#0f1419;--mde-bg-secondary:#1a1f2e;--mde-text:#e8eaed;',
+        '--mde-text-secondary:#a8aac0;--mde-border:#2a2d3a;--mde-toolbar:#1a1f2e;--mde-btn-bg:#252d3d;',
+        '--mde-btn-hover:#303849;--mde-input-bg:#0f1419;--mde-accent:#10b981;--mde-shadow:0 8px 24px rgba(0,0,0,0.3);}}',
+      '.mde-wrapper{display:flex;flex-direction:column;height:100%;font-family:"JetBrains Mono","Fira Code","Consolas",monospace;',
+        'background:var(--mde-bg);color:var(--mde-text);overflow:hidden;position:relative;transition:background-color 0.3s,color 0.3s;}',
+      '.mde-toolbar{display:flex;align-items:center;gap:6px;padding:10px 14px;background:var(--mde-toolbar);',
+        'border-bottom:1px solid var(--mde-border);flex-shrink:0;flex-wrap:wrap;row-gap:8px;overflow-x:auto;max-width:100%;',
+        'box-shadow:var(--mde-shadow);transition:background-color 0.3s;}',
+      '.mde-toolbar-sep{width:1px;height:20px;background:var(--mde-border);margin:0 2px;flex-shrink:0;opacity:0.2;}',
+      '.mde-toolbar-right{margin-left:auto;display:flex;gap:6px;align-items:center;flex-wrap:wrap;}',
+      '.mde-btn{display:inline-flex;align-items:center;justify-content:center;gap:3px;',
+        'padding:6px 10px;border:1.5px solid var(--mde-border);border-radius:6px;font-size:13px;font-weight:500;',
+        'cursor:pointer;background:var(--mde-btn-bg);color:var(--mde-text-secondary);line-height:1;font-family:inherit;',
+        'min-width:auto;height:32px;transition:all 0.2s cubic-bezier(0.4,0,0.2,1);',
+        'white-space:nowrap;flex-shrink:0;position:relative;}',
+      '.mde-btn:hover{background:var(--mde-btn-hover);color:var(--mde-text);border-color:var(--mde-accent);',
+        'transform:translateY(-2px);box-shadow:0 4px 16px rgba(16,185,129,0.15);}',
+      '.mde-btn:active{transform:translateY(0);opacity:0.9;}',
+      '.mde-btn-primary{background:linear-gradient(135deg,#10b981 0%,#059669 100%);color:#ffffff;border-color:#10b981;padding:8px 16px;}',
+      '.mde-btn-primary:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(16,185,129,0.4);border-color:#059669;}',
+      '.mde-btn-danger{color:#ef4444;border-color:var(--mde-border);}',
+      '.mde-btn-danger:hover{background:rgba(239,68,68,0.08);border-color:#ef4444;color:#ef4444;}',
+      '.mde-textarea{width:100%;flex:1;resize:none;border:none;outline:none;background:var(--mde-input-bg);',
+        'color:var(--mde-text);font-family:inherit;font-size:14px;line-height:1.85;padding:18px 20px;box-sizing:border-box;',
+        'tab-size:2;caret-color:var(--mde-accent);transition:all 0.3s;}',
+      '.mde-textarea::selection{background:rgba(16,185,129,0.25);}',
+      '.mde-textarea::placeholder{color:var(--mde-text-secondary);opacity:0.5;}',
+      '.mde-footer{display:flex;align-items:center;justify-content:space-between;padding:9px 14px;',
+        'background:var(--mde-toolbar);border-top:1px solid var(--mde-border);font-size:11px;color:var(--mde-text-secondary);',
+        'flex-shrink:0;gap:12px;transition:all 0.3s;}',
+      '.mde-stats{flex:1;display:flex;gap:8px;align-items:center;}',
+      '.mde-stat{display:flex;align-items:center;gap:4px;font-size:11px;color:var(--mde-text-secondary);}',
+      '.mde-stat strong{color:var(--mde-text);font-weight:600;font-size:12px;}',
+      '.mde-stat-sep{color:var(--mde-border);opacity:0.5;}',
+      '.mde-hint{font-size:11px;color:var(--mde-text-secondary);white-space:nowrap;overflow:auto;text-overflow:ellipsis;}',
+      '.mde-unsaved-dot{width:8px;height:8px;border-radius:50%;background:#f59e0b;',
         'display:inline-block;margin-left:6px;vertical-align:middle;opacity:0;transition:opacity 0.2s;',
-        'box-shadow:0 0 6px rgba(245,158,11,0.6);animation:pulse-indicator 2s infinite;}',
+        'box-shadow:0 0 8px rgba(245,158,11,0.7);animation:pulse-indicator 2s cubic-bezier(0.4,0,0.6,1) infinite;}',
       '.mde-unsaved-dot.visible{opacity:1;}',
-      '@keyframes pulse-indicator{0%,100%{transform:scale(1);opacity:1;}50%{transform:scale(1.2);opacity:0.7;}}',
-      '.mde-status-bar{position:absolute;bottom:40px;left:50%;transform:translateX(-50%);',
-        'background:#fff;border:1px solid #e5e7eb;color:#6b7280;font-size:12px;',
-        'padding:8px 16px;border-radius:6px;opacity:0;transition:opacity 0.18s;',
-        'pointer-events:none;white-space:nowrap;z-index:20;box-shadow:0 4px 12px rgba(0,0,0,0.12);}',
+      '@keyframes pulse-indicator{0%,100%{transform:scale(1);opacity:1;}50%{transform:scale(1.25);opacity:0.6;}}',
+      '.mde-status-bar{position:absolute;bottom:48px;left:50%;transform:translateX(-50%);',
+        'background:var(--mde-toolbar);border:1px solid var(--mde-border);color:var(--mde-text-secondary);font-size:12px;font-weight:500;',
+        'padding:10px 18px;border-radius:7px;opacity:0;transition:opacity 0.18s,transform 0.18s;',
+        'pointer-events:none;white-space:nowrap;z-index:20;box-shadow:var(--mde-shadow);}',
       '.mde-status-bar.mde-status-visible{opacity:1;}',
-      '.mde-status-success{color:#10b981;border-color:#dbeafe;background:#f0fdf4;}',
-      '.mde-status-error{color:#ef4444;border-color:#fee2e2;background:#fef2f2;}',
+      '.mde-status-success{color:#10b981;border-color:rgba(16,185,129,0.2);background:rgba(16,185,129,0.08);}',
+      '.mde-status-error{color:#ef4444;border-color:rgba(239,68,68,0.2);background:rgba(239,68,68,0.08);}',
     ].join('');
     document.head.appendChild(style);
   }
@@ -263,109 +342,98 @@ const MarkdownEditor = (() => {
     }
 
     var fmtButtons = [
-      { html: '<strong>B</strong>', title: 'Bold text (Ctrl+B)',  key: 'bold'    },
-      { html: '<em>I</em>', title: 'Italic text (Ctrl+I)',key: 'italic'  },
-      { html: '<s>S</s>', title: 'Strikethrough text',  key: 'strike'  },
-      { html: '&lt; /&gt;', title: 'Code snippet',        key: 'code'    },
+      { html: '<strong>B</strong>', title: 'Bold (Ctrl+B)',  key: 'bold'    },
+      { html: '<em>I</em>', title: 'Italic (Ctrl+I)',key: 'italic'  },
+      { html: '<del>S</del>', title: 'Strikethrough',  key: 'strike'  },
+      { html: '&lt;/&gt;', title: 'Code',        key: 'code'    },
     ];
 
     var headingButtons = [
-      { html: 'H1', title: 'Large heading', key: 'heading' },
-      { html: 'H2', title: 'Medium heading', key: 'h2' },
-      { html: 'H3', title: 'Small heading', key: 'h3' },
+      { html: 'H1', title: 'Heading 1', key: 'heading' },
+      { html: 'H2', title: 'Heading 2', key: 'h2' },
+      { html: 'H3', title: 'Heading 3', key: 'h3' },
     ];
 
     var listButtons = [
-      { html: '&#10625; Bullet', title: 'Bullet point list', key: 'ul' },
-      { html: '1. Number', title: 'Numbered list', key: 'ol' },
-      { html: '&#9658; Quote', title: 'Block quote', key: 'quote' },
+      { html: '&#10625;', title: 'Bullet list', key: 'ul' },
+      { html: '1.', title: 'Numbered list', key: 'ol' },
+      { html: '&#10625;', title: 'Quote', key: 'quote' },
     ];
 
     var insertButtons = [
-      { html: '🔗 Link', title: 'Insert link' },
-      { html: '□ Table', title: 'Insert table' },
-      { html: '∑ Formula', title: 'Inline math equation' },
-      { html: '∑∑ Big Formula', title: 'Centered math equation' },
+      { html: '🔗', title: 'Link' },
+      { html: '▦', title: 'Table' },
+      { html: '∑', title: 'Math' },
+      { html: '∑∑', title: 'Block Math' },
     ];
 
     var advancedButtons = [
-      { html: '📊 Graph', title: 'Interactive graph' },
-      { html: '📐 Diagram', title: 'TikZ diagram' },
+      { html: '📊', title: 'Graph' },
+      { html: '📐', title: 'Diagram' },
     ];
 
     var calloutButtons = [
-      { html: '📝 Note', title: 'Add a note' },
-      { html: '⚠️ Warning', title: 'Add a warning' },
-      { html: 'ℹ️ Info', title: 'Add info box' },
-      { html: '✓ Tip', title: 'Add a helpful tip' },
+      { html: '📝', title: 'Note' },
+      { html: '⚠️', title: 'Warning' },
+      { html: 'ℹ️', title: 'Info' },
+      { html: '✓', title: 'Tip' },
     ];
 
     // textarea is declared here so closures below can reference it
     var textarea = document.createElement('textarea');
 
-    // Format buttons
-    fmtButtons.forEach(function(item) {
-      var before = FORMAT_ACTIONS[item.key].before;
-      var after  = FORMAT_ACTIONS[item.key].after;
-      toolbar.appendChild(makeBtn(item.html, item.title, '', function() {
-        insertFormat(before, after, textarea);
-      }));
-    });
+    // Helper function to create button groups
+    function createButtonGroup(buttons, formatActions) {
+      buttons.forEach(function(item) {
+        var before = formatActions ? formatActions[item.key].before : undefined;
+        var after = formatActions ? formatActions[item.key].after : undefined;
+        toolbar.appendChild(makeBtn(item.html, item.title, '', function() {
+          if (formatActions) {
+            insertFormat(before, after, textarea);
+          }
+        }));
+      });
+    }
 
-    // Separator
+    // GROUP 1: Text Formatting (Bold, Italic, Strike, Code)
+    createButtonGroup(fmtButtons, FORMAT_ACTIONS);
+    
     var sep1 = document.createElement('div');
     sep1.className = 'mde-toolbar-sep';
     toolbar.appendChild(sep1);
 
-    // Heading buttons
-    headingButtons.forEach(function(item) {
-      var before = FORMAT_ACTIONS[item.key].before;
-      var after  = FORMAT_ACTIONS[item.key].after;
-      toolbar.appendChild(makeBtn(item.html, item.title, '', function() {
-        insertFormat(before, after, textarea);
-      }));
-    });
-
-    // Separator
+    // GROUP 2: Structure (Headings, Lists, Quote)
+    createButtonGroup(headingButtons, FORMAT_ACTIONS);
+    
     var sep2 = document.createElement('div');
     sep2.className = 'mde-toolbar-sep';
     toolbar.appendChild(sep2);
 
-    // List buttons
-    listButtons.forEach(function(item) {
-      var before = FORMAT_ACTIONS[item.key].before;
-      var after  = FORMAT_ACTIONS[item.key].after;
-      toolbar.appendChild(makeBtn(item.html, item.title, '', function() {
-        insertFormat(before, after, textarea);
-      }));
-    });
-
-    // Separator
+    createButtonGroup(listButtons, FORMAT_ACTIONS);
+    
     var sep3 = document.createElement('div');
     sep3.className = 'mde-toolbar-sep';
     toolbar.appendChild(sep3);
 
-    // Insert buttons
+    // GROUP 3: Inserts (Link, Table, Math)
     toolbar.appendChild(makeBtn(insertButtons[0].html, insertButtons[0].title, '', function() { insertLink(textarea); }));
     toolbar.appendChild(makeBtn(insertButtons[1].html, insertButtons[1].title, '', function() { insertTable(textarea); }));
     toolbar.appendChild(makeBtn(insertButtons[2].html, insertButtons[2].title, '', function() { insertMath(textarea, false); }));
     toolbar.appendChild(makeBtn(insertButtons[3].html, insertButtons[3].title, '', function() { insertMath(textarea, true); }));
-
-    // Separator
+    
     var sep4 = document.createElement('div');
     sep4.className = 'mde-toolbar-sep';
     toolbar.appendChild(sep4);
 
-    // Advanced buttons
+    // GROUP 4: Advanced (Graphs, Diagrams)
     toolbar.appendChild(makeBtn(advancedButtons[0].html, advancedButtons[0].title, '', function() { insertDesmos(textarea); }));
     toolbar.appendChild(makeBtn(advancedButtons[1].html, advancedButtons[1].title, '', function() { insertTikz(textarea); }));
-
-    // Separator
+    
     var sep5 = document.createElement('div');
     sep5.className = 'mde-toolbar-sep';
     toolbar.appendChild(sep5);
 
-    // Callout buttons
+    // GROUP 5: Callouts (Note, Warning, Info, Tip)
     toolbar.appendChild(makeBtn(calloutButtons[0].html, calloutButtons[0].title, '', function() { insertCallout(textarea, 'note'); }));
     toolbar.appendChild(makeBtn(calloutButtons[1].html, calloutButtons[1].title, '', function() { insertCallout(textarea, 'warning'); }));
     toolbar.appendChild(makeBtn(calloutButtons[2].html, calloutButtons[2].title, '', function() { insertCallout(textarea, 'info'); }));
@@ -394,16 +462,51 @@ const MarkdownEditor = (() => {
       unsavedDot.classList.remove('visible');
     });
 
+    var prBtn = makeBtn('\u2191 Submit PR', 'Push changes as pull request', 'mde-btn-primary', function() {
+      if (textarea.value === originalContent) {
+        showToast(wrapper, 'No changes to submit', 'error');
+        return;
+      }
+      prBtn.disabled = true;
+      prBtn.textContent = '\u2191 Submitting...';
+      fetch('/api/submit-pr', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          filePath: filePath,
+          content: textarea.value,
+          originalContent: originalContent
+        })
+      })
+      .then(r => r.json())
+      .then(data => {
+        prBtn.disabled = false;
+        prBtn.textContent = '\u2191 Submit PR';
+        if (data.success) {
+          showToast(wrapper, 'PR created: ' + (data.prUrl || 'Check GitHub'));
+          window.open(data.prUrl, '_blank');
+        } else {
+          showToast(wrapper, data.error || 'Failed to create PR', 'error');
+        }
+      })
+      .catch(err => {
+        prBtn.disabled = false;
+        prBtn.textContent = '\u2191 Submit PR';
+        showToast(wrapper, 'Error: ' + err.message, 'error');
+      });
+    });
+
     right.appendChild(unsavedDot);
     right.appendChild(doneBtn);
     right.appendChild(revertBtn);
+    right.appendChild(prBtn);
     toolbar.appendChild(right);
 
     // Textarea
     textarea.className   = 'mde-textarea';
     textarea.value       = savedContent;
     textarea.spellcheck  = true;
-    textarea.placeholder = 'Start writing markdown\u2026';
+    textarea.placeholder = '// Start editing your markdown here...\n// Use Ctrl+B for bold, Ctrl+I for italic\n// Press Ctrl+S to save changes';
 
     // Footer
     var footer = document.createElement('div');
@@ -414,7 +517,7 @@ const MarkdownEditor = (() => {
 
     var hint = document.createElement('span');
     hint.className = 'mde-hint';
-    hint.textContent = 'Tip: Use Ctrl+B for bold, Ctrl+I for italic, Ctrl+K to add links, Ctrl+S to save. Hover over buttons to learn more!';
+    hint.textContent = '// Keyboard: Ctrl+B bold • Ctrl+I italic • Ctrl+K link • Ctrl+M math • Ctrl+S save • Tab indent';
 
     footer.appendChild(statsEl);
     footer.appendChild(hint);
@@ -430,10 +533,15 @@ const MarkdownEditor = (() => {
     wrapper.appendChild(toast);
 
     // Events
+    // Initialize history with starting content
+    EditorHistory.init(originalContent);
+    
     textarea.addEventListener('input', function() {
       sessionStorage.setItem(storageKey, textarea.value);
       updateStats(textarea, statsEl);
       unsavedDot.classList.add('visible');
+      // Track change in history
+      EditorHistory.push(textarea.value);
     });
 
     attachShortcuts(textarea, wrapper, storageKey, onClose);

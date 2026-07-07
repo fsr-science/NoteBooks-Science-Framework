@@ -2,7 +2,44 @@
 
 ## Phase Overview
 
-This document outlines the deployment of the upgraded NoteBooks system with Neon PostgreSQL backend, community forum, enhanced markdown rendering, and admin capabilities.
+This document outlines the deployment of the upgraded NoteBooks system with:
+- Express.js backend (preserves all original functionality)
+- Neon PostgreSQL database
+- Community forum with persistent discussions
+- Enhanced markdown rendering with Obsidian callouts
+- Admin dashboard and in-app PR review
+- GitHub App integration for content submission
+
+**Note**: This deployment uses Express.js instead of the static `serve` server. The migration is fully backward compatible with no breaking changes.
+
+## Express Server Setup
+
+### Local Development
+
+```bash
+# Install dependencies (already done)
+npm install
+
+# Start development server on port 3000
+npm run dev
+
+# Alternative: start on custom port
+PORT=3001 npm start
+```
+
+### Start Script
+
+The `package.json` now uses Express instead of static server:
+
+```json
+{
+  "scripts": {
+    "dev": "node server.js",
+    "start": "node server.js",
+    "static": "npx serve -l 3000"  // fallback to static server if needed
+  }
+}
+```
 
 ## Environment Variables Required
 
@@ -18,6 +55,8 @@ AUTH_SECRET=<same as BETTER_AUTH_SECRET>
 GITHUB_REPO_OWNER=fsr-science
 GITHUB_REPO_NAME=NoteBooks-Science-Framework
 GITHUB_APP_TOKEN=ghu_xxxx... (GitHub App token, not user PAT)
+GITHUB_OWNER=fsr-science
+GITHUB_REPO=NoteBooks-Science-Framework
 GITHUB_BRANCH=content
 ```
 
@@ -32,9 +71,11 @@ RESEND_API_KEY=re_xxx (for email notifications)
 ```
 NODE_ENV=production
 VERCEL_PROJECT_ID=prj_xxx
+PORT=3000
 APP_URL=https://notebooks.fsr-science.org
 GITPAGE_URL=https://fsr-science.github.io/NoteBooks-Science-Framework
 INITIAL_ADMIN_EMAIL=admin@fsr-science.org
+CORS_ORIGIN=*
 ```
 
 ## Database Setup
@@ -78,22 +119,31 @@ vercel deploy --prod
 
 ### 3. Verify APIs
 
-Test endpoints:
+Test Express endpoints locally:
+
 ```bash
-# Test forum API
-curl -X POST https://your-domain/api/forum \
-  -H "Content-Type: application/json" \
-  -d '{"action":"listTopics"}'
+# Health check
+curl http://localhost:3000/health
 
-# Test mirrors API
-curl -X POST https://your-domain/api/mirrors \
+# Markdown validation
+curl -X POST http://localhost:3000/api/markdown/validate \
   -H "Content-Type: application/json" \
-  -d '{"action":"listMirrors"}'
+  -d '{"content":"# Test\nHello"}'
 
-# Test markdown renderer
-curl -X POST https://your-domain/api/markdown \
+# Forum topics list (requires DB connection)
+curl -X POST http://localhost:3000/api/forum/topics/list \
   -H "Content-Type: application/json" \
-  -d '{"markdown":"# Hello"}'
+  -d '{"page":1}'
+
+# Admin stats (requires auth token in Authorization header)
+curl -X GET http://localhost:3000/api/admin/stats \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN"
+
+# Mirrors list
+curl http://localhost:3000/api/mirrors/list
+
+# GitHub PR list
+curl "http://localhost:3000/api/pr-review/list?owner=fsr-science&repo=NoteBooks-Science-Framework"
 ```
 
 ### 4. Enable Features

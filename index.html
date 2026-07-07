@@ -392,43 +392,72 @@
     </div>
   </div>
 
-  <div class="window">
-    <div class="toolbar">
-      <h1>NoteBooks-Science</h1>
-      <!-- Secondary buttons hidden on mobile into overflow menu -->
-      <button class="mob-toolbar-overflow" onclick="refreshFiles()" title="Refresh">↻</button>
-      <button class="mob-toolbar-overflow" onclick="goUp()" title="Go up">↑</button>
-      <button class="mob-toolbar-overflow" id="uploadBtnToolbar" onclick="showUploadScreen()" title="Upload file" style="font-size:15px">📤</button>
-      <button class="mob-toolbar-overflow" id="adminPanelBtn" onclick="showAdminPanel()" title="Admin panel" style="display:none; font-size:15px">⚙️</button>
-      <button class="mob-toolbar-overflow" id="communityBtnToolbar" onclick="openCommunity()" title="Community" style="font-size:15px">💬</button>
-      <!-- Always visible on both desktop and mobile -->
-      <button id="loginBtnToolbar" onclick="showLoginScreen()" title="Login / Account">🔑 Login</button>
-      <!-- Mobile-only overflow toggle -->
-      <button id="mobOverflowBtn" onclick="toggleMobOverflow()" title="More options">⋯</button>
+  <div class="app-shell">
+    <aside class="app-sidebar" id="appSidebar">
+      <div class="sidebar-brand">
+        <div class="brand-mark">N</div>
+        <div>
+          <div class="brand-title">NoteBooks</div>
+          <div class="brand-subtitle">Science workspace</div>
+        </div>
+      </div>
+
+      <div class="sidebar-section">
+        <div class="sidebar-section-title">Quick actions</div>
+        <button class="sidebar-action" onclick="refreshFiles()">↻ Refresh</button>
+        <button class="sidebar-action" onclick="goUp()">↑ Go up</button>
+        <button class="sidebar-action" onclick="showUploadScreen()">⬆ Upload</button>
+        <button class="sidebar-action" onclick="openCommunity()">💬 Community</button>
+      </div>
+
+      <div class="sidebar-section">
+        <div class="sidebar-section-title">Account</div>
+        <div class="sidebar-account-card" id="sidebarAccountCard">
+          <div class="sidebar-avatar" id="sidebarAvatar">U</div>
+          <div class="sidebar-account-copy">
+            <div class="sidebar-account-name" id="sidebarAccountName">Sign in</div>
+            <div class="sidebar-account-meta" id="sidebarAccountMeta">Access your workspace</div>
+          </div>
+        </div>
+        <button class="sidebar-action secondary" id="sidebarLoginBtn" onclick="showLoginScreen()">🔐 Login / Account</button>
+        <button class="sidebar-action secondary" id="sidebarAdminBtn" onclick="showAdminPanel()" style="display:none">⚙️ Admin Panel</button>
+      </div>
+    </aside>
+
+    <div class="window">
+      <div class="toolbar">
+        <h1>NoteBooks-Science</h1>
+        <button class="mob-toolbar-overflow" onclick="refreshFiles()" title="Refresh">↻</button>
+        <button class="mob-toolbar-overflow" onclick="goUp()" title="Go up">↑</button>
+        <button class="mob-toolbar-overflow" id="uploadBtnToolbar" onclick="showUploadScreen()" title="Upload file">⬆</button>
+        <button class="mob-toolbar-overflow" id="adminPanelBtn" onclick="showAdminPanel()" title="Admin panel" style="display:none">⚙️</button>
+        <button class="mob-toolbar-overflow" id="communityBtnToolbar" onclick="openCommunity()" title="Community">💬</button>
+        <button id="loginBtnToolbar" onclick="showLoginScreen()" title="Login / Account">🔐 Account</button>
+        <button id="mobOverflowBtn" onclick="toggleMobOverflow()" title="More options">⋯</button>
+      </div>
+      <div id="mobOverflowMenu">
+        <button class="mob-overflow-item" onclick="refreshFiles();closeMobOverflow()">
+          <span class="moi-icon">↻</span> Refresh
+        </button>
+        <button class="mob-overflow-item" onclick="goUp();closeMobOverflow()">
+          <span class="moi-icon">↑</span> Go Up
+        </button>
+        <button class="mob-overflow-item" onclick="showUploadScreen();closeMobOverflow()">
+          <span class="moi-icon">⬆</span> Upload File
+        </button>
+        <div class="mob-overflow-sep"></div>
+        <button class="mob-overflow-item" onclick="openCommunity();closeMobOverflow()">
+          <span class="moi-icon">💬</span> Community
+        </button>
+        <button class="mob-overflow-item" id="mobOverflowAdminBtn" style="display:none" onclick="showAdminPanel();closeMobOverflow()">
+          <span class="moi-icon">⚙️</span> Admin Panel
+        </button>
+      </div>
+      <div class="path-nav" id="pathNav">
+        <span class="path-segment" onclick="goToRoot()">☁️</span>
+      </div>
+      <div class="list-view" id="listView"></div>
     </div>
-    <!-- Mobile overflow dropdown -->
-    <div id="mobOverflowMenu">
-      <button class="mob-overflow-item" onclick="refreshFiles();closeMobOverflow()">
-        <span class="moi-icon">↻</span> Refresh
-      </button>
-      <button class="mob-overflow-item" onclick="goUp();closeMobOverflow()">
-        <span class="moi-icon">↑</span> Go Up
-      </button>
-      <button class="mob-overflow-item" onclick="showUploadScreen();closeMobOverflow()">
-        <span class="moi-icon">📤</span> Upload File
-      </button>
-      <div class="mob-overflow-sep"></div>
-      <button class="mob-overflow-item" onclick="openCommunity();closeMobOverflow()">
-        <span class="moi-icon">💬</span> Community
-      </button>
-      <button class="mob-overflow-item" id="mobOverflowAdminBtn" style="display:none" onclick="showAdminPanel();closeMobOverflow()">
-        <span class="moi-icon">⚙️</span> Admin Panel
-      </button>
-    </div>
-    <div class="path-nav" id="pathNav">
-      <span class="path-segment" onclick="goToRoot()">☁️</span>
-    </div>
-    <div class="list-view" id="listView"></div>
   </div>
 
   <div class="context-menu" id="contextMenu">

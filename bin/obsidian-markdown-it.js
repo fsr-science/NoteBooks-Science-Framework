@@ -807,6 +807,47 @@
     };                  // ← closes md.renderer.rules.fence = function(...)
   }                     // ← closes ruleDesmos
 
+  // --- DESMOS 3D fence handler ---
+  /* Same idea as ruleDesmos above, but targets Desmos.Calculator3D instead of
+     Desmos.GraphingCalculator. Uses a separate fence language ("desmos3d") so
+     existing ```desmos blocks keep behaving exactly as before — nothing about
+     2D graphs changes. Good for VSEPR-style spatial modeling: atoms as sphere
+     inequalities, bonds as finite-cylinder ("capsule") inequalities, orbitals
+     as double-cone surfaces — see initDesmos3D()'s doc comment for ready-made
+     templates. */
+  function ruleDesmos3D(md) {
+    var orig = md.renderer.rules.fence;
+    md.renderer.rules.fence = function (tokens, idx, options, env, self) {
+      var token = tokens[idx];
+      var lang  = token.info.trim().split(/\s+/)[0].toLowerCase();
+      if (lang !== 'desmos3d') {
+        return orig ? orig(tokens, idx, options, env, self) : self.renderToken(tokens, idx, options);
+      }
+
+      /* ── Parse key=value options from info string ── */
+      var opts = { lock: 'none', zoom: 'true', height: '720' };
+      token.info.trim().split(/\s+/).slice(1).forEach(function (part) {
+        var kv = part.split('=');
+        if (kv.length === 2) opts[kv[0]] = kv[1];
+      });
+      var expressions = token.content
+        .trim()
+        .split('\n')
+        .filter(function (line) { return line.trim() !== ''; })
+        .map(function (latex, i) { return { id: 'expr3d-' + i, latex: latex.trim() }; });
+
+      var stateJson = JSON.stringify({ expressions: { list: expressions } });
+      var uid = 'desmos3d-' + Math.random().toString(36).slice(2, 9);
+
+      return '<div class="desmos3d-block" id="' + uid + '"'
+        + ' data-state=\'' + stateJson.replace(/'/g, '&#39;') + '\''
+        + ' data-lock="'   + opts.lock + '"'
+        + ' data-zoom="'   + opts.zoom + '"'
+        + ' style="width:100%;height:' + opts.height + 'px;min-height:' + opts.height + 'px;border-radius:18px;overflow:hidden;background:var(--bg);border:1px solid var(--border);box-shadow:var(--shadow);">'
+        + '</div>\n';
+    };
+  }
+
   /* ── Rule: heading IDs — stamp id="..." on <h1>–<h6> for wikilink anchors ─ */
 
   function ruleHeadingIds(md) {
@@ -1189,6 +1230,109 @@
     });
   }
 
+  /* ── Post-render init: Desmos 3D blocks ──────────────────────────────────── */
+  /*                                                                           */
+  /* Same lock/zoom/expression wiring as initDesmos() above, but instantiates  */
+  /* Desmos.Calculator3D instead of Desmos.GraphingCalculator.                 */
+  /*                                                                           */
+  /* IMPORTANT: 3D calculator access must be enabled *per API key* on Desmos's */
+  /* side (desmos.com/my-api) — separately from graphing-calculator access —  */
+  /* and the proxied script (see api/desmos.js) needs to be a version that     */
+  /* actually ships Calculator3D (v1.11+; the docs confirm v1.11, v1.12, and   */
+  /* v1.13 all include it — older pinned versions like v1.9 do not). Calling   */
+  /* Desmos.Calculator3D() for a key without 3D enabled throws, so this checks */
+  /* Desmos.enabledFeatures.Calculator3D first and renders a plain-language    */
+  /* notice in the block instead of letting an exception break the page.      */
+  /*                                                                           */
+  /* Ready-to-use templates for spatial chemistry modeling — drop any of these */
+  /* into a ```desmos3d fence:                                                 */
+  /*                                                                           */
+  /*   Atom (sphere), centered at (a,b,c) with radius r:                       */
+  /*     a=0                                                                   */
+  /*     b=0                                                                   */
+  /*     c=0                                                                   */
+  /*     r=1                                                                   */
+  /*     (x-a)^2+(y-b)^2+(z-c)^2\le r^2                                        */
+  /*                                                                           */
+  /*   Bond (finite cylinder / "capsule" between two atom centers P1, P2):     */
+  /*   given endpoints (x_1,y_1,z_1) and (x_2,y_2,z_2) and bond radius r_b,     */
+  /*   a point (x,y,z) is inside the bond when its perpendicular distance to   */
+  /*   the P1–P2 segment is ≤ r_b AND its projection falls between the two     */
+  /*   endpoints (0≤t≤1) — this keeps it a finite stick, not an infinite line: */
+  /*     t=\frac{(x-x_1)(x_2-x_1)+(y-y_1)(y_2-y_1)+(z-z_1)(z_2-z_1)}{(x_2-x_1)^2+(y_2-y_1)^2+(z_2-z_1)^2} */
+  /*     d^2=(x-x_1-t(x_2-x_1))^2+(y-y_1-t(y_2-y_1))^2+(z-z_1-t(z_2-z_1))^2     */
+  /*     \left\{0\le t\le1\right\}\left\{d^2\le r_b^2\right\}                   */
+  /*                                                                           */
+  /*   p-orbital lobe (double cone along the z-axis), height h controls taper: */
+  /*     z^2=h^2(x^2+y^2)                                                      */
+  /*                                                                           */
+  /* Wrap repeated atoms/bonds with named constants (a, b, c, r, etc. per      */
+  /* instance, e.g. a_1, a_2...) the same way sliders are used elsewhere —     */
+  /* Desmos 3D treats each as an independent, draggable parameter.             */
+
+  function initDesmos3D(root) {
+    if (typeof Desmos === 'undefined') return;
+    requestAnimationFrame(function () {
+      (root || document).querySelectorAll('.desmos3d-block:not([data-desmos-ready])').forEach(function (elt) {
+        elt.setAttribute('data-desmos-ready', 'true');
+
+        if (!Desmos.Calculator3D || (Desmos.enabledFeatures && Desmos.enabledFeatures.Calculator3D === false)) {
+          elt.style.display = 'flex';
+          elt.style.alignItems = 'center';
+          elt.style.justifyContent = 'center';
+          elt.style.padding = '1em';
+          elt.style.textAlign = 'center';
+          elt.style.background = 'rgba(239,83,80,.08)';
+          elt.style.color = '#ef5350';
+          elt.style.fontSize = '.85em';
+          elt.textContent = '3D Calculator isn\u2019t enabled for this Desmos API key (or the loaded API version predates it) \u2014 check desmos.com/my-api and the version pinned in api/desmos.js.';
+          return;
+        }
+
+        var lock      = elt.getAttribute('data-lock') || 'none';
+        var allowZoom = elt.getAttribute('data-zoom') !== 'false';
+        var prefersDark = typeof window !== 'undefined' && window.matchMedia
+          ? window.matchMedia('(prefers-color-scheme: dark)').matches
+          : false;
+        var calc = Desmos.Calculator3D(elt, {
+          invertedColors:       prefersDark,
+          settingsMenu:         false,
+          zoomButtons:          allowZoom,
+          lockViewport:         lock === 'all',
+          expressions:          true,
+          keypad:               lock === 'none',
+          expressionsCollapsed: false,
+        });
+        requestAnimationFrame(function () {
+          if (typeof window !== 'undefined') {
+            window.dispatchEvent(new Event('resize'));
+          }
+        });
+        try {
+          var state = JSON.parse(elt.getAttribute('data-state'));
+          state.expressions.list.forEach(function (expr) {
+            var isSlider = expr.latex && /^[a-zA-Z_0-9]+(\s*)=(\s*)[0-9]/.test(expr.latex);
+
+            if (lock === 'none') {
+              // everything visible and editable — do nothing
+            } else if (lock === 'expressions') {
+              if (!isSlider) expr.secret = true;
+            } else if (lock === 'sliders') {
+              if (!isSlider) expr.secret = true;
+              if (isSlider)  expr.readonly = true;
+            } else if (lock === 'all') {
+              expr.secret = true;
+            }
+
+            calc.setExpression(expr);
+          });
+        } catch (e) {
+          console.warn('[obsidian-markdown-it] Desmos 3D expr error:', e);
+        }
+      });
+    });
+  }
+
   /* ── Post-render init: highlight.js code blocks ─────────────────────────── */
   /*                                                                           */
   /* Wraps every <pre><code> in a styled shell with:                          */
@@ -1525,6 +1669,7 @@
     if (opts.enableMermaid)        ruleMermaid(md);
     if (opts.enableTikz)          ruleTikz(md);
     ruleDesmos(md);   
+    ruleDesmos3D(md);
     ruleHeadingIds(md);
   }
 
@@ -1912,5 +2057,6 @@
   global.obsidianInitMermaid        = initMermaid;
   global.obsidianInitHighlight      = initHighlight;
   global.obsidianInitDesmos         = initDesmos;
+  global.obsidianInitDesmos3D       = initDesmos3D;
 
 }(window));

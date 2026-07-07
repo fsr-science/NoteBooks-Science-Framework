@@ -1,4 +1,4 @@
-  /**
+/**
    * Render raw Markdown to an HTML string.
    * The caller must insert the HTML into the DOM, then call
    * initMarkdownFeatures(containerEl) to activate MathJax / TikZJax / Mermaid / hljs / folds.
@@ -40,6 +40,9 @@
     if (typeof window.obsidianInitDesmos === 'function') {
       window.obsidianInitDesmos(container);
     }
+    if (typeof window.obsidianInitDesmos3D === 'function') {
+      window.obsidianInitDesmos3D(container);
+    }
     if (typeof window.obsidianInitHighlight === 'function') {
       window.obsidianInitHighlight(container);
     }
@@ -78,4 +81,4 @@ async function checkForUpdate() {
     }
 
   }
-}	
+}

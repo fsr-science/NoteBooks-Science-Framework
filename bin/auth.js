@@ -177,6 +177,64 @@ function attemptModernLogout() {
 
 // ===== UPDATE AUTH UI =====
 
+function showAdminPanel() {
+  const overlay = document.getElementById('adminOverlay');
+  if (!overlay) return;
+  overlay.style.display = 'flex';
+  requestAnimationFrame(() => overlay.classList.add('active'));
+}
+
+function hideAdminPanel() {
+  const overlay = document.getElementById('adminOverlay');
+  if (!overlay) return;
+  overlay.classList.remove('active');
+  setTimeout(() => { overlay.style.display = 'none'; }, 380);
+}
+
+function updateShellSidebar() {
+  const nameEl = document.getElementById('sidebarAccountName');
+  const metaEl = document.getElementById('sidebarAccountMeta');
+  const avatarEl = document.getElementById('sidebarAvatar');
+  const loginBtn = document.getElementById('loginBtnToolbar');
+  const sidebarLoginBtn = document.getElementById('sidebarLoginBtn');
+  const sidebarAdminBtn = document.getElementById('sidebarAdminBtn');
+  const adminToolbarBtn = document.getElementById('adminPanelBtn');
+  const mobileAdminBtn = document.getElementById('mobOverflowAdminBtn');
+
+  if (!nameEl || !metaEl || !avatarEl) return;
+
+  const loggedIn = window.ModernAuthInstance.isLoggedIn();
+  const email = window.ModernAuthInstance.getEmail();
+
+  if (loggedIn) {
+    nameEl.textContent = email || 'Signed in';
+    metaEl.textContent = 'Authenticated and ready';
+    avatarEl.textContent = (email || 'U').charAt(0).toUpperCase();
+    if (loginBtn) {
+      loginBtn.textContent = '👤 Account';
+      loginBtn.style.background = 'var(--selected)';
+      loginBtn.style.color = 'var(--accent)';
+    }
+    if (sidebarLoginBtn) sidebarLoginBtn.textContent = '👤 Account';
+    if (sidebarAdminBtn) sidebarAdminBtn.style.display = 'flex';
+    if (adminToolbarBtn) adminToolbarBtn.style.display = 'flex';
+    if (mobileAdminBtn) mobileAdminBtn.style.display = 'block';
+  } else {
+    nameEl.textContent = 'Sign in';
+    metaEl.textContent = 'Access your workspace';
+    avatarEl.textContent = 'U';
+    if (loginBtn) {
+      loginBtn.textContent = '🔐 Account';
+      loginBtn.style.background = '';
+      loginBtn.style.color = '';
+    }
+    if (sidebarLoginBtn) sidebarLoginBtn.textContent = '🔐 Login / Account';
+    if (sidebarAdminBtn) sidebarAdminBtn.style.display = 'none';
+    if (adminToolbarBtn) adminToolbarBtn.style.display = 'none';
+    if (mobileAdminBtn) mobileAdminBtn.style.display = 'none';
+  }
+}
+
 function updateModernAuthUI() {
   const loginBtn = document.getElementById('loginBtnToolbar');
   if (!loginBtn) return;
@@ -190,6 +248,8 @@ function updateModernAuthUI() {
     loginBtn.style.background = '';
     loginBtn.style.color = '';
   }
+
+  updateShellSidebar();
 }
 
 // ===== RESTORE SESSION =====
@@ -198,6 +258,8 @@ function restoreModernSession() {
   // Try to restore from localStorage if available
   if (window.ModernAuthInstance.isLoggedIn()) {
     updateModernAuthUI();
+  } else {
+    updateShellSidebar();
   }
 }
 

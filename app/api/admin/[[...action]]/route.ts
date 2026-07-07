@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { query } from '@/lib/db-client';
-import { getAuthenticatedUser, requireRole } from '@/lib/auth-middleware';
+import { getAuthenticatedUser } from '@/lib/auth-middleware';
 
 export async function GET(
   request: NextRequest,

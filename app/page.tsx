@@ -6,13 +6,15 @@ export default function Page() {
   let indexHtml = '';
   try {
     const publicPath = join(process.cwd(), 'public', 'index.html');
-    indexHtml = readFileSync(publicPath, 'utf-8');
+    const content = readFileSync(publicPath, 'utf-8');
+    indexHtml = content;
   } catch (error) {
-    console.error('[v0] Failed to load index.html:', error);
+    console.error('[v0] Failed to load index.html from:', join(process.cwd(), 'public', 'index.html'), error);
     return (
       <div style={{ padding: '20px', fontFamily: 'sans-serif' }}>
         <h1>NoteBooks Science Framework</h1>
         <p>Loading frontend...</p>
+        <p style={{ color: 'red' }}>Error: Could not load public/index.html</p>
       </div>
     );
   }

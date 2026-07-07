@@ -1,219 +1,181 @@
-// api/pr-review.mjs — In-app PR review with diff, preview, and merge capability
-import { requireAuth } from '../lib/auth-middleware.js';
-import { query } from '../lib/db.js';
+// api/pr-review.mjs — In-app PR review with GitHub integration (Express Router)
+import express from 'express';
 import { Octokit } from '@octokit/rest';
+import { query } from '../lib/db.js';
+import { getAuthenticatedUser, requireAuth } from '../lib/auth-middleware.js';
 
-const octokit = new Octokit({
-  auth: process.env.GITHUB_APP_TOKEN
-});
+const router = express.Router();
+const octokit = new Octokit({ auth: process.env.GITHUB_APP_TOKEN });
 
-const REPO_OWNER = process.env.GITHUB_REPO_OWNER;
-const REPO_NAME = process.env.GITHUB_REPO_NAME;
-const CONTENT_BRANCH = 'content';
-const MAIN_BRANCH = 'main';
-
-export default async function handler(req, res) {
-  res.setHeader('Content-Type', 'application/json');
-
+// List open PRs for review
+router.get('/list', async (req, res) => {
   try {
-    const { action } = req.body;
-    const user = await requireAuth(req);
+    const { owner = process.env.GITHUB_OWNER, repo = process.env.GITHUB_REPO } = req.query;
 
-    // List PRs for current user
-    if (action === 'listMyPRs' && req.method === 'POST') {
-      const { page = 1, limit = 20 } = req.body;
-      const offset = (page - 1) * limit;
+    if (!owner || !repo) {
+      return res.status(400).json({ error: 'Missing owner or repo' });
+    }
 
-      // Get PRs from GitHub API
-      const prs = await octokit.rest.pulls.list({
-        owner: REPO_OWNER,
-        repo: REPO_NAME,
-        creator: user.email.split('@')[0], // GitHub username would be better
-        state: 'open',
-        per_page: limit,
-        page
-      });
+    const prs = await octokit.pulls.list({
+      owner,
+      repo,
+      state: 'open',
+      per_page: 100
+    });
 
-      const prDetails = prs.data.map(pr => ({
+    res.json({
+      pullRequests: prs.data.map(pr => ({
         id: pr.id,
         number: pr.number,
         title: pr.title,
-        description: pr.body,
+        author: pr.user.login,
         createdAt: pr.created_at,
         updatedAt: pr.updated_at,
-        status: pr.state,
-        reviewComments: pr.review_comments,
-        commits: pr.commits,
+        url: pr.html_url,
+        filesChanged: pr.changed_files,
         additions: pr.additions,
-        deletions: pr.deletions,
-        filesChanged: pr.changed_files
-      }));
-
-      return res.status(200).json({ prs: prDetails });
-    }
-
-    // Get PR diff
-    if (action === 'getPRDiff' && req.method === 'POST') {
-      const { prNumber } = req.body;
-
-      if (!prNumber) {
-        return res.status(400).json({ error: 'Missing prNumber' });
-      }
-
-      const diff = await octokit.rest.pulls.get({
-        owner: REPO_OWNER,
-        repo: REPO_NAME,
-        pull_number: prNumber
-      });
-
-      const files = await octokit.rest.pulls.listFiles({
-        owner: REPO_OWNER,
-        repo: REPO_NAME,
-        pull_number: prNumber
-      });
-
-      return res.status(200).json({
-        pr: {
-          number: diff.data.number,
-          title: diff.data.title,
-          description: diff.data.body,
-          state: diff.data.state
-        },
-        files: files.data.map(f => ({
-          filename: f.filename,
-          status: f.status,
-          additions: f.additions,
-          deletions: f.deletions,
-          patch: f.patch,
-          rawUrl: f.raw_url
-        }))
-      });
-    }
-
-    // Get file preview from PR
-    if (action === 'getFilePreview' && req.method === 'POST') {
-      const { prNumber, filename } = req.body;
-
-      if (!prNumber || !filename) {
-        return res.status(400).json({ error: 'Missing prNumber or filename' });
-      }
-
-      try {
-        const content = await octokit.rest.repos.getContent({
-          owner: REPO_OWNER,
-          repo: REPO_NAME,
-          path: filename,
-          ref: `refs/pull/${prNumber}/head`
-        });
-
-        const fileContent = Buffer.from(content.data.content, 'base64').toString('utf-8');
-
-        return res.status(200).json({
-          filename,
-          content: fileContent,
-          size: content.data.size
-        });
-      } catch (error) {
-        return res.status(404).json({ error: 'File not found in PR' });
-      }
-    }
-
-    // Add review comment to PR
-    if (action === 'addReviewComment' && req.method === 'POST') {
-      const { prNumber, commitId, filename, line, comment } = req.body;
-
-      if (!prNumber || !commitId || !filename || !line || !comment) {
-        return res.status(400).json({ error: 'Missing required fields' });
-      }
-
-      const review = await octokit.rest.pulls.createReviewComment({
-        owner: REPO_OWNER,
-        repo: REPO_NAME,
-        pull_number: prNumber,
-        commit_id: commitId,
-        path: filename,
-        line,
-        body: comment
-      });
-
-      // Audit log
-      await query(
-        `INSERT INTO audit_log (user_id, action, resource_type, resource_id, changes, created_at)
-         VALUES ($1, 'ADD_PR_COMMENT', 'pr', $2, $3, NOW())`,
-        [user.id, prNumber, JSON.stringify({ filename, line })]
-      );
-
-      return res.status(201).json({ comment: review.data });
-    }
-
-    // Approve and merge PR (reviewers only)
-    if (action === 'approvePR' && req.method === 'POST') {
-      const { prNumber, approvalComment } = req.body;
-
-      if (!prNumber) {
-        return res.status(400).json({ error: 'Missing prNumber' });
-      }
-
-      // Create approval review
-      const approval = await octokit.rest.pulls.createReview({
-        owner: REPO_OWNER,
-        repo: REPO_NAME,
-        pull_number: prNumber,
-        event: 'APPROVE',
-        body: approvalComment || 'Approved'
-      });
-
-      // Audit log
-      await query(
-        `INSERT INTO audit_log (user_id, action, resource_type, resource_id, created_at)
-         VALUES ($1, 'APPROVE_PR', 'pr', $2, NOW())`,
-        [user.id, prNumber]
-      );
-
-      return res.status(200).json({ review: approval.data });
-    }
-
-    // Merge PR (admin/maintainer only)
-    if (action === 'mergePR' && req.method === 'POST') {
-      const { prNumber, commitMessage, squash = false } = req.body;
-
-      // Verify user is maintainer
-      const collaboratorStatus = await octokit.rest.repos.checkCollaborator({
-        owner: REPO_OWNER,
-        repo: REPO_NAME,
-        username: user.email.split('@')[0]
-      }).catch(() => ({ status: 204 }));
-
-      if (collaboratorStatus.status !== 204) {
-        return res.status(403).json({ error: 'Not authorized to merge PRs' });
-      }
-
-      const merge = await octokit.rest.pulls.merge({
-        owner: REPO_OWNER,
-        repo: REPO_NAME,
-        pull_number: prNumber,
-        commit_message: commitMessage,
-        merge_method: squash ? 'squash' : 'merge'
-      });
-
-      // Audit log
-      await query(
-        `INSERT INTO audit_log (user_id, action, resource_type, resource_id, changes, created_at)
-         VALUES ($1, 'MERGE_PR', 'pr', $2, $3, NOW())`,
-        [user.id, prNumber, JSON.stringify({ merged: true, method: squash ? 'squash' : 'merge' })]
-      );
-
-      return res.status(200).json({ merged: merge.data });
-    }
-
-    return res.status(400).json({ error: 'Invalid action' });
+        deletions: pr.deletions
+      }))
+    });
   } catch (error) {
-    console.error('PR Review API error:', error);
+    console.error('[v0] List PRs error:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
 
-    if (error.message === 'Unauthorized') {
+// Get PR details and diff
+router.get('/:prNumber/details', async (req, res) => {
+  try {
+    const { prNumber } = req.params;
+    const { owner = process.env.GITHUB_OWNER, repo = process.env.GITHUB_REPO } = req.query;
+
+    if (!owner || !repo) {
+      return res.status(400).json({ error: 'Missing owner or repo' });
+    }
+
+    // Get PR details
+    const pr = await octokit.pulls.get({
+      owner,
+      repo,
+      pull_number: parseInt(prNumber)
+    });
+
+    // Get PR files
+    const files = await octokit.pulls.listFiles({
+      owner,
+      repo,
+      pull_number: parseInt(prNumber),
+      per_page: 100
+    });
+
+    res.json({
+      pr: {
+        number: pr.data.number,
+        title: pr.data.title,
+        body: pr.data.body,
+        author: pr.data.user.login,
+        status: pr.data.state,
+        createdAt: pr.data.created_at,
+        updatedAt: pr.data.updated_at,
+        url: pr.data.html_url
+      },
+      files: files.data.map(file => ({
+        filename: file.filename,
+        status: file.status,
+        additions: file.additions,
+        deletions: file.deletions,
+        changesUrl: file.contents_url,
+        patch: file.patch
+      }))
+    });
+  } catch (error) {
+    console.error('[v0] Get PR details error:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Approve and merge PR
+router.post('/:prNumber/approve-merge', requireAuth, async (req, res) => {
+  try {
+    const { prNumber } = req.params;
+    const { owner = process.env.GITHUB_OWNER, repo = process.env.GITHUB_REPO, mergeStrategy = 'squash' } = req.body;
+    const user = await getAuthenticatedUser(req);
+
+    if (!user) {
       return res.status(401).json({ error: 'Unauthorized' });
     }
 
-    return res.status(500).json({ error: error.message });
+    // Check user has reviewer permissions
+    const userRole = (await query('SELECT role FROM "user" WHERE id = $1', [user.id])).rows[0]?.role;
+    if (!['admin', 'moderator'].includes(userRole)) {
+      return res.status(403).json({ error: 'Insufficient permissions' });
+    }
+
+    // Approve review
+    await octokit.pulls.createReview({
+      owner,
+      repo,
+      pull_number: parseInt(prNumber),
+      event: 'APPROVE'
+    });
+
+    // Merge PR
+    const merge = await octokit.pulls.merge({
+      owner,
+      repo,
+      pull_number: parseInt(prNumber),
+      merge_method: mergeStrategy,
+      commit_title: `Approved by ${user.email}`,
+      commit_message: `Merged via in-app review by ${user.name || user.email}`
+    });
+
+    // Log action
+    await query(
+      `INSERT INTO audit_log (user_id, action, resource_type, resource_id, created_at)
+       VALUES ($1, $2, $3, $4, NOW())`,
+      [user.id, 'PR_MERGED', 'pull_request', `${prNumber}`]
+    );
+
+    res.json({
+      ok: true,
+      message: 'PR approved and merged',
+      sha: merge.data.sha
+    });
+  } catch (error) {
+    console.error('[v0] Approve merge error:', error);
+    res.status(500).json({ error: error.message });
   }
-}
+});
+
+// Add review comment
+router.post('/:prNumber/comment', requireAuth, async (req, res) => {
+  try {
+    const { prNumber } = req.params;
+    const { body, owner = process.env.GITHUB_OWNER, repo = process.env.GITHUB_REPO } = req.body;
+    const user = await getAuthenticatedUser(req);
+
+    if (!user) {
+      return res.status(401).json({ error: 'Unauthorized' });
+    }
+
+    const comment = await octokit.issues.createComment({
+      owner,
+      repo,
+      issue_number: parseInt(prNumber),
+      body
+    });
+
+    res.json({
+      ok: true,
+      comment: {
+        id: comment.data.id,
+        url: comment.data.html_url
+      }
+    });
+  } catch (error) {
+    console.error('[v0] Add comment error:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+export default router;

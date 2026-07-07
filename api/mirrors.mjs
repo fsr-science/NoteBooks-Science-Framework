@@ -1,158 +1,102 @@
-// api/mirrors.mjs — Manage content mirrors/sources
+// api/mirrors.mjs — Content mirrors registry (Express Router)
+import express from 'express';
 import { query } from '../lib/db.js';
-import { requireAuth, requireRole } from '../lib/auth-middleware.js';
+import { getAuthenticatedUser, requireAuth } from '../lib/auth-middleware.js';
 
-export default async function handler(req, res) {
-  res.setHeader('Content-Type', 'application/json');
+const router = express.Router();
 
+// List all active mirrors
+router.get('/list', async (req, res) => {
   try {
-    const { action } = req.body;
-
-    // List all active mirrors
-    if (action === 'listMirrors' && req.method === 'POST') {
-      const result = await query(
-        `SELECT id, name, description, github_repo, github_branch, subjects, created_at, updated_at
-         FROM mirrors
-         WHERE is_active = true
-         ORDER BY created_at DESC`
-      );
-
-      return res.status(200).json({ mirrors: result.rows });
-    }
-
-    // Get mirrors registry (published as JSON)
-    if (action === 'getMirrorsRegistry' && req.method === 'POST') {
-      const result = await query(
-        `SELECT id, name, description, github_repo, github_branch, subjects
-         FROM mirrors
-         WHERE is_active = true`
-      );
-
-      const registry = {
-        version: '1.0',
-        lastUpdated: new Date().toISOString(),
-        mirrors: result.rows.map(m => ({
-          id: m.id,
-          name: m.name,
-          description: m.description,
-          repo: m.github_repo,
-          branch: m.github_branch,
-          subjects: m.subjects || []
-        }))
-      };
-
-      return res.status(200).json(registry);
-    }
-
-    // Create new mirror (admin only)
-    if (action === 'createMirror' && req.method === 'POST') {
-      const user = await requireRole(req, 'admin');
-      const { name, description, github_repo, github_branch = 'main', subjects = [] } = req.body;
-
-      if (!name || !github_repo) {
-        return res.status(400).json({ error: 'Missing required fields' });
-      }
-
-      const result = await query(
-        `INSERT INTO mirrors (name, description, github_repo, github_branch, subjects, created_by, created_at, updated_at)
-         VALUES ($1, $2, $3, $4, $5, $6, NOW(), NOW())
-         RETURNING id, name, github_repo`,
-        [name, description, github_repo, github_branch, subjects, user.id]
-      );
-
-      // Audit log
-      await query(
-        `INSERT INTO audit_log (user_id, action, resource_type, resource_id, created_at)
-         VALUES ($1, 'CREATE_MIRROR', 'mirror', $2, NOW())`,
-        [user.id, result.rows[0].id]
-      );
-
-      return res.status(201).json({ mirror: result.rows[0] });
-    }
-
-    // Update mirror (admin only)
-    if (action === 'updateMirror' && req.method === 'POST') {
-      const user = await requireRole(req, 'admin');
-      const { id, name, description, subjects, is_active } = req.body;
-
-      if (!id) {
-        return res.status(400).json({ error: 'Missing mirror ID' });
-      }
-
-      const updates = [];
-      const values = [];
-      let paramIndex = 1;
-
-      if (name !== undefined) {
-        updates.push(`name = $${paramIndex++}`);
-        values.push(name);
-      }
-
-      if (description !== undefined) {
-        updates.push(`description = $${paramIndex++}`);
-        values.push(description);
-      }
-
-      if (subjects !== undefined) {
-        updates.push(`subjects = $${paramIndex++}`);
-        values.push(subjects);
-      }
-
-      if (is_active !== undefined) {
-        updates.push(`is_active = $${paramIndex++}`);
-        values.push(is_active);
-      }
-
-      updates.push(`updated_at = NOW()`);
-      values.push(id);
-
-      const result = await query(
-        `UPDATE mirrors SET ${updates.join(', ')} WHERE id = $${paramIndex} RETURNING id, name`,
-        values
-      );
-
-      // Audit log
-      await query(
-        `INSERT INTO audit_log (user_id, action, resource_type, resource_id, created_at)
-         VALUES ($1, 'UPDATE_MIRROR', 'mirror', $2, NOW())`,
-        [user.id, id]
-      );
-
-      return res.status(200).json({ mirror: result.rows[0] });
-    }
-
-    // Delete mirror (admin only)
-    if (action === 'deleteMirror' && req.method === 'POST') {
-      const user = await requireRole(req, 'admin');
-      const { id } = req.body;
-
-      if (!id) {
-        return res.status(400).json({ error: 'Missing mirror ID' });
-      }
-
-      await query('UPDATE mirrors SET is_active = false WHERE id = $1', [id]);
-
-      // Audit log
-      await query(
-        `INSERT INTO audit_log (user_id, action, resource_type, resource_id, created_at)
-         VALUES ($1, 'DELETE_MIRROR', 'mirror', $2, NOW())`,
-        [user.id, id]
-      );
-
-      return res.status(200).json({ ok: true });
-    }
-
-    return res.status(400).json({ error: 'Invalid action' });
+    const result = await query(
+      'SELECT id, name, description, github_repo, github_branch, subjects, created_at FROM mirrors WHERE is_active = true ORDER BY created_at DESC'
+    );
+    res.json({ mirrors: result.rows });
   } catch (error) {
-    console.error('Mirrors API error:', error);
+    console.error('[v0] List mirrors error:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Get manifest from a mirror
+router.get('/:mirrorId/manifest', async (req, res) => {
+  try {
+    const { mirrorId } = req.params;
     
-    if (error.message === 'Unauthorized') {
+    const mirrorResult = await query('SELECT * FROM mirrors WHERE id = $1 AND is_active = true', [mirrorId]);
+    if (mirrorResult.rows.length === 0) {
+      return res.status(404).json({ error: 'Mirror not found' });
+    }
+
+    const mirror = mirrorResult.rows[0];
+    // Fetch manifest from GitHub Pages or blob storage
+    const manifestUrl = `https://raw.githubusercontent.com/${mirror.github_repo}/${mirror.github_branch}/manifest.json`;
+    
+    const response = await fetch(manifestUrl);
+    if (!response.ok) {
+      return res.status(404).json({ error: 'Manifest not found in repository' });
+    }
+
+    const manifest = await response.json();
+    res.json({ manifest, mirror });
+  } catch (error) {
+    console.error('[v0] Get manifest error:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Create new mirror (admin only)
+router.post('/create', requireAuth, async (req, res) => {
+  try {
+    const { name, description, github_repo, github_branch = 'main', subjects } = req.body;
+    const user = await getAuthenticatedUser(req);
+
+    if (!user) {
       return res.status(401).json({ error: 'Unauthorized' });
     }
-    if (error.message === 'Insufficient permissions') {
-      return res.status(403).json({ error: 'Forbidden' });
+
+    const result = await query(
+      `INSERT INTO mirrors (name, description, github_repo, github_branch, subjects, created_by, created_at, updated_at)
+       VALUES ($1, $2, $3, $4, $5, $6, NOW(), NOW())
+       RETURNING id, name, github_repo`,
+      [name, description, github_repo, github_branch, subjects || [], user.id]
+    );
+
+    // Log action
+    await query(
+      `INSERT INTO audit_log (user_id, action, resource_type, resource_id, created_at)
+       VALUES ($1, $2, $3, $4, NOW())`,
+      [user.id, 'MIRROR_CREATED', 'mirror', result.rows[0].id]
+    );
+
+    res.status(201).json({ mirror: result.rows[0] });
+  } catch (error) {
+    console.error('[v0] Create mirror error:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Update mirror (admin only)
+router.put('/:mirrorId', requireAuth, async (req, res) => {
+  try {
+    const { mirrorId } = req.params;
+    const { name, description, is_active } = req.body;
+    const user = await getAuthenticatedUser(req);
+
+    if (!user) {
+      return res.status(401).json({ error: 'Unauthorized' });
     }
 
-    return res.status(500).json({ error: error.message });
+    await query(
+      `UPDATE mirrors SET name = $1, description = $2, is_active = $3, updated_at = NOW() WHERE id = $4`,
+      [name, description, is_active !== undefined ? is_active : true, mirrorId]
+    );
+
+    res.json({ ok: true });
+  } catch (error) {
+    console.error('[v0] Update mirror error:', error);
+    res.status(500).json({ error: error.message });
   }
-}
+});
+
+export default router;

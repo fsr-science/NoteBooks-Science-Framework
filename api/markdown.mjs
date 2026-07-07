@@ -1,28 +1,69 @@
-// api/markdown.mjs — Render markdown with enhanced callouts
+// api/markdown.mjs — Markdown rendering with callouts (Express Router)
+import express from 'express';
 import { renderMarkdown } from '../lib/markdown-renderer.js';
 
-export default async function handler(req, res) {
-  res.setHeader('Content-Type', 'application/json');
+const router = express.Router();
 
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed' });
-  }
-
+// Render markdown to HTML
+router.post('/render', (req, res) => {
   try {
-    const { markdown } = req.body;
+    const { content, format = 'html' } = req.body;
 
-    if (!markdown || typeof markdown !== 'string') {
-      return res.status(400).json({ error: 'Missing or invalid markdown content' });
+    if (!content) {
+      return res.status(400).json({ error: 'Missing content' });
     }
 
-    const html = renderMarkdown(markdown);
+    const html = renderMarkdown(content);
 
-    return res.status(200).json({
+    res.json({
       html,
-      success: true
+      format,
+      timestamp: new Date().toISOString()
     });
   } catch (error) {
-    console.error('Markdown rendering error:', error);
-    return res.status(500).json({ error: error.message });
+    console.error('[v0] Markdown render error:', error);
+    res.status(500).json({ error: error.message });
   }
-}
+});
+
+// Parse and validate markdown
+router.post('/validate', (req, res) => {
+  try {
+    const { content } = req.body;
+
+    if (!content) {
+      return res.status(400).json({ error: 'Missing content' });
+    }
+
+    // Check for common issues
+    const issues = [];
+    
+    if (content.length > 1000000) {
+      issues.push('Content exceeds 1MB limit');
+    }
+
+    // Check for unbalanced code blocks
+    const codeBlockCount = (content.match(/```/g) || []).length;
+    if (codeBlockCount % 2 !== 0) {
+      issues.push('Unbalanced code blocks');
+    }
+
+    // Try rendering to catch other errors
+    try {
+      renderMarkdown(content);
+    } catch (err) {
+      issues.push(`Render error: ${err.message}`);
+    }
+
+    res.json({
+      valid: issues.length === 0,
+      issues,
+      contentLength: content.length
+    });
+  } catch (error) {
+    console.error('[v0] Markdown validate error:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+export default router;

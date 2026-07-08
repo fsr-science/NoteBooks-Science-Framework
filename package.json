@@ -1,6 +1,7 @@
 {
   "name": "notebooks-science",
   "version": "2.0.0",
+  "type": "module",
   "description": "NoteBooks XI - A structured knowledge system for students and educators",
   "scripts": {
     "dev": "next dev",
@@ -28,6 +29,7 @@
   "devDependencies": {
     "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "26.1.0",
+    "@types/pg": "^8.20.0",
     "@types/react": "19.2.17",
     "serve": "^14.2.0",
     "typescript": "6.0.3"

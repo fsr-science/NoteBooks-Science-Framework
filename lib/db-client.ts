@@ -20,7 +20,7 @@ export function getPool(): Pool {
   return pool;
 }
 
-export async function query<T = any>(
+export async function query<T extends Record<string, any> = any>(
   text: string,
   params?: (string | number | boolean | null)[]
 ): Promise<QueryResult<T>> {

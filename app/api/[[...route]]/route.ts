@@ -85,7 +85,7 @@ export async function GET(
       return NextResponse.json({ prs: [] });
     }
 
-    // Config endpoint - returns app configuration
+    // Config endpoint (for fetch calls from JavaScript)
     if (service === 'config') {
       return NextResponse.json({
         version: '2.0.0',
@@ -97,23 +97,6 @@ export async function GET(
           github: true,
           desmos: true,
         },
-      });
-    }
-
-    // GitHub integration endpoint
-    if (service === 'gh.js' || service === 'gh') {
-      return NextResponse.json({
-        authenticated: false,
-        repos: [],
-      });
-    }
-
-    // Desmos endpoint - for math rendering
-    if (service === 'desmos.js' || service === 'desmos') {
-      return NextResponse.json({
-        status: 'ok',
-        version: '1.7.1',
-        message: 'Desmos API proxy ready',
       });
     }
 
@@ -324,35 +307,23 @@ export async function POST(
       }
     }
 
-    // Config endpoint (POST)
-    if (service === 'config') {
-      return NextResponse.json({
-        version: '2.0.0',
-        apiUrl: '/api',
-        environment: process.env.NODE_ENV,
-        features: {
-          forum: true,
-          markdown: true,
-          github: true,
-          desmos: true,
-        },
-      });
-    }
+    // GitHub API proxy (POST)
+    if (service === 'gh') {
+      const user = await getAuthenticatedUser(request);
+      if (!user) {
+        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      }
 
-    // GitHub integration endpoint (POST)
-    if (service === 'gh.js' || service === 'gh') {
+      const { endpoint } = body as any;
+      if (!endpoint) {
+        return NextResponse.json({ error: 'Missing endpoint' }, { status: 400 });
+      }
+
+      // Stub response for GitHub API
       return NextResponse.json({
         status: 'ok',
-        message: 'GitHub integration ready',
-      });
-    }
-
-    // Desmos endpoint (POST)
-    if (service === 'desmos.js' || service === 'desmos') {
-      return NextResponse.json({
-        status: 'ok',
-        version: '1.7.1',
-        message: 'Desmos API proxy ready',
+        endpoint,
+        data: []
       });
     }
 

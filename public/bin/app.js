@@ -1033,7 +1033,7 @@ let initialLoadComplete = false;
 
 async function fetchLatestCommit() {
   try {
-    const response = await fetch('/api/gh.js', {
+    const response = await fetch('/api/gh', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ action: 'latestCommit' })
